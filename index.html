@@ -468,10 +468,10 @@ const REPLIES=[
 ];
 // 末尾の言い回し。ひとつずつ、文と絵文字が合うようにしてある（「別の言い回し」で入れ替わる）
 const DID_END=['よ'];
-const CLOSE_DID=['ついでにやっちゃった☺️','気にしないでね🌿','たまたま目に入っただけだよ👀','そのままで大丈夫だよ🌿','やりたくてやっただけだよ✨'];
-const CLOSE_INF=['','急ぎじゃないからね🌿','ついでの共有だよ☺️','気づいたから伝えておくね👀','そのままで大丈夫だよ🌿'];
+const CLOSE_DID=['ついでにやっちゃった☺️','気にしないでね🌿','たまたま目に入っただけだよ👀','やりたくてやっただけだよ✨','ちょっと気になっただけだよ☺️','通りがかりにやっただけだよ🚶','やったらすっきりしたよ✨'];
+const CLOSE_INF=['','急ぎじゃないからね🌿','ついでの共有だよ☺️','気づいたから伝えておくね👀','ただのお知らせだよ📮','メモがわりだよ📝'];
 const LEAD=['お願いがあるの。','もしよかったら、','ちょっとだけお願い、','できたらでいいんだけど、','よかったら、'];
-const TIMING=['手が空いたときでいいからね☺️','急がないよ🌿','ゆっくりで大丈夫だよ🐢','気が向いたときで十分だよ🌿','あとでも全然いいよ⏳'];
+const TIMING=['手が空いたときでいいからね☺️','急がないよ🌿','ゆっくりで大丈夫だよ🐢','気が向いたときで十分だよ🌿','あとでも全然いいよ⏳','いつでも大丈夫だよ🕊️','できるときでいいよ🌿'];
 const THX=['いつもありがとう💕','助かってるよ🙏','ありがとうね🌸','いつも感謝してるよ💕','ありがとうね☺️'];
 function askEmoji(t){return /嬉しい$/.test(t)?'☺️':/助かる$/.test(t)?'🙏':/安心する$/.test(t)?'😌':'';}
 function pick(a,seed){return a[seed%a.length];}
@@ -524,7 +524,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v21';
+  var APP_VERSION='v22';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
