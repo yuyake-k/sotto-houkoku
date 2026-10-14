@@ -82,6 +82,17 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .row.mine .bubble{background:var(--accent);color:var(--accent-ink);border-color:transparent;border-bottom-right-radius:6px}
 .row:not(.mine) .bubble{border-bottom-left-radius:6px}
 .row.reply .bubble{font-size:14.5px;padding:6px 14px}
+.quote{
+  font:inherit;font-size:12px;line-height:1.5;text-align:left;
+  display:block;max-width:100%;margin:0 0 3px;padding:3px 10px;
+  color:var(--muted);background:var(--chip);
+  border:0;border-left:3px solid var(--line);border-radius:8px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+button.quote{cursor:pointer}
+.quote.gone{font-style:italic}
+.row.mine .quote{align-self:flex-end}
+.row.hl .bubble{outline:3px solid var(--focus);outline-offset:2px}
 button.bubble{cursor:pointer}
 .meta{display:flex;align-items:center;gap:8px;margin:2px 6px 0;font-size:11.5px;color:var(--muted);min-height:20px}
 .tag{padding:0 8px;border-radius:999px;border:1px solid var(--line)}
@@ -482,6 +493,14 @@ function textFor(m){
   }
   function fmtCode(c){return c?c.slice(0,4)+'-'+c.slice(4):'';}
 
+  function jumpTo(id){
+    var n=log.querySelector('[data-mid="'+id+'"]');
+    if(!n)return;
+    if(n.scrollIntoView)n.scrollIntoView({block:'center'});
+    n.classList.add('hl');
+    setTimeout(function(){n.classList.remove('hl');},1400);
+  }
+
   function paint(){
     var stick=firstPaint||forceBottom||(log.scrollHeight-log.scrollTop-log.clientHeight<90);
     log.textContent='';
@@ -505,6 +524,7 @@ function textFor(m){
       if(day&&day!==lastDay){log.appendChild(el('div','day',day));lastDay=day;}
       var mine=m.sender_id===me;
       var row=el('div','row'+(mine?' mine':'')+(m.kind==='reply'?' reply':''));
+      row.setAttribute('data-mid',m.id);
       var text=textFor(m);
       var bubble;
       if(mine){
@@ -513,6 +533,21 @@ function textFor(m){
         bubble.addEventListener('click',function(){selected=(selected===m.id)?null:m.id;paint();});
       }else{
         bubble=el('div','bubble',text);
+      }
+      if(m.kind==='reply'){
+        var tgt=m.reply_to?msgs.find(function(x){return x.id===m.reply_to;}):null;
+        var qe;
+        if(tgt){
+          var who=tgt.sender_id===me?'自分の報告':'相手の報告';
+          var first=textFor(tgt).split('\n')[0];
+          qe=el('button','quote','↩ '+who+'：'+first);
+          qe.type='button';
+          qe.setAttribute('aria-label',who+'を見る：'+first);
+          qe.addEventListener('click',function(){jumpTo(tgt.id);});
+        }else{
+          qe=el('div','quote gone',m.reply_to?'↩ 古い報告への返信':'↩ 取り消された報告への返信');
+        }
+        row.appendChild(qe);
       }
       row.appendChild(bubble);
       var meta=el('div','meta');
@@ -713,6 +748,12 @@ function textFor(m){
 </script>
 <script>
 if ('serviceWorker' in navigator) {
+  // 新しい版に切り替わったときだけ、自動で読み込み直す（初回の登録では読み込み直さない）
+  var hadController = !!navigator.serviceWorker.controller;
+  var reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (hadController && !reloaded) { reloaded = true; location.reload(); }
+  });
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('sw.js').catch(function () {});
   });
