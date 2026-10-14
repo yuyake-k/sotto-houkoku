@@ -310,7 +310,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         </section>
         <section class="setsec">
           <h3>通知</h3>
-          <p id="push-msg">相手からメッセージが届いたとき、スマホに知らせます。通知には中身は出ません。</p>
+          <p id="push-msg">相手からメッセージが届いたとき、スマホに知らせます。</p>
           <button id="btn-push" class="btn" type="button" hidden>通知をオンにする</button>
         </section>
         <section class="setsec">
@@ -414,12 +414,22 @@ const EVENTS=[
   {id:'clothes',label:'服の出しっぱなし',now:'服が出しっぱなしだよ',did:'服片付けておいた',ask:'服をかごに入れてもらえると嬉しい',em:'👚',emDid:'👚'},
   {id:'fridge',label:'冷蔵庫が開いてた',now:'冷蔵庫が開いたままだよ',did:'冷蔵庫閉めておいた',ask:'冷蔵庫を閉めてもらえると助かる',em:'❄️',emDid:'❄️'}
 ];
+// 選択肢は、あとから足してもデータベースを直さなくていい（k は英小文字12文字まで）
 const STATES=[
   {k:'on',label:'つけっぱなし',now:'がつけっぱなしだよ',ask:'消してもらえると嬉しい'},
   {k:'out',label:'出しっぱなし',now:'が出しっぱなしだよ',ask:'片付けてもらえると嬉しい'},
   {k:'piled',label:'溜まってる',now:'が溜まってるよ',ask:'片付けてもらえると嬉しい'},
   {k:'open',label:'開いたまま',now:'が開いたままだよ',ask:'閉めてもらえると嬉しい'},
-  {k:'left',label:'残ってる',now:'が残ってるよ',ask:'見てもらえると嬉しい'}
+  {k:'left',label:'残ってる',now:'が残ってるよ',ask:'見てもらえると嬉しい'},
+  {k:'fallen',label:'落ちてる',now:'が落ちてるよ',ask:'拾ってもらえると嬉しい'},
+  {k:'dirty',label:'汚れてる',now:'が汚れてるよ',ask:'きれいにしてもらえると嬉しい'},
+  {k:'wet',label:'濡れたまま',now:'が濡れたままだよ',ask:'乾かしてもらえると嬉しい'},
+  {k:'unfinished',label:'途中のまま',now:'が途中のままだよ',ask:'続きを見てもらえると嬉しい'},
+  {k:'full',label:'いっぱい',now:'がいっぱいだよ',ask:'空けてもらえると助かる'},
+  {k:'low',label:'なくなりそう',now:'がなくなりそうだよ',ask:'補充してもらえると助かる'},
+  {k:'broken',label:'壊れてる',now:'が壊れてるよ',ask:'見てもらえると助かる'},
+  {k:'plugged',label:'挿しっぱなし',now:'が挿しっぱなしだよ',ask:'抜いてもらえると嬉しい'},
+  {k:'expiring',label:'期限が近い',now:'の期限が近いよ',ask:'見てもらえると助かる'}
 ];
 // 絵文字は、その動作や気持ちに合うものだけを付ける
 const ACTIONS=[
@@ -429,7 +439,17 @@ const ACTIONS=[
   {k:'wash',label:'洗った',did:'洗っておいた',em:'🫧'},
   {k:'close',label:'閉めた',did:'閉めておいた',em:'🚪'},
   {k:'takeout',label:'出した',did:'出しておいた',em:'🗑️'},
-  {k:'fold',label:'取り込んだ',did:'取り込んでおいた',em:'👕'}
+  {k:'fold',label:'取り込んだ',did:'取り込んでおいた',em:'👕'},
+  {k:'pickup',label:'拾った',did:'拾っておいた',em:'✨'},
+  {k:'wipe',label:'拭いた',did:'拭いておいた',em:'🧽'},
+  {k:'dry',label:'乾かした',did:'乾かしておいた',em:'☀️'},
+  {k:'sweep',label:'掃除した',did:'掃除しておいた',em:'🧹'},
+  {k:'empty',label:'空けた',did:'空けておいた',em:'🗑️'},
+  {k:'refill',label:'補充した',did:'補充しておいた',em:'📦'},
+  {k:'buy',label:'買った',did:'買っておいた',em:'🛒'},
+  {k:'unplug',label:'抜いた',did:'抜いておいた',em:'🔌'},
+  {k:'fix',label:'直した',did:'直しておいた',em:'🔧'},
+  {k:'contact',label:'連絡した',did:'連絡しておいた',em:'📞'}
 ];
 const MODES=[
   {id:'did',label:'やっておいたよ',sub:'やったことだけ'},
@@ -447,7 +467,7 @@ const REPLIES=[
 const DID_END=['よ','ね','んだ','よ〜'];
 const CLOSE_DID=['ついでにやっちゃった☺️','気にしないでね🌿','たまたま目に入っただけだよ👀','そのままで大丈夫だよ🌿','やりたくてやっただけだよ✨'];
 const CLOSE_INF=['','急ぎじゃないからね🌿','ついでの共有だよ☺️','気づいたから伝えておくね👀','そのままで大丈夫だよ🌿'];
-const LEAD=['お願いがあるの、','もしよかったら、','ちょっとだけお願い、','できたらでいいんだけど、','よかったら、'];
+const LEAD=['お願いがあるの。','もしよかったら、','ちょっとだけお願い、','できたらでいいんだけど、','よかったら、'];
 const TIMING=['手が空いたときでいいからね☺️','急がないよ🌿','ゆっくりで大丈夫だよ🐢','気が向いたときで十分だよ🌿','あとでも全然いいよ⏳'];
 const THX=['いつもありがとう💕','助かってるよ🙏','ありがとうね🌸','いつも感謝してるよ💕','ありがとうね☺️'];
 function askEmoji(t){return /嬉しい$/.test(t)?'☺️':/助かる$/.test(t)?'🙏':/安心する$/.test(t)?'😌':'';}
@@ -501,7 +521,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v16';
+  var APP_VERSION='v18';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -1096,10 +1116,10 @@ function textFor(m){
     try{sub=await (await pushRegistration()).pushManager.getSubscription();}catch(e){}
     btn.hidden=false;btn.disabled=false;
     if(sub&&Notification.permission==='granted'){
-      msg.textContent='通知はオンです。相手から届いたとき、スマホに知らせます（中身は出ません）。';
+      msg.textContent='通知はオンです。相手から届いたとき、スマホに知らせます。';
       btn.textContent='通知をオフにする';btn.dataset.on='1';
     }else{
-      msg.textContent='相手からメッセージが届いたとき、スマホに知らせます。通知には中身は出ません。';
+      msg.textContent='相手からメッセージが届いたとき、スマホに知らせます。';
       btn.textContent='通知をオンにする';btn.dataset.on='';
     }
   }

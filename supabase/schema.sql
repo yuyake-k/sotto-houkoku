@@ -43,8 +43,9 @@ create table if not exists public.messages (
   thanks     boolean not null default false,
   -- 「ほかのこと」用: 物の名前（短い言葉）と、選択式の状態・やったこと
   noun       text check (char_length(noun) between 1 and 12 and noun !~ '[\r\n]'),
-  state_key  text check (state_key in ('on','out','piled','open','left')),
-  action_key text check (action_key in ('none','off','tidy','wash','close','takeout','fold')),
+  -- 選択肢はアプリ側で増やせるように、英小文字の短い名前なら保存できる（文章は保存できない）
+  state_key  text check (state_key ~ '^[a-z]{1,12}$'),
+  action_key text check (action_key ~ '^[a-z]{1,12}$'),
 
   -- 返信（定型のみ）
   reply_key  text check (reply_key in ('thanks','ok','later','sorry','seen')),

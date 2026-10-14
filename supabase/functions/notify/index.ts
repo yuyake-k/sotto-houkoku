@@ -21,7 +21,7 @@ Deno.serve(async (req) => {
   if (!SECRET || req.headers.get("x-webhook-secret") !== SECRET) {
     return new Response("forbidden", { status: 403 });
   }
-  let p: { room_id?: string; sender_id?: string; kind?: string };
+  let p: { room_id?: string; sender_id?: string; kind?: string; title?: string; body?: string };
   try { p = await req.json(); } catch { return new Response("bad", { status: 400 }); }
   if (!p.room_id || !p.sender_id) return new Response("bad", { status: 400 });
 
@@ -37,9 +37,10 @@ Deno.serve(async (req) => {
   const list = subs.data ?? [];
   if (!list.length) return new Response(`no-subscription members=${ids.length}`);
 
+  // 文言はデータベース側の関数（notify_new_message）で決めて、ここに渡される
   const body = JSON.stringify({
-    title: "そっと報告",
-    body: p.kind === "reply" ? "返信が届いています" : "そっと報告が届いています",
+    title: (p.title ?? "そっと報告").slice(0, 60),
+    body: (p.body ?? (p.kind === "reply" ? "返信が届いています" : "届いています")).slice(0, 100),
     tag: p.room_id,
   });
 

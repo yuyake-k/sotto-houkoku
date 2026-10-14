@@ -58,12 +58,19 @@ returns trigger
 language plpgsql security definer
 set search_path = public, extensions
 as $$
+declare
+  nick text;
+  ttl text;
+  bdy text;
 begin
   begin
+    select nickname into nick from room_members where room_id = new.room_id and user_id = new.sender_id;
+    ttl := coalesce(nullif(nick, ''), '相手') || 'から';
+    bdy := case when new.kind = 'reply' then '返信が届いています' else '届いています（急ぎじゃないよ）' end;
     perform net.http_post(
-      url     := 'https://pbzrhnkjtcpouplvewok.supabase.co/functions/v1/notify',
+      url     := 'https://pbzrhnkjtcpouplvewok.supabase.co/functions/v1/dynamic-worker',
       headers := jsonb_build_object('Content-Type', 'application/json', 'x-webhook-secret', '__WEBHOOK_SECRET__'),
-      body    := jsonb_build_object('room_id', new.room_id, 'sender_id', new.sender_id, 'kind', new.kind)
+      body    := jsonb_build_object('room_id', new.room_id, 'sender_id', new.sender_id, 'kind', new.kind, 'title', ttl, 'body', bdy)
     );
   exception when others then
     null;
