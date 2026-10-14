@@ -44,6 +44,11 @@ revoke all on function public.delete_push(text)            from public, anon;
 grant execute on function public.save_push(text, text, text) to authenticated;
 grant execute on function public.delete_push(text)           to authenticated;
 
+-- 通知を送る係（Edge Function）が、部屋のメンバーと通知の宛先を読めるようにする
+grant usage on schema public to service_role;
+grant select on public.room_members to service_role;
+grant select, delete on public.push_subscriptions to service_role;
+
 -- 新しいメッセージが入ったら、通知を送る係（Edge Function）を呼ぶ
 -- 失敗しても、メッセージの保存には影響しません
 create extension if not exists pg_net with schema extensions;
