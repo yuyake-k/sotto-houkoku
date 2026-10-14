@@ -164,6 +164,12 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .setsec h3{margin:0;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em}
 .setsec p{margin:0;font-size:13.5px;color:var(--muted)}
 .setsec .field{margin-top:0}
+.rl{display:flex;flex-direction:column;gap:8px;overflow-y:auto;min-height:0;padding-bottom:12px}
+.ritem{font:inherit;text-align:left;display:flex;flex-direction:column;gap:2px;width:100%;padding:12px 14px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:16px;cursor:pointer}
+.ritem .t{font-size:16px;font-weight:700;overflow-wrap:anywhere}
+.ritem .s{font-size:12px;color:var(--muted)}
+.ritem[aria-current="true"]{border-color:var(--accent)}
+.btn.danger{color:var(--accent);border-color:var(--accent)}
 .nickbanner{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .nickbanner span{flex:1 1 160px}
 .nickbanner .btn{min-height:32px;padding:2px 12px;font-size:13px}
@@ -210,7 +216,20 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <input id="in-code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="例: ABCD-2345">
         <button id="btn-join" class="btn block" type="button" disabled>部屋に入る</button>
       </div>
+      <button id="btn-wback" class="btn block" type="button" hidden>部屋のいちらんにもどる</button>
     </div>
+  </section>
+
+  <!-- 部屋のいちらん -->
+  <section id="screen-list" class="screen" hidden>
+    <header class="top">
+      <div>
+        <h1>そっと報告</h1>
+        <p class="lead">あなたの部屋 ・<span id="list-ver"></span></p>
+      </div>
+    </header>
+    <div id="roomlist" class="rl"></div>
+    <div class="composer"><button id="btn-addroom" class="btn primary" type="button">＋ 部屋をつくる／合言葉で入る</button></div>
   </section>
 
   <!-- 通信がつながらなかったとき（部屋は覚えている） -->
@@ -231,7 +250,10 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <h1>そっと報告</h1>
         <p id="room-sub" class="lead">相手を待っています</p>
       </div>
-      <button id="btn-code" class="btn" type="button" style="min-height:36px;padding:4px 12px" aria-expanded="false" aria-controls="codepanel">設定</button>
+      <div style="display:flex;gap:6px;flex:none">
+        <button id="btn-list" class="btn" type="button" style="min-height:36px;padding:4px 12px">いちらん</button>
+        <button id="btn-code" class="btn" type="button" style="min-height:36px;padding:4px 12px" aria-expanded="false" aria-controls="codepanel">設定</button>
+      </div>
     </header>
 
     <div id="codepanel" class="codepanel" hidden role="dialog" aria-modal="true" aria-labelledby="set-title">
@@ -258,6 +280,18 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           <div class="actions" style="margin-top:0">
             <button id="btn-codecopy" class="btn" type="button">コピー</button>
             <button id="btn-codeshare" class="btn primary" type="button">相手に送る</button>
+          </div>
+        </section>
+        <section class="setsec">
+          <h3>この部屋から退室する</h3>
+          <p>退室すると、この部屋は自分の画面から消えます。全員が退室して7日たつと、部屋とやりとりは完全に消えます。7日のあいだは、合言葉があれば戻れます。</p>
+          <button id="btn-leave" class="btn danger" type="button">退室する</button>
+          <div id="leave-confirm" hidden>
+            <p style="margin-bottom:8px">本当に退室しますか？</p>
+            <div class="actions" style="margin-top:0">
+              <button id="btn-leave-no" class="btn" type="button">やめる</button>
+              <button id="btn-leave-yes" class="btn danger" type="button">退室する</button>
+            </div>
           </div>
         </section>
       </div>
@@ -439,12 +473,12 @@ function textFor(m){
     set:function(k,v){try{localStorage.setItem('sotto.'+k,v);}catch(e){}}
   };
   var show=function(name){
-    ['setup','welcome','retry','room'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
+    ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v7';
+  var APP_VERSION='v8';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
-  var names={},myNick='',nickPrompted=false;
+  var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
   var selected=null,firstPaint=true,forceBottom=false,busy=false;
   var log=$('log');
 
@@ -545,7 +579,7 @@ function textFor(m){
     return 'うまくいきませんでした。通信を確認して、もう一度お試しください。';
   }
   function updateSub(){
-    $('room-sub').textContent=(memberCount>=2?'二人の部屋':'相手を待っています')+' ・'+APP_VERSION;
+    $('room-sub').textContent=(others.length?others.join('・')+' との部屋':'相手を待っています')+' ・'+APP_VERSION;
   }
   function fmtCode(c){return c?c.slice(0,4)+'-'+c.slice(4):'';}
 
@@ -657,6 +691,7 @@ function textFor(m){
       names={};
       r.data.forEach(function(x){if(x.nickname)names[x.user_id]=x.nickname;});
       myNick=names[me]||'';
+      others=r.data.filter(function(x){return x.user_id!==me;}).map(function(x){return x.nickname||'相手';});
       updateSub();
       var ni=$('in-nick');
       if(document.activeElement!==ni)ni.value=myNick;
@@ -726,7 +761,12 @@ function textFor(m){
 
   /* ---------- 部屋の作成・入室 ---------- */
   function enterRoom(r){
-    room=r;store.set('room',JSON.stringify({id:r.id,code:r.code}));
+    room=r;store.set('room',JSON.stringify({id:r.id,code:r.code}));addCode(r.code);
+    msgs=[];names={};others=[];myNick='';memberCount=1;nickPrompted=false;selected=null;
+    $('nickbanner').hidden=true;$('leave-confirm').hidden=true;$('btn-leave').hidden=false;
+    $('codepanel').hidden=true;$('btn-code').setAttribute('aria-expanded','false');
+    $('in-nick').value='';log.innerHTML='';
+    try{openSheet(false);}catch(e){}
     $('codebox').textContent=fmtCode(r.code);
     firstPaint=true;
     show('room');
@@ -736,13 +776,43 @@ function textFor(m){
     subscribe();
     refreshSheet();
   }
-  async function findMyRoom(){
-    var mem=await sb.from('room_members').select('room_id,joined_at').eq('user_id',me).order('joined_at',{ascending:false}).limit(1);
+  /* ---------- 部屋のいちらん ---------- */
+  function codes(){try{var a=JSON.parse(store.get('codes','[]'));return Array.isArray(a)?a:[];}catch(e){return [];}}
+  function addCode(c){var a=codes();if(a.indexOf(c)<0)a.push(c);store.set('codes',JSON.stringify(a.slice(-20)));}
+  function removeCode(c){store.set('codes',JSON.stringify(codes().filter(function(x){return x!==c;})));}
+  async function loadRooms(){
+    var mem=await sb.from('room_members').select('room_id,user_id,nickname,joined_at');
+    if(mem.error)mem=await sb.from('room_members').select('room_id,user_id,joined_at');
     if(mem.error)throw mem.error;
-    if(!mem.data||!mem.data.length)return null;
-    var rr=await sb.from('rooms').select('id,code').eq('id',mem.data[0].room_id).single();
+    var rr=await sb.from('rooms').select('id,code');
     if(rr.error)throw rr.error;
-    return rr.data;
+    var byRoom={};
+    (mem.data||[]).forEach(function(x){(byRoom[x.room_id]=byRoom[x.room_id]||[]).push(x);});
+    myRooms=(rr.data||[]).map(function(r){
+      var ms=byRoom[r.id]||[];
+      var mine=ms.filter(function(x){return x.user_id===me;})[0];
+      return {id:r.id,code:r.code,joined:mine?mine.joined_at:'',
+        others:ms.filter(function(x){return x.user_id!==me;}).map(function(x){return x.nickname||'相手';})};
+    }).sort(function(a,b){return a.joined<b.joined?1:a.joined>b.joined?-1:0;});
+    return myRooms;
+  }
+  function renderList(){
+    $('list-ver').textContent=APP_VERSION;
+    var box=$('roomlist');box.innerHTML='';
+    myRooms.forEach(function(r){
+      var b=document.createElement('button');b.type='button';b.className='ritem';
+      var t=document.createElement('span');t.className='t';
+      t.textContent=r.others.length?r.others.join('・')+' との部屋':'相手を待っている部屋';
+      var u=document.createElement('span');u.className='s';u.textContent='合言葉 '+fmtCode(r.code);
+      b.appendChild(t);b.appendChild(u);
+      b.addEventListener('click',function(){enterRoom({id:r.id,code:r.code});});
+      box.appendChild(b);
+    });
+  }
+  async function showList(){
+    try{await loadRooms();}catch(e){}
+    if(!myRooms.length){$('btn-wback').hidden=true;show('welcome');return;}
+    renderList();show('list');
   }
   var inName=$('in-name');
   function nameOk(){var v=inName.value.trim();return v.length>=1&&v.length<=12&&!/[\r\n]/.test(v);}
@@ -852,25 +922,50 @@ function textFor(m){
         session=a.data.session;
       }
       me=session.user.id;
-      var r=await findMyRoom();
-      if(r){enterRoom(r);return;}
+      await loadRooms();
       // 身元が変わっていたら、覚えている合言葉で静かに入り直す
-      if(saved&&saved.code){
-        try{
-          var j=await sb.rpc('join_room',{p_code:saved.code});
-          if(j.error)throw j.error;
-          var rr=await sb.from('rooms').select('id,code').eq('id',j.data).single();
-          if(rr.error)throw rr.error;
-          enterRoom(rr.data);return;
-        }catch(e2){wnote(errText(e2));}
+      if(!myRooms.length){
+        var cs=codes();if(saved&&saved.code&&cs.indexOf(saved.code)<0)cs.push(saved.code);
+        var lastErr=null;
+        for(var i=0;i<cs.length;i++){
+          try{var j=await sb.rpc('join_room',{p_code:cs[i]});if(j.error)throw j.error;}
+          catch(e2){lastErr=e2;if(!/room_not_found|room_full/.test(String(e2&&e2.message||e2)))throw e2;removeCode(cs[i]);}
+        }
+        if(cs.length){await loadRooms();}
+        if(!myRooms.length&&lastErr)wnote(errText(lastErr));
       }
-      show('welcome');
+      if(!myRooms.length){$('btn-wback').hidden=true;show('welcome');return;}
+      var pick=saved&&myRooms.filter(function(x){return x.id===saved.id;})[0];
+      if(pick){enterRoom({id:pick.id,code:pick.code});return;}
+      if(myRooms.length===1){enterRoom({id:myRooms[0].id,code:myRooms[0].code});return;}
+      renderList();show('list');
     }catch(e){
       // 通信の一時的な失敗では、入口に戻さない（部屋を覚えているときは、つなぎ直す画面にする）
-      if(saved&&saved.code){show('retry');}
+      if((saved&&saved.code)||codes().length){show('retry');}
       else{show('welcome');wnote(errText(e));}
     }
   }
+  $('btn-list').addEventListener('click',function(){showList();});
+  $('btn-addroom').addEventListener('click',function(){wnote('');$('btn-wback').hidden=false;show('welcome');});
+  $('btn-wback').addEventListener('click',function(){showList();});
+  $('btn-leave').addEventListener('click',function(){this.hidden=true;$('leave-confirm').hidden=false;});
+  $('btn-leave-no').addEventListener('click',function(){$('leave-confirm').hidden=true;$('btn-leave').hidden=false;});
+  $('btn-leave-yes').addEventListener('click',async function(){
+    var b=this;b.disabled=true;
+    try{
+      var r=await sb.rpc('leave_room',{p_room:room.id});
+      if(r.error)throw r.error;
+      if(channel){try{sb.removeChannel(channel);}catch(e){}channel=null;}
+      removeCode(room.code);store.set('room','');
+      room=null;msgs=[];
+      setPanel(false);
+      await showList();
+    }catch(e){
+      $('leave-confirm').hidden=true;$('btn-leave').hidden=false;
+      note('退室できませんでした。通信を確認して、もう一度お試しください。');
+      setPanel(false);
+    }finally{b.disabled=false;}
+  });
   $('btn-retry').addEventListener('click',function(){boot();});
   window.addEventListener('online',function(){if(!$('screen-retry').hidden)boot();});
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&!$('screen-retry').hidden)boot();});
