@@ -140,6 +140,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .minebar{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--bg)}
 .minebar-name{flex:1;min-width:0;font-size:14px;font-weight:700;overflow-wrap:anywhere}
 .minebar .btn{min-height:34px;padding:2px 12px;font-size:13px}
+.xfer-left{margin:0;font-size:12.5px;color:var(--muted)}
 .mine-note{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
 .modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .mode{
@@ -243,6 +244,13 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <input id="in-code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="例: ABCD-2345">
         <button id="btn-join" class="btn block" type="button" disabled>部屋に入る</button>
       </div>
+      <div class="card">
+        <h2>別の端末から引き継ぐ</h2>
+        <p>別のスマホやブラウザで使っていた人として、始めます。もとの端末で「設定」から出した、引き継ぎコードを入れてください。</p>
+        <label class="lbl" for="in-xfer">引き継ぎコード（12文字）</label>
+        <input id="in-xfer" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="例: ABCD-EFGH-2345">
+        <button id="btn-claim" class="btn block" type="button" disabled>引き継ぐ</button>
+      </div>
       <button id="btn-wback" class="btn block" type="button" hidden>部屋のいちらんにもどる</button>
     </div>
   </section>
@@ -314,6 +322,16 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           <h3>通知</h3>
           <p id="push-msg">相手からメッセージが届いたとき、スマホに知らせます。</p>
           <button id="btn-push" class="btn" type="button" hidden>通知をオンにする</button>
+        </section>
+        <section class="setsec">
+          <h3>別の端末へ引き継ぐ</h3>
+          <p>いまの自分（呼び名・部屋・過去のやりとり）を、別のスマホやブラウザに移すためのコードです。コードは15分だけ使えて、1回で使えなくなります。引き継ぐと、この端末は、はじめからになります。他の人には教えないでください。</p>
+          <button id="btn-xfer" class="btn" type="button">引き継ぎコードを出す</button>
+          <div id="xfer-box" hidden>
+            <div id="xfer-code" class="codebox" style="font-size:22px"></div>
+            <p id="xfer-left" class="xfer-left"></p>
+            <div class="actions" style="margin-top:0"><button id="btn-xfercopy" class="btn" type="button">コピー</button></div>
+          </div>
         </section>
         <section class="setsec">
           <h3>アプリの更新</h3>
@@ -525,10 +543,10 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v24';
+  var APP_VERSION='v25';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
-  var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
+  var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
   var selected=null,firstPaint=true,forceBottom=false,busy=false;
   var log=$('log');
 
@@ -685,6 +703,7 @@ function textFor(m){
   function dayLabel(t){try{return new Date(t).toLocaleDateString('ja-JP',{month:'numeric',day:'numeric',weekday:'short'});}catch(e){return '';}}
   function errText(e){
     var m=String((e&&e.message)||e||'');
+    if(/too_many_attempts/.test(m))return 'しばらくしてから、もう一度お試しください。';
     if(/room_not_found/.test(m))return '合言葉が見つかりません。入力を確認してください。';
     if(/room_full/.test(m))return 'この部屋はいっぱいです。';
     if(/too_many_rooms/.test(m))return '作れる部屋の数の上限に達しました。';
@@ -801,6 +820,7 @@ function textFor(m){
   async function loadMembers(){
     var r=await sb.from('room_members').select('user_id,nickname').eq('room_id',room.id);
     if(r.error){r=await sb.from('room_members').select('user_id').eq('room_id',room.id);}
+    if(!r.error&&r.data&&room&&!r.data.some(function(x){return x.user_id===me;})&&Date.now()-lastKick>10000){lastKick=Date.now();boot();return;}
     if(!r.error&&r.data){
       memberCount=r.data.length;
       names={};
@@ -924,9 +944,20 @@ function textFor(m){
       box.appendChild(b);
     });
   }
+  // 引き継ぎずみの端末は、はじめの状態に戻す（古い身元で、同じ部屋に入り直さないため）
+  async function resetThisDevice(){
+    if(channel){try{sb.removeChannel(channel);}catch(e){}channel=null;}
+    try{await sb.auth.signOut();}catch(e){}
+    store.set('room','');store.set('codes','[]');
+    room=null;msgs=[];me=null;
+    bootNote='別の端末に引き継ぎました。この端末は、はじめからになります。';
+    await boot();
+  }
+  function isMoved(e){return /identity_moved/.test(String((e&&e.message)||e||''));}
+  function welcomeNote(){if(bootNote){wnote(bootNote);bootNote='';}}
   async function showList(){
     try{await loadRooms();}catch(e){}
-    if(!myRooms.length){$('btn-wback').hidden=true;show('welcome');return;}
+    if(!myRooms.length){$('btn-wback').hidden=true;show('welcome');welcomeNote();return;}
     renderList();show('list');
   }
   var inName=$('in-name');
@@ -962,7 +993,7 @@ function textFor(m){
       await saveNameFor(row.room_id);
       enterRoom({id:row.room_id,code:row.code});
       setPanel(true);
-    }catch(e){wnote(errText(e));}
+    }catch(e){if(isMoved(e)){resetThisDevice();return;}wnote(errText(e));}
     finally{syncWelcome();}
   });
   var inCode=$('in-code');
@@ -984,7 +1015,7 @@ function textFor(m){
       var rr=await sb.from('rooms').select('id,code').eq('id',j.data).single();
       if(rr.error)throw rr.error;
       enterRoom(rr.data);
-    }catch(e){wnote(errText(e));}
+    }catch(e){if(isMoved(e)){resetThisDevice();return;}wnote(errText(e));}
     finally{syncWelcome();}
   });
 
@@ -1056,12 +1087,12 @@ function textFor(m){
         var lastErr=null;
         for(var i=0;i<cs.length;i++){
           try{var j=await sb.rpc('join_room',{p_code:cs[i]});if(j.error)throw j.error;}
-          catch(e2){lastErr=e2;if(!/room_not_found|room_full/.test(String(e2&&e2.message||e2)))throw e2;removeCode(cs[i]);}
+          catch(e2){if(isMoved(e2)){await resetThisDevice();return;}lastErr=e2;if(!/room_not_found|room_full/.test(String(e2&&e2.message||e2)))throw e2;removeCode(cs[i]);}
         }
         if(cs.length){await loadRooms();}
         if(!myRooms.length&&lastErr)wnote(errText(lastErr));
       }
-      if(!myRooms.length){$('btn-wback').hidden=true;show('welcome');return;}
+      if(!myRooms.length){$('btn-wback').hidden=true;show('welcome');welcomeNote();return;}
       var pick=saved&&myRooms.filter(function(x){return x.id===saved.id;})[0];
       if(pick){enterRoom({id:pick.id,code:pick.code});return;}
       if(myRooms.length===1){enterRoom({id:myRooms[0].id,code:myRooms[0].code});return;}
@@ -1153,6 +1184,50 @@ function textFor(m){
       b.disabled=false;return;
     }
     await paintPush();
+  });
+
+  /* ---------- 引き継ぎ ---------- */
+  var xferTimer=null,xferEnd=0;
+  function fmtXfer(c){return c?c.slice(0,4)+'-'+c.slice(4,8)+'-'+c.slice(8):'';}
+  function xferTick(){
+    var left=Math.max(0,Math.ceil((xferEnd-Date.now())/1000));
+    if(left<=0){clearInterval(xferTimer);$('xfer-box').hidden=true;$('btn-xfer').hidden=false;$('xfer-code').textContent='';return;}
+    $('xfer-left').textContent='あと '+Math.floor(left/60)+'分'+('0'+(left%60)).slice(-2)+'秒 で無効になります';
+  }
+  $('btn-xfer').addEventListener('click',async function(){
+    var b=this;b.disabled=true;
+    try{
+      var r=await sb.rpc('create_transfer_code');
+      if(r.error)throw r.error;
+      $('xfer-code').textContent=fmtXfer(r.data);$('xfer-code').dataset.raw=r.data;
+      xferEnd=Date.now()+15*60*1000;clearInterval(xferTimer);xferTimer=setInterval(xferTick,1000);xferTick();
+      $('xfer-box').hidden=false;b.hidden=true;
+    }catch(e){note('引き継ぎコードを出せませんでした。通信を確認して、もう一度お試しください。');}
+    finally{b.disabled=false;}
+  });
+  $('btn-xfercopy').addEventListener('click',function(){
+    copyText($('xfer-code').dataset.raw||'','引き継ぎコードをコピーしました');
+    var b=this;b.textContent='コピーしました';setTimeout(function(){b.textContent='コピー';},1800);
+  });
+  var inX=$('in-xfer');
+  inX.addEventListener('input',function(){
+    var c=normCode(inX.value).slice(0,12);
+    inX.value=c.length>8?c.slice(0,4)+'-'+c.slice(4,8)+'-'+c.slice(8):c.length>4?c.slice(0,4)+'-'+c.slice(4):c;
+    $('btn-claim').disabled=c.length!==12;
+  });
+  $('btn-claim').addEventListener('click',async function(){
+    var c=normCode(inX.value);
+    if(c.length!==12)return;
+    var b=this;b.disabled=true;wnote('');
+    try{
+      var r=await sb.rpc('claim_transfer',{p_code:c});
+      if(r.error)throw r.error;
+      if(r.data==='ok'){inX.value='';store.set('room','');await boot();return;}
+      wnote(r.data==='too_many'?'入力ミスが続いたため、しばらく使えません。時間をおいて、もう一度お試しください。'
+        :r.data==='same'?'このコードは、この端末で出したものです。引き継ぐ側の端末で入力してください。'
+        :'コードが違うか、期限が切れています。もとの端末で、もう一度コードを出してください。');
+    }catch(e){wnote(errText(e));}
+    finally{b.disabled=normCode(inX.value).length!==12;}
   });
 
   $('btn-refresh').addEventListener('click',async function(){
