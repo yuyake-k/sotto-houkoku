@@ -82,6 +82,9 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .row.mine .bubble{background:var(--accent);color:var(--accent-ink);border-color:transparent;border-bottom-right-radius:6px}
 .row:not(.mine) .bubble{border-bottom-left-radius:6px}
 .row.reply .bubble{font-size:14.5px;padding:6px 14px}
+.nm{font-size:12px;color:var(--muted);margin:0 4px 2px}
+.nickrow{display:flex;gap:8px}
+.nickrow input{flex:1}
 .quote{
   font:inherit;font-size:12px;line-height:1.5;text-align:left;
   display:block;max-width:100%;margin:0 0 3px;padding:3px 10px;
@@ -195,6 +198,17 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
     </div>
   </section>
 
+  <!-- 通信がつながらなかったとき（部屋は覚えている） -->
+  <section id="screen-retry" class="screen" hidden>
+    <div class="welcome">
+      <h1>そっと報告</h1>
+      <div class="card">
+        <p>つながりませんでした。通信を確認して、もう一度お試しください。部屋は覚えているので、合言葉は要りません。</p>
+        <button id="btn-retry" class="btn primary block" type="button">つなぎ直す</button>
+      </div>
+    </div>
+  </section>
+
   <!-- 部屋 -->
   <section id="screen-room" class="screen" hidden>
     <header class="top">
@@ -202,7 +216,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <h1>そっと報告</h1>
         <p id="room-sub" class="lead">相手を待っています</p>
       </div>
-      <button id="btn-code" class="btn" type="button" style="min-height:36px;padding:4px 12px" aria-expanded="false" aria-controls="codepanel">合言葉</button>
+      <button id="btn-code" class="btn" type="button" style="min-height:36px;padding:4px 12px" aria-expanded="false" aria-controls="codepanel">設定</button>
     </header>
 
     <section id="codepanel" class="card codepanel" hidden>
@@ -212,6 +226,14 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <button id="btn-codecopy" class="btn" type="button">コピー</button>
         <button id="btn-codeshare" class="btn primary" type="button">相手に送る</button>
       </div>
+      <div class="field">
+        <label for="in-nick">自分の呼び名（12文字まで）</label>
+        <div class="nickrow">
+          <input id="in-nick" type="text" autocomplete="off" maxlength="12" placeholder="例: ゆや">
+          <button id="btn-nick" class="btn" type="button">保存</button>
+        </div>
+      </div>
+      <p id="nick-hint" class="note" hidden>呼び名を決めると、相手の画面に名前が出ます。</p>
     </section>
 
     <p id="note" class="note" role="status" hidden></p>
@@ -385,11 +407,12 @@ function textFor(m){
     set:function(k,v){try{localStorage.setItem('sotto.'+k,v);}catch(e){}}
   };
   var show=function(name){
-    ['setup','welcome','room'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
+    ['setup','welcome','retry','room'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v3';
+  var APP_VERSION='v5';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
+  var names={},myNick='',nickPrompted=false;
   var selected=null,firstPaint=true,forceBottom=false,busy=false;
   var log=$('log');
 
@@ -526,6 +549,7 @@ function textFor(m){
       var mine=m.sender_id===me;
       var row=el('div','row'+(mine?' mine':'')+(m.kind==='reply'?' reply':''));
       row.setAttribute('data-mid',m.id);
+      if(!mine)row.appendChild(el('div','nm',names[m.sender_id]||'相手'));
       var text=textFor(m);
       var bubble;
       if(mine){
@@ -539,7 +563,7 @@ function textFor(m){
         var tgt=m.reply_to?msgs.find(function(x){return x.id===m.reply_to;}):null;
         var qe;
         if(tgt){
-          var who=tgt.sender_id===me?'自分の報告':'相手の報告';
+          var who=tgt.sender_id===me?'自分の報告':(names[tgt.sender_id]||'相手')+'の報告';
           var first=textFor(tgt).split('\n')[0];
           qe=el('button','quote','↩ '+who+'：'+first);
           qe.type='button';
@@ -588,9 +612,28 @@ function textFor(m){
     msgs=(r.data||[]).slice().reverse();
     paint();
   }
+  function openNickPanel(){
+    $('codepanel').hidden=false;
+    $('btn-code').setAttribute('aria-expanded','true');
+    $('nick-hint').hidden=false;
+  }
   async function loadMembers(){
-    var r=await sb.from('room_members').select('user_id').eq('room_id',room.id);
-    if(!r.error&&r.data){memberCount=r.data.length;updateSub();}
+    var r=await sb.from('room_members').select('user_id,nickname').eq('room_id',room.id);
+    if(r.error){r=await sb.from('room_members').select('user_id').eq('room_id',room.id);}
+    if(!r.error&&r.data){
+      memberCount=r.data.length;
+      names={};
+      r.data.forEach(function(x){if(x.nickname)names[x.user_id]=x.nickname;});
+      myNick=names[me]||'';
+      updateSub();
+      var ni=$('in-nick');
+      if(document.activeElement!==ni)ni.value=myNick;
+      if(msgs.length)paint();
+      // 呼び名がまだなら、設定を開いて促す（呼び名の機能が使えるときだけ）
+      if(!myNick&&!nickPrompted&&r.data.some(function(x){return 'nickname' in x;})){
+        nickPrompted=true;openNickPanel();
+      }
+    }
   }
   function subscribe(){
     if(channel){try{sb.removeChannel(channel);}catch(e){}}
@@ -651,7 +694,7 @@ function textFor(m){
 
   /* ---------- 部屋の作成・入室 ---------- */
   function enterRoom(r){
-    room=r;store.set('room',r.id);
+    room=r;store.set('room',JSON.stringify({id:r.id,code:r.code}));
     $('codebox').textContent=fmtCode(r.code);
     firstPaint=true;
     show('room');
@@ -701,6 +744,24 @@ function textFor(m){
     finally{this.disabled=normCode(inCode.value).length!==8;}
   });
 
+  /* ---------- 呼び名 ---------- */
+  $('btn-nick').addEventListener('click',async function(){
+    var v=$('in-nick').value.trim();
+    if(/[\r\n]/.test(v)||v.length>12)return;
+    var b=this;b.disabled=true;
+    try{
+      var r=await sb.rpc('set_nickname',{p_room:room.id,p_name:v});
+      if(r.error)throw r.error;
+      $('nick-hint').hidden=true;note('');
+      await loadMembers();
+      $('status').textContent='呼び名を保存しました';
+      b.textContent='保存しました';setTimeout(function(){b.textContent='保存';},1800);
+    }catch(e){
+      note('呼び名を保存できませんでした。通信を確認して、もう一度お試しください。');
+    }finally{b.disabled=false;}
+  });
+  $('in-nick').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('btn-nick').click();}});
+
   /* ---------- 合言葉パネル ---------- */
   $('btn-code').addEventListener('click',function(){
     var open=$('codepanel').hidden;
@@ -724,11 +785,16 @@ function textFor(m){
   });
 
   /* ---------- 起動 ---------- */
+  function savedRoom(){
+    try{var s=store.get('room','');return s?JSON.parse(s):null;}catch(e){return null;}
+  }
   async function boot(){
     var bad=!cfg.url||!cfg.anonKey||/YOUR_/.test(cfg.url)||/YOUR_/.test(cfg.anonKey);
     if(bad||!window.supabase||!window.supabase.createClient){show('setup');return;}
+    try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+    var saved=savedRoom();
     try{
-      sb=window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
+      if(!sb)sb=window.supabase.createClient(cfg.url,cfg.anonKey,{auth:{persistSession:true,autoRefreshToken:true}});
       var s=await sb.auth.getSession();
       var session=s&&s.data&&s.data.session;
       if(!session){
@@ -738,11 +804,27 @@ function textFor(m){
       }
       me=session.user.id;
       var r=await findMyRoom();
-      if(r)enterRoom(r);else show('welcome');
+      if(r){enterRoom(r);return;}
+      // 身元が変わっていたら、覚えている合言葉で静かに入り直す
+      if(saved&&saved.code){
+        try{
+          var j=await sb.rpc('join_room',{p_code:saved.code});
+          if(j.error)throw j.error;
+          var rr=await sb.from('rooms').select('id,code').eq('id',j.data).single();
+          if(rr.error)throw rr.error;
+          enterRoom(rr.data);return;
+        }catch(e2){wnote(errText(e2));}
+      }
+      show('welcome');
     }catch(e){
-      show('welcome');wnote(errText(e));
+      // 通信の一時的な失敗では、入口に戻さない（部屋を覚えているときは、つなぎ直す画面にする）
+      if(saved&&saved.code){show('retry');}
+      else{show('welcome');wnote(errText(e));}
     }
   }
+  $('btn-retry').addEventListener('click',function(){boot();});
+  window.addEventListener('online',function(){if(!$('screen-retry').hidden)boot();});
+  document.addEventListener('visibilitychange',function(){if(!document.hidden&&!$('screen-retry').hidden)boot();});
   refreshSheet();
   boot();
 })();
