@@ -168,9 +168,10 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .composer .btn{width:100%}
 .composer .btn[aria-expanded="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:transparent}
 .codepanel{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(20,12,30,.45)}
-.setcard{width:100%;max-width:520px;max-height:88%;overflow-y:auto;background:var(--bg);border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:6px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
-.sethead{position:sticky;top:0;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0 8px;border-bottom:1.5px solid var(--line)}
+.setcard{width:100%;max-width:520px;max-height:88%;background:var(--bg);border-radius:22px 22px 0 0;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.sethead{flex:none;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px 10px;border-bottom:1.5px solid var(--line)}
 .sethead h2{margin:0;font-size:18px}
+.setbody{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
 .setsec{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
 .setsec h3{margin:0;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em}
 .setsec p{margin:0;font-size:13.5px;color:var(--muted)}
@@ -288,6 +289,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           <h2 id="set-title">設定</h2>
           <button id="btn-setclose" class="btn" type="button" style="min-height:36px;padding:4px 14px">とじる</button>
         </div>
+        <div class="setbody">
         <section class="setsec">
           <h3>あなたの呼び名</h3>
           <p id="nick-hint">相手の画面に、この名前で表示されます。</p>
@@ -330,6 +332,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
             </div>
           </div>
         </section>
+        </div>
       </div>
     </div>
 
@@ -521,7 +524,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v20';
+  var APP_VERSION='v21';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
