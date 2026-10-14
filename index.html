@@ -156,7 +156,17 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .composer{flex:none;padding-block:6px 12px}
 .composer .btn{width:100%}
 .composer .btn[aria-expanded="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:transparent}
-.codepanel{flex:none;margin-bottom:8px}
+.codepanel{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(20,12,30,.45)}
+.setcard{width:100%;max-width:520px;max-height:88%;overflow-y:auto;background:var(--bg);border-radius:22px 22px 0 0;box-shadow:var(--shadow);padding:6px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.sethead{position:sticky;top:0;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 0 8px;border-bottom:1.5px solid var(--line)}
+.sethead h2{margin:0;font-size:18px}
+.setsec{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.setsec h3{margin:0;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.setsec p{margin:0;font-size:13.5px;color:var(--muted)}
+.setsec .field{margin-top:0}
+.nickbanner{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nickbanner span{flex:1 1 160px}
+.nickbanner .btn{min-height:32px;padding:2px 12px;font-size:13px}
 
 .chip:focus-visible,.mode:focus-visible,.btn:focus-visible,.bubble:focus-visible,.undo:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -219,23 +229,40 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
       <button id="btn-code" class="btn" type="button" style="min-height:36px;padding:4px 12px" aria-expanded="false" aria-controls="codepanel">設定</button>
     </header>
 
-    <section id="codepanel" class="card codepanel" hidden>
-      <p>相手に伝える合言葉です。他の人には教えないでください。</p>
-      <div id="codebox" class="codebox"></div>
-      <div class="actions" style="margin-top:0">
-        <button id="btn-codecopy" class="btn" type="button">コピー</button>
-        <button id="btn-codeshare" class="btn primary" type="button">相手に送る</button>
-      </div>
-      <div class="field">
-        <label for="in-nick">自分の呼び名（12文字まで）</label>
-        <div class="nickrow">
-          <input id="in-nick" type="text" autocomplete="off" maxlength="12" placeholder="例: ゆや">
-          <button id="btn-nick" class="btn" type="button">保存</button>
+    <div id="codepanel" class="codepanel" hidden role="dialog" aria-modal="true" aria-labelledby="set-title">
+      <div class="setcard">
+        <div class="sethead">
+          <h2 id="set-title">設定</h2>
+          <button id="btn-setclose" class="btn" type="button" style="min-height:36px;padding:4px 14px">とじる</button>
         </div>
+        <section class="setsec">
+          <h3>あなたの呼び名</h3>
+          <p id="nick-hint">相手の画面に、この名前で表示されます。</p>
+          <div class="field" style="margin:0">
+            <label class="sr" for="in-nick">自分の呼び名（12文字まで）</label>
+            <div class="nickrow">
+              <input id="in-nick" type="text" autocomplete="off" maxlength="12" placeholder="例: ゆや（12文字まで）">
+              <button id="btn-nick" class="btn" type="button">保存</button>
+            </div>
+          </div>
+        </section>
+        <section class="setsec">
+          <h3>部屋の合言葉</h3>
+          <p>相手に伝える合言葉です。他の人には教えないでください。</p>
+          <div id="codebox" class="codebox"></div>
+          <div class="actions" style="margin-top:0">
+            <button id="btn-codecopy" class="btn" type="button">コピー</button>
+            <button id="btn-codeshare" class="btn primary" type="button">相手に送る</button>
+          </div>
+        </section>
       </div>
-      <p id="nick-hint" class="note" hidden>呼び名を決めると、相手の画面に名前が出ます。</p>
-    </section>
+    </div>
 
+    <p id="nickbanner" class="note nickbanner" hidden>
+      <span>呼び名を決めると、相手の画面に名前が出ます。</span>
+      <button id="btn-nickgo" class="btn" type="button">決める</button>
+      <button id="btn-nickskip" class="btn" type="button" aria-label="あとで">あとで</button>
+    </p>
     <p id="note" class="note" role="status" hidden></p>
     <div id="log" class="log" aria-live="polite" aria-label="メッセージ"></div>
 
@@ -409,7 +436,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v5';
+  var APP_VERSION='v6';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false;
@@ -612,10 +639,10 @@ function textFor(m){
     msgs=(r.data||[]).slice().reverse();
     paint();
   }
-  function openNickPanel(){
-    $('codepanel').hidden=false;
-    $('btn-code').setAttribute('aria-expanded','true');
-    $('nick-hint').hidden=false;
+  function setPanel(open){
+    $('codepanel').hidden=!open;
+    $('btn-code').setAttribute('aria-expanded',open?'true':'false');
+    if(!open)$('btn-code').focus();
   }
   async function loadMembers(){
     var r=await sb.from('room_members').select('user_id,nickname').eq('room_id',room.id);
@@ -631,7 +658,7 @@ function textFor(m){
       if(msgs.length)paint();
       // 呼び名がまだなら、設定を開いて促す（呼び名の機能が使えるときだけ）
       if(!myNick&&!nickPrompted&&r.data.some(function(x){return 'nickname' in x;})){
-        nickPrompted=true;openNickPanel();
+        nickPrompted=true;$('nickbanner').hidden=false;
       }
     }
   }
@@ -719,7 +746,7 @@ function textFor(m){
       if(r.error)throw r.error;
       var row=Array.isArray(r.data)?r.data[0]:r.data;
       enterRoom({id:row.room_id,code:row.code});
-      $('codepanel').hidden=false;$('btn-code').setAttribute('aria-expanded','true');
+      setPanel(true);
     }catch(e){wnote(errText(e));}
     finally{this.disabled=false;}
   });
@@ -752,7 +779,7 @@ function textFor(m){
     try{
       var r=await sb.rpc('set_nickname',{p_room:room.id,p_name:v});
       if(r.error)throw r.error;
-      $('nick-hint').hidden=true;note('');
+      $('nickbanner').hidden=true;note('');
       await loadMembers();
       $('status').textContent='呼び名を保存しました';
       b.textContent='保存しました';setTimeout(function(){b.textContent='保存';},1800);
@@ -763,11 +790,12 @@ function textFor(m){
   $('in-nick').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('btn-nick').click();}});
 
   /* ---------- 合言葉パネル ---------- */
-  $('btn-code').addEventListener('click',function(){
-    var open=$('codepanel').hidden;
-    $('codepanel').hidden=!open;
-    this.setAttribute('aria-expanded',open?'true':'false');
-  });
+  $('btn-code').addEventListener('click',function(){setPanel($('codepanel').hidden);});
+  $('btn-setclose').addEventListener('click',function(){setPanel(false);});
+  $('codepanel').addEventListener('click',function(e){if(e.target===this)setPanel(false);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('codepanel').hidden)setPanel(false);});
+  $('btn-nickgo').addEventListener('click',function(){setPanel(true);$('in-nick').focus();});
+  $('btn-nickskip').addEventListener('click',function(){$('nickbanner').hidden=true;});
   function copyText(t,okMsg){
     var done=function(ok){$('status').textContent=ok?okMsg:'コピーできませんでした。手で選んでコピーしてください。';};
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}
