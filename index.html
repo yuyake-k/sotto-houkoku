@@ -129,7 +129,15 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 }
 .chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink)}
 .chip.plus{background:transparent;border-color:var(--line);color:var(--muted)}
-.chip.plus[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:transparent}
+.chip.plus[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.chip.mine{border-color:var(--line);background:var(--surface)}
+.chip.mine[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.custombox{margin-top:12px;padding:12px;border:2px solid var(--accent);border-radius:16px;background:var(--bg)}
+.customhead{margin:0 0 4px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.customtag{font-size:11px;font-weight:700;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:1px 8px}
+.custombox label{display:flex;align-items:center;gap:8px}
+.custombox label .req{margin-left:auto}
+.mine-note{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
 .modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .mode{
   font:inherit;text-align:left;display:flex;flex-direction:column;gap:2px;min-height:56px;padding:8px 12px;
@@ -327,19 +335,25 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
       </div>
       <div class="group">
         <div id="events" class="chips" role="group" aria-label="出来事"></div>
-        <div id="custom" hidden>
+        <div id="custom" class="custombox" hidden>
+          <p class="customhead"><span class="customtag">入力中</span>ほかのこと を自分でつくる</p>
           <div class="field">
-            <label for="c-noun">物の名前（12文字まで）</label>
+            <label for="c-noun"><span class="stepno">1</span>物の名前（12文字まで）<span class="req">必須</span></label>
             <input id="c-noun" type="text" autocomplete="off" placeholder="例: ベランダの窓" maxlength="12">
           </div>
           <div class="field">
-            <label>どうなってた？</label>
+            <label><span class="stepno">2</span>どうなってた？</label>
             <div id="c-state" class="chips" role="group" aria-label="状態"></div>
           </div>
           <div class="field">
-            <label>やったこと</label>
+            <label><span class="stepno">3</span>やったこと</label>
             <div id="c-action" class="chips" role="group" aria-label="やったこと"></div>
           </div>
+          <div class="actions" style="margin-top:4px">
+            <button id="btn-savemine" class="btn" type="button" disabled>★ この項目を保存する</button>
+            <button id="btn-delmine" class="btn danger" type="button" hidden>保存した項目を削除</button>
+          </div>
+          <p id="mine-note" class="mine-note" hidden></p>
         </div>
       </div>
       <div class="group">
@@ -469,7 +483,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v10';
+  var APP_VERSION='v11';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -496,8 +510,28 @@ function textFor(m){
     var b=mkChip(e.label,'chip',function(){st.event=e.id;st.seed=0;store.set('event',e.id);refreshSheet();});
     groups.events.push({id:e.id,el:b});$('events').appendChild(b);
   });
-  var customBtn=mkChip('＋ ほかのこと','chip plus',function(){st.event='custom';st.seed=0;store.set('event','custom');refreshSheet();$('c-noun').focus();});
+  // 保存した項目（この端末の中だけに保存）
+  var MAXMINE=12;
+  function loadMine(){try{var a=JSON.parse(store.get('mine','[]'));return Array.isArray(a)?a.filter(function(x){return x&&typeof x.noun==='string'&&x.noun&&x.noun.length<=12&&STATES.some(function(t){return t.k===x.state;})&&ACTIONS.some(function(t){return t.k===x.action;});}):[];}catch(e){return [];}}
+  var mine=loadMine(),mineGroup=[];
+  st.mineId=null;
+  function saveMine(){store.set('mine',JSON.stringify(mine));}
+  function mineLabel(x){return '★ '+x.noun;}
+  function renderMine(){
+    mineGroup.forEach(function(g){if(g.el.parentNode)g.el.parentNode.removeChild(g.el);});
+    mineGroup=[];
+    mine.forEach(function(x){
+      var b=mkChip(mineLabel(x),'chip mine',function(){
+        st.event='custom';st.mineId=x.id;st.cState=x.state;st.cAction=x.action;st.seed=0;
+        $('c-noun').value=x.noun;store.set('event','custom');refreshSheet();
+      });
+      mineGroup.push({id:x.id,el:b});
+      $('events').insertBefore(b,customBtn);
+    });
+  }
+  var customBtn=mkChip('＋ ほかのこと','chip plus',function(){st.event='custom';st.mineId=null;st.seed=0;store.set('event','custom');refreshSheet();$('c-noun').focus();});
   $('events').appendChild(customBtn);
+  renderMine();
   MODES.forEach(function(m){
     var b=el('button','mode');b.type='button';b.setAttribute('aria-pressed','false');
     b.appendChild(el('span','t',m.label));b.appendChild(el('span','s',m.sub));
@@ -505,11 +539,11 @@ function textFor(m){
     groups.modes.push({id:m.id,el:b});$('modes').appendChild(b);
   });
   STATES.forEach(function(s){
-    var b=mkChip(s.label,'chip',function(){st.cState=s.k;st.seed=0;store.set('cstate',s.k);refreshSheet();});
+    var b=mkChip(s.label,'chip',function(){st.cState=s.k;st.mineId=null;st.seed=0;store.set('cstate',s.k);refreshSheet();});
     groups.cstate.push({id:s.k,el:b});$('c-state').appendChild(b);
   });
   ACTIONS.forEach(function(a){
-    var b=mkChip(a.label,'chip',function(){st.cAction=a.k;st.seed=0;store.set('caction',a.k);refreshSheet();});
+    var b=mkChip(a.label,'chip',function(){st.cAction=a.k;st.mineId=null;st.seed=0;store.set('caction',a.k);refreshSheet();});
     groups.caction.push({id:a.k,el:b});$('c-action').appendChild(b);
   });
 
@@ -525,17 +559,47 @@ function textFor(m){
   function refreshSheet(){
     sync(groups.events,st.event);sync(groups.modes,st.mode);
     sync(groups.cstate,st.cState);sync(groups.caction,st.cAction);
-    customBtn.setAttribute('aria-pressed',st.event==='custom'?'true':'false');
+    customBtn.setAttribute('aria-pressed',(st.event==='custom'&&!st.mineId)?'true':'false');
+    mineGroup.forEach(function(g){g.el.setAttribute('aria-pressed',(st.event==='custom'&&st.mineId===g.id)?'true':'false');});
+    // 保存ボタン
+    var nv=$('c-noun').value.trim();
+    var dup=mine.some(function(x){return x.noun===nv&&x.state===st.cState&&x.action===st.cAction;});
+    var okN=nv.length>=1&&nv.length<=12&&!/[\r\n]/.test(nv);
+    var sb2=$('btn-savemine');
+    sb2.disabled=!okN||dup||mine.length>=MAXMINE;
+    sb2.textContent=dup?'★ 保存ずみ':'★ この項目を保存する';
+    $('btn-delmine').hidden=!(st.mineId&&dup);
+    var mn=$('mine-note');
+    if(mine.length>=MAXMINE&&!dup){mn.textContent='保存できるのは'+MAXMINE+'個までです。いらない項目を削除してください。';mn.hidden=false;}
+    else if(st.event==='custom'&&!mine.length){mn.textContent='保存すると、次からは上の一覧から1回で選べます（この端末の中に保存されます）。';mn.hidden=false;}
+    else mn.hidden=true;
     $('custom').hidden=st.event!=='custom';
     $('thx').checked=st.thanks;
     var row=currentRow();
     var pv=$('preview');
     if(row){pv.textContent=textFor(row);pv.className='preview';}
-    else{pv.textContent='物の名前を入れると、ここに文面が出ます';pv.className='preview empty-p';}
+    else{pv.textContent='↑ 「1 物の名前」を入れると、ここに文面が出ます';pv.className='preview empty-p';}
     $('shuffle').disabled=!row;
     $('sendReport').disabled=!row||busy;
   }
-  $('c-noun').addEventListener('input',refreshSheet);
+  $('c-noun').addEventListener('input',function(){
+    var cur=mine.filter(function(x){return x.id===st.mineId;})[0];
+    if(cur&&cur.noun!==$('c-noun').value.trim())st.mineId=null;
+    refreshSheet();
+  });
+  $('btn-savemine').addEventListener('click',function(){
+    var nv=$('c-noun').value.trim();
+    if(!nv||nv.length>12||/[\r\n]/.test(nv)||mine.length>=MAXMINE)return;
+    var id='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+    mine.push({id:id,noun:nv,state:st.cState,action:st.cAction});
+    saveMine();st.mineId=id;renderMine();refreshSheet();
+    $('status').textContent='保存しました';
+  });
+  $('btn-delmine').addEventListener('click',function(){
+    mine=mine.filter(function(x){return x.id!==st.mineId;});
+    saveMine();st.mineId=null;renderMine();refreshSheet();
+    $('status').textContent='削除しました';
+  });
   $('thx').addEventListener('change',function(e){st.thanks=e.target.checked;store.set('thanks',st.thanks?'1':'0');refreshSheet();});
   $('shuffle').addEventListener('click',function(){st.seed+=1;refreshSheet();});
 
