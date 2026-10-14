@@ -543,7 +543,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v25';
+  var APP_VERSION='v26';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -552,7 +552,7 @@ function textFor(m){
 
   /* ---------- 文面づくりシートの状態 ---------- */
   var st={
-    event:store.get('event','cups'),mode:store.get('mode','did'),tone:'kawaii',
+    event:store.get('event','light'),mode:store.get('mode','did'),tone:'kawaii',
     thanks:store.get('thanks','0')==='1',cState:store.get('cstate','left'),cAction:store.get('caction','none'),seed:0
   };
   if(st.event!=='custom'&&!EVENTS.some(function(e){return e.id===st.event;}))st.event='cups';
@@ -683,6 +683,8 @@ function textFor(m){
 
   function scrollBottom(){log.scrollTop=log.scrollHeight;}
   function openSheet(open){
+    // 開くたびに「電気の消し忘れ」から始める
+    if(open&&$('sheet').hidden){st.event='light';st.mineId=null;st.editing=false;st.seed=0;store.set('event','light');}
     $('sheet').hidden=!open;
     $('openSheet').setAttribute('aria-expanded',open?'true':'false');
     $('openSheet').textContent=open?'とじる':'そっと報告';
