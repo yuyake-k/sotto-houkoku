@@ -137,6 +137,9 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .customtag{font-size:11px;font-weight:700;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:1px 8px}
 .custombox label{display:flex;align-items:center;gap:8px}
 .custombox label .req{margin-left:auto}
+.minebar{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;border:1.5px solid var(--line);border-radius:14px;background:var(--bg)}
+.minebar-name{flex:1;min-width:0;font-size:14px;font-weight:700;overflow-wrap:anywhere}
+.minebar .btn{min-height:34px;padding:2px 12px;font-size:13px}
 .mine-note{margin:6px 0 0;font-size:12.5px;color:var(--muted)}
 .modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .mode{
@@ -335,6 +338,11 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
       </div>
       <div class="group">
         <div id="events" class="chips" role="group" aria-label="出来事"></div>
+        <div id="minebar" class="minebar" hidden>
+          <span id="minebar-name" class="minebar-name"></span>
+          <button id="btn-minedit" class="btn" type="button">編集</button>
+          <button id="btn-minedel" class="btn danger" type="button">削除</button>
+        </div>
         <div id="custom" class="custombox" hidden>
           <p class="customhead"><span class="customtag">入力中</span>ほかのこと を自分でつくる</p>
           <div class="field">
@@ -351,7 +359,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           </div>
           <div class="actions" style="margin-top:4px">
             <button id="btn-savemine" class="btn" type="button" disabled>★ この項目を保存する</button>
-            <button id="btn-delmine" class="btn danger" type="button" hidden>保存した項目を削除</button>
+            <button id="btn-minecancel" class="btn" type="button" hidden>やめる</button>
           </div>
           <p id="mine-note" class="mine-note" hidden></p>
         </div>
@@ -483,7 +491,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v11';
+  var APP_VERSION='v13';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -514,22 +522,23 @@ function textFor(m){
   var MAXMINE=12;
   function loadMine(){try{var a=JSON.parse(store.get('mine','[]'));return Array.isArray(a)?a.filter(function(x){return x&&typeof x.noun==='string'&&x.noun&&x.noun.length<=12&&STATES.some(function(t){return t.k===x.state;})&&ACTIONS.some(function(t){return t.k===x.action;});}):[];}catch(e){return [];}}
   var mine=loadMine(),mineGroup=[];
-  st.mineId=null;
+  st.mineId=null;st.editing=false;
   function saveMine(){store.set('mine',JSON.stringify(mine));}
-  function mineLabel(x){return '★ '+x.noun;}
+  function mineText(x){var st0=STATES.filter(function(t){return t.k===x.state;})[0];return x.noun+'が'+(st0?st0.label:'');}
+  function mineLabel(x){return '★ '+mineText(x);}
   function renderMine(){
     mineGroup.forEach(function(g){if(g.el.parentNode)g.el.parentNode.removeChild(g.el);});
     mineGroup=[];
     mine.forEach(function(x){
       var b=mkChip(mineLabel(x),'chip mine',function(){
-        st.event='custom';st.mineId=x.id;st.cState=x.state;st.cAction=x.action;st.seed=0;
+        st.event='custom';st.mineId=x.id;st.editing=false;st.cState=x.state;st.cAction=x.action;st.seed=0;
         $('c-noun').value=x.noun;store.set('event','custom');refreshSheet();
       });
       mineGroup.push({id:x.id,el:b});
       $('events').insertBefore(b,customBtn);
     });
   }
-  var customBtn=mkChip('＋ ほかのこと','chip plus',function(){st.event='custom';st.mineId=null;st.seed=0;store.set('event','custom');refreshSheet();$('c-noun').focus();});
+  var customBtn=mkChip('＋ ほかのこと','chip plus',function(){st.event='custom';st.mineId=null;st.editing=false;st.seed=0;store.set('event','custom');refreshSheet();$('c-noun').focus();});
   $('events').appendChild(customBtn);
   renderMine();
   MODES.forEach(function(m){
@@ -539,11 +548,11 @@ function textFor(m){
     groups.modes.push({id:m.id,el:b});$('modes').appendChild(b);
   });
   STATES.forEach(function(s){
-    var b=mkChip(s.label,'chip',function(){st.cState=s.k;st.mineId=null;st.seed=0;store.set('cstate',s.k);refreshSheet();});
+    var b=mkChip(s.label,'chip',function(){st.cState=s.k;if(!st.editing)st.mineId=null;st.seed=0;store.set('cstate',s.k);refreshSheet();});
     groups.cstate.push({id:s.k,el:b});$('c-state').appendChild(b);
   });
   ACTIONS.forEach(function(a){
-    var b=mkChip(a.label,'chip',function(){st.cAction=a.k;st.mineId=null;st.seed=0;store.set('caction',a.k);refreshSheet();});
+    var b=mkChip(a.label,'chip',function(){st.cAction=a.k;if(!st.editing)st.mineId=null;st.seed=0;store.set('caction',a.k);refreshSheet();});
     groups.caction.push({id:a.k,el:b});$('c-action').appendChild(b);
   });
 
@@ -565,15 +574,20 @@ function textFor(m){
     var nv=$('c-noun').value.trim();
     var dup=mine.some(function(x){return x.noun===nv&&x.state===st.cState&&x.action===st.cAction;});
     var okN=nv.length>=1&&nv.length<=12&&!/[\r\n]/.test(nv);
-    var sb2=$('btn-savemine');
-    sb2.disabled=!okN||dup||mine.length>=MAXMINE;
-    sb2.textContent=dup?'★ 保存ずみ':'★ この項目を保存する';
-    $('btn-delmine').hidden=!(st.mineId&&dup);
+    var sb2=$('btn-savemine'),editingSaved=!!(st.mineId&&st.editing);
+    sb2.disabled=!okN||dup||(!editingSaved&&mine.length>=MAXMINE);
+    sb2.textContent=editingSaved?'★ 変更を保存する':(dup?'★ 保存ずみ':'★ この項目を保存する');
+    $('btn-minecancel').hidden=!editingSaved;
     var mn=$('mine-note');
-    if(mine.length>=MAXMINE&&!dup){mn.textContent='保存できるのは'+MAXMINE+'個までです。いらない項目を削除してください。';mn.hidden=false;}
-    else if(st.event==='custom'&&!mine.length){mn.textContent='保存すると、次からは上の一覧から1回で選べます（この端末の中に保存されます）。';mn.hidden=false;}
+    if(!editingSaved&&mine.length>=MAXMINE&&!dup){mn.textContent='保存できるのは'+MAXMINE+'個までです。いらない項目を削除してください。';mn.hidden=false;}
+    else if(isC&&!mine.length){mn.textContent='保存すると、次からは上の一覧から1回で選べます（この端末の中に保存されます）。';mn.hidden=false;}
     else mn.hidden=true;
-    $('custom').hidden=st.event!=='custom';
+    var isC=st.event==='custom';
+    var cur=mine.filter(function(x){return x.id===st.mineId;})[0];
+    if(!cur){st.mineId=null;st.editing=false;}
+    $('custom').hidden=!(isC&&(!st.mineId||st.editing));
+    $('minebar').hidden=!(isC&&st.mineId&&!st.editing);
+    if(cur)$('minebar-name').textContent=mineLabel(cur)+'（保存した項目）';
     $('thx').checked=st.thanks;
     var row=currentRow();
     var pv=$('preview');
@@ -583,21 +597,33 @@ function textFor(m){
     $('sendReport').disabled=!row||busy;
   }
   $('c-noun').addEventListener('input',function(){
-    var cur=mine.filter(function(x){return x.id===st.mineId;})[0];
-    if(cur&&cur.noun!==$('c-noun').value.trim())st.mineId=null;
+    if(!st.editing)st.mineId=null;
     refreshSheet();
   });
   $('btn-savemine').addEventListener('click',function(){
     var nv=$('c-noun').value.trim();
-    if(!nv||nv.length>12||/[\r\n]/.test(nv)||mine.length>=MAXMINE)return;
+    if(!nv||nv.length>12||/[\r\n]/.test(nv))return;
+    if(st.mineId&&st.editing){
+      var it=mine.filter(function(x){return x.id===st.mineId;})[0];
+      if(it){it.noun=nv;it.state=st.cState;it.action=st.cAction;}
+      st.editing=false;saveMine();renderMine();refreshSheet();
+      $('status').textContent='変更を保存しました';return;
+    }
+    if(mine.length>=MAXMINE)return;
     var id='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
     mine.push({id:id,noun:nv,state:st.cState,action:st.cAction});
-    saveMine();st.mineId=id;renderMine();refreshSheet();
+    saveMine();st.mineId=id;st.editing=false;renderMine();refreshSheet();
     $('status').textContent='保存しました';
   });
-  $('btn-delmine').addEventListener('click',function(){
+  $('btn-minedit').addEventListener('click',function(){st.editing=true;refreshSheet();$('c-noun').focus();});
+  $('btn-minecancel').addEventListener('click',function(){
+    var it=mine.filter(function(x){return x.id===st.mineId;})[0];
+    if(it){st.cState=it.state;st.cAction=it.action;$('c-noun').value=it.noun;}
+    st.editing=false;refreshSheet();
+  });
+  $('btn-minedel').addEventListener('click',function(){
     mine=mine.filter(function(x){return x.id!==st.mineId;});
-    saveMine();st.mineId=null;renderMine();refreshSheet();
+    saveMine();st.mineId=null;st.editing=false;renderMine();refreshSheet();
     $('status').textContent='削除しました';
   });
   $('thx').addEventListener('change',function(e){st.thanks=e.target.checked;store.set('thanks',st.thanks?'1':'0');refreshSheet();});
