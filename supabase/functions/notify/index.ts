@@ -27,11 +27,15 @@ Deno.serve(async (req) => {
 
   const mem = await admin.from("room_members").select("user_id")
     .eq("room_id", p.room_id).neq("user_id", p.sender_id);
+  if (mem.error) return new Response(`error members: ${mem.error.message}`.slice(0, 200));
   const ids = (mem.data ?? []).map((m: { user_id: string }) => m.user_id);
   if (!ids.length) return new Response("no-recipient");
 
   const subs = await admin.from("push_subscriptions")
     .select("endpoint,p256dh,auth").in("user_id", ids);
+  if (subs.error) return new Response(`error subs: ${subs.error.message}`.slice(0, 200));
+  const list = subs.data ?? [];
+  if (!list.length) return new Response(`no-subscription members=${ids.length}`);
 
   const body = JSON.stringify({
     title: "そっと報告",
@@ -40,7 +44,8 @@ Deno.serve(async (req) => {
   });
 
   let sent = 0;
-  await Promise.all((subs.data ?? []).map(async (s: { endpoint: string; p256dh: string; auth: string }) => {
+  const errs: string[] = [];
+  await Promise.all(list.map(async (s: { endpoint: string; p256dh: string; auth: string }) => {
     try {
       await webpush.sendNotification(
         { endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } },
@@ -50,10 +55,11 @@ Deno.serve(async (req) => {
       sent++;
     } catch (e) {
       const code = (e as { statusCode?: number }).statusCode;
+      errs.push(`${code ?? "?"}:${String((e as Error).message ?? e).slice(0, 60)}`);
       if (code === 404 || code === 410) {
         await admin.from("push_subscriptions").delete().eq("endpoint", s.endpoint);
       }
     }
   }));
-  return new Response(`sent ${sent}`);
+  return new Response(`sent=${sent} subs=${list.length}${errs.length ? " err=" + errs.join("|") : ""}`.slice(0, 300));
 });
