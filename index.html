@@ -387,6 +387,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','room'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
+  var APP_VERSION='v3';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var selected=null,firstPaint=true,forceBottom=false,busy=false;
@@ -489,7 +490,7 @@ function textFor(m){
     return 'うまくいきませんでした。通信を確認して、もう一度お試しください。';
   }
   function updateSub(){
-    $('room-sub').textContent=memberCount>=2?'二人の部屋':'相手を待っています';
+    $('room-sub').textContent=(memberCount>=2?'二人の部屋':'相手を待っています')+' ・'+APP_VERSION;
   }
   function fmtCode(c){return c?c.slice(0,4)+'-'+c.slice(4):'';}
 
