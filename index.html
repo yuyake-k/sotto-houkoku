@@ -164,6 +164,19 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .setsec h3{margin:0;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em}
 .setsec p{margin:0;font-size:13.5px;color:var(--muted)}
 .setsec .field{margin-top:0}
+.step h2{display:flex;align-items:center;gap:8px;font-size:15px}
+.stepno{flex:none;width:22px;height:22px;border-radius:50%;background:var(--chip-on);color:var(--chip-on-ink);font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+.req{margin-left:auto;font-size:11px;font-weight:700;color:var(--accent-ink);background:var(--accent);border-radius:999px;padding:1px 8px}
+#card-name{border-color:var(--accent)}
+#card-name.done{border-color:var(--line)}
+#card-name.done .req{display:none}
+.stepdone{color:var(--ok)!important;font-weight:700}
+.stephint{margin:-6px 0 -6px;text-align:center;font-size:13px;font-weight:700;color:var(--accent)}
+.step.locked{opacity:.45}
+.step.locked input,.step.locked button{pointer-events:none}
+@keyframes nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.nudge{animation:nudge .3s 2}
+@media (prefers-reduced-motion: reduce){.nudge{animation:none;outline:3px solid var(--focus)}}
 .rl{display:flex;flex-direction:column;gap:8px;overflow-y:auto;min-height:0;padding-bottom:12px}
 .ritem{font:inherit;text-align:left;display:flex;flex-direction:column;gap:2px;width:100%;padding:12px 14px;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:16px;cursor:pointer}
 .ritem .t{font-size:16px;font-weight:700;overflow-wrap:anywhere}
@@ -200,18 +213,20 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <p class="lead">言いにくいことを、定型のやさしい文面で二人だけに届けます。</p>
       </div>
       <p id="w-note" class="note" role="status" hidden></p>
-      <div class="card">
-        <h2>まず、あなたの呼び名</h2>
+      <div id="card-name" class="card step">
+        <h2><span class="stepno">1</span>あなたの呼び名を入れてください<span class="req">必須</span></h2>
         <label class="lbl" for="in-name">相手の画面に、この名前で表示されます（12文字まで）</label>
         <input id="in-name" type="text" autocomplete="off" maxlength="12" placeholder="例: ゆや">
+        <p id="name-ok" class="stepdone" hidden>✓ 次へ進めます。下から選んでください。</p>
       </div>
-      <div class="card">
-        <h2>はじめて使う</h2>
+      <p id="step-hint" class="stephint">↑ 先に呼び名を入れると、下の2つが押せるようになります</p>
+      <div id="card-create" class="card step locked">
+        <h2><span class="stepno">2</span>はじめて使う</h2>
         <p>新しい部屋をつくると、相手に伝える合言葉が出ます。</p>
         <button id="btn-create" class="btn primary block" type="button" disabled>部屋をつくる</button>
       </div>
-      <div class="card">
-        <h2>合言葉をもらった</h2>
+      <div id="card-join" class="card step locked">
+        <h2><span class="stepno">2</span>合言葉をもらった</h2>
         <label class="lbl" for="in-code">合言葉（8文字）</label>
         <input id="in-code" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="例: ABCD-2345">
         <button id="btn-join" class="btn block" type="button" disabled>部屋に入る</button>
@@ -475,7 +490,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v8';
+  var APP_VERSION='v9';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -817,10 +832,21 @@ function textFor(m){
   var inName=$('in-name');
   function nameOk(){var v=inName.value.trim();return v.length>=1&&v.length<=12&&!/[\r\n]/.test(v);}
   function syncWelcome(){
-    $('btn-create').disabled=!nameOk();
+    var ok=nameOk();
+    $('card-create').classList.toggle('locked',!ok);$('card-join').classList.toggle('locked',!ok);
+    $('card-name').classList.toggle('done',ok);$('name-ok').hidden=!ok;$('step-hint').hidden=ok;
+    $('btn-create').disabled=!ok;
     $('btn-join').disabled=!(nameOk()&&normCode(inCode.value).length===8);
   }
   try{inName.value=store.get('nick','');}catch(e){}
+  function nudgeName(){
+    var c=$('card-name');inName.focus();c.classList.remove('nudge');void c.offsetWidth;c.classList.add('nudge');
+    wnote('先に、あなたの呼び名を入れてください。');
+  }
+  ['card-create','card-join'].forEach(function(id){
+    $(id).addEventListener('click',function(){if(!nameOk())nudgeName();});
+  });
+  inName.addEventListener('input',function(){if(nameOk())wnote('');});
   inName.addEventListener('input',function(){store.set('nick',inName.value.trim());syncWelcome();});
   async function saveNameFor(rid){
     // 呼び名の保存に失敗しても、入室は止めない（あとで設定から直せる）
