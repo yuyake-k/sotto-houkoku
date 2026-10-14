@@ -1,4 +1,4 @@
-const CACHE = 'sotto-v14';
+const CACHE = 'sotto-v15';
 const ASSETS = [
   './',
   './index.html',
@@ -43,4 +43,23 @@ self.addEventListener('fetch', (e) => {
       return hit || net;
     })
   );
+});
+
+// 通知: 中身は載せず、「届いています」とだけ知らせる
+self.addEventListener('push', (e) => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (err) {}
+  e.waitUntil(self.registration.showNotification(d.title || 'そっと報告', {
+    body: d.body || 'そっと報告が届いています',
+    tag: d.tag || 'sotto',
+    icon: './icons/icon-192.png',
+    badge: './icons/icon-192.png'
+  }));
+});
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+    for (const c of list) { if ('focus' in c) return c.focus(); }
+    return self.clients.openWindow('./');
+  }));
 });

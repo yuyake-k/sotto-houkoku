@@ -309,6 +309,11 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           </div>
         </section>
         <section class="setsec">
+          <h3>通知</h3>
+          <p id="push-msg">相手からメッセージが届いたとき、スマホに知らせます。通知には中身は出ません。</p>
+          <button id="btn-push" class="btn" type="button" hidden>通知をオンにする</button>
+        </section>
+        <section class="setsec">
           <h3>アプリの更新</h3>
           <p>新しい版にならないときに押してください。保存した部屋や項目は消えません。</p>
           <button id="btn-refresh" class="btn" type="button">最新の版に更新する</button>
@@ -496,7 +501,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v14';
+  var APP_VERSION='v15';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -763,6 +768,7 @@ function textFor(m){
     paint();
   }
   function setPanel(open){
+    if(open)paintPush();
     $('codepanel').hidden=!open;
     $('btn-code').setAttribute('aria-expanded',open?'true':'false');
     if(!open)$('btn-code').focus();
@@ -1017,6 +1023,7 @@ function textFor(m){
         session=a.data.session;
       }
       me=session.user.id;
+      ensurePush();
       await loadRooms();
       // 身元が変わっていたら、覚えている合言葉で静かに入り直す
       if(!myRooms.length){
@@ -1061,6 +1068,68 @@ function textFor(m){
       setPanel(false);
     }finally{b.disabled=false;}
   });
+  /* ---------- 通知 ---------- */
+  function b64ToU8(b){var p='='.repeat((4-b.length%4)%4),r=(b+p).replace(/-/g,'+').replace(/_/g,'/'),raw=atob(r),o=new Uint8Array(raw.length);for(var i=0;i<raw.length;i++)o[i]=raw.charCodeAt(i);return o;}
+  function pushSupported(){return !!(cfg.vapidPublicKey&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window);}
+  function keyOf(sub,n){var k=sub.getKey(n);if(!k)return '';var a=new Uint8Array(k),s2='';for(var i=0;i<a.length;i++)s2+=String.fromCharCode(a[i]);return btoa(s2);}
+  async function pushRegistration(){return await navigator.serviceWorker.ready;}
+  async function savePush(sub){
+    var j=sub.toJSON?sub.toJSON():null;
+    var p256=(j&&j.keys&&j.keys.p256dh)||keyOf(sub,'p256dh'),au=(j&&j.keys&&j.keys.auth)||keyOf(sub,'auth');
+    var r=await sb.rpc('save_push',{p_endpoint:sub.endpoint,p_p256dh:p256,p_auth:au});
+    if(r.error)throw r.error;
+  }
+  async function paintPush(){
+    var btn=$('btn-push'),msg=$('push-msg');
+    if(!pushSupported()){
+      btn.hidden=true;
+      msg.textContent=cfg.vapidPublicKey?'この端末では通知が使えません。iPhoneでは、ホーム画面に追加したアプリから開くと使えます。':'通知の準備がまだ終わっていません。';
+      return;
+    }
+    if(Notification.permission==='denied'){
+      btn.hidden=true;
+      msg.textContent='通知がオフになっています。iPhoneの「設定」アプリ → 通知 → そっと報告 から、許可してください。';
+      return;
+    }
+    var sub=null;
+    try{sub=await (await pushRegistration()).pushManager.getSubscription();}catch(e){}
+    btn.hidden=false;btn.disabled=false;
+    if(sub&&Notification.permission==='granted'){
+      msg.textContent='通知はオンです。相手から届いたとき、スマホに知らせます（中身は出ません）。';
+      btn.textContent='通知をオフにする';btn.dataset.on='1';
+    }else{
+      msg.textContent='相手からメッセージが届いたとき、スマホに知らせます。通知には中身は出ません。';
+      btn.textContent='通知をオンにする';btn.dataset.on='';
+    }
+  }
+  async function ensurePush(){
+    // すでにオンなら、この端末の宛先を保存し直す（身元が変わっていても届くように）
+    try{
+      if(!pushSupported()||Notification.permission!=='granted')return;
+      var sub=await (await pushRegistration()).pushManager.getSubscription();
+      if(sub)await savePush(sub);
+    }catch(e){}
+  }
+  $('btn-push').addEventListener('click',async function(){
+    var b=this;b.disabled=true;
+    try{
+      var reg=await pushRegistration();
+      if(b.dataset.on==='1'){
+        var cur=await reg.pushManager.getSubscription();
+        if(cur){try{await sb.rpc('delete_push',{p_endpoint:cur.endpoint});}catch(e){}await cur.unsubscribe();}
+      }else{
+        var perm=await Notification.requestPermission();
+        if(perm!=='granted'){await paintPush();return;}
+        var sub=await reg.pushManager.getSubscription()||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64ToU8(cfg.vapidPublicKey)});
+        await savePush(sub);
+      }
+    }catch(e){
+      $('push-msg').textContent='通知の設定ができませんでした。通信を確認して、もう一度お試しください。';
+      b.disabled=false;return;
+    }
+    await paintPush();
+  });
+
   $('btn-refresh').addEventListener('click',async function(){
     this.disabled=true;this.textContent='更新しています…';
     try{
