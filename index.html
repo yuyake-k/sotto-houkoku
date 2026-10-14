@@ -347,8 +347,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <div id="modes" class="modes" role="group" aria-label="伝え方"></div>
       </div>
       <div class="group">
-        <h2>トーンは？</h2>
-        <div id="tones" class="chips" role="group" aria-label="トーン"></div>
+        <h2>ひとこと</h2>
         <label class="switch"><input id="thx" type="checkbox"> ありがとうをひとこと添える</label>
       </div>
       <div class="group">
@@ -374,14 +373,14 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 <script>
 /*LOGIC*/
 const EVENTS=[
-  {id:'light',label:'電気の消し忘れ',now:'電気がつけっぱなしだよ',did:'電気消しておいた',ask:'電気を消してもらえると嬉しい'},
-  {id:'cups',label:'コップが溜まってる',now:'コップが溜まってるよ',did:'コップ洗っておいた',ask:'コップを下に持っていってもらえると嬉しい'},
-  {id:'dishes',label:'洗い物',now:'洗い物が残ってるよ',did:'洗い物しておいた',ask:'洗い物をお願いできると嬉しい'},
-  {id:'trash',label:'ゴミ出し',now:'ゴミがそのままだよ',did:'ゴミ出しておいた',ask:'ゴミを出してもらえると助かる'},
-  {id:'laundry',label:'洗濯物',now:'洗濯物が干しっぱなしだよ',did:'洗濯物取り込んでおいた',ask:'洗濯物を取り込んでもらえると助かる'},
-  {id:'lock',label:'鍵の閉め忘れ',now:'鍵が開いたままだよ',did:'鍵閉めておいた',ask:'鍵を閉めてもらえると安心する'},
-  {id:'clothes',label:'服の出しっぱなし',now:'服が出しっぱなしだよ',did:'服片付けておいた',ask:'服をかごに入れてもらえると嬉しい'},
-  {id:'fridge',label:'冷蔵庫が開いてた',now:'冷蔵庫が開いたままだよ',did:'冷蔵庫閉めておいた',ask:'冷蔵庫を閉めてもらえると助かる'}
+  {id:'light',label:'電気の消し忘れ',now:'電気がつけっぱなしだよ',did:'電気消しておいた',ask:'電気を消してもらえると嬉しい',em:'💡',emDid:'💡'},
+  {id:'cups',label:'コップが溜まってる',now:'コップが溜まってるよ',did:'コップ洗っておいた',ask:'コップを下に持っていってもらえると嬉しい',em:'🥛',emDid:'🫧'},
+  {id:'dishes',label:'洗い物',now:'洗い物が残ってるよ',did:'洗い物しておいた',ask:'洗い物をお願いできると嬉しい',em:'🍽️',emDid:'🫧'},
+  {id:'trash',label:'ゴミ出し',now:'ゴミがそのままだよ',did:'ゴミ出しておいた',ask:'ゴミを出してもらえると助かる',em:'🗑️',emDid:'🗑️'},
+  {id:'laundry',label:'洗濯物',now:'洗濯物が干しっぱなしだよ',did:'洗濯物取り込んでおいた',ask:'洗濯物を取り込んでもらえると助かる',em:'👕',emDid:'👕'},
+  {id:'lock',label:'鍵の閉め忘れ',now:'鍵が開いたままだよ',did:'鍵閉めておいた',ask:'鍵を閉めてもらえると安心する',em:'🔑',emDid:'🔑'},
+  {id:'clothes',label:'服の出しっぱなし',now:'服が出しっぱなしだよ',did:'服片付けておいた',ask:'服をかごに入れてもらえると嬉しい',em:'👚',emDid:'👚'},
+  {id:'fridge',label:'冷蔵庫が開いてた',now:'冷蔵庫が開いたままだよ',did:'冷蔵庫閉めておいた',ask:'冷蔵庫を閉めてもらえると助かる',em:'❄️',emDid:'❄️'}
 ];
 const STATES=[
   {k:'on',label:'つけっぱなし',now:'がつけっぱなしだよ',ask:'消してもらえると嬉しい'},
@@ -390,56 +389,36 @@ const STATES=[
   {k:'open',label:'開いたまま',now:'が開いたままだよ',ask:'閉めてもらえると嬉しい'},
   {k:'left',label:'残ってる',now:'が残ってるよ',ask:'見てもらえると嬉しい'}
 ];
+// 絵文字は、その動作や気持ちに合うものだけを付ける
 const ACTIONS=[
-  {k:'none',label:'特になし',did:null},
-  {k:'off',label:'消した',did:'消しておいた'},
-  {k:'tidy',label:'片付けた',did:'片付けておいた'},
-  {k:'wash',label:'洗った',did:'洗っておいた'},
-  {k:'close',label:'閉めた',did:'閉めておいた'},
-  {k:'takeout',label:'出した',did:'出しておいた'},
-  {k:'fold',label:'取り込んだ',did:'取り込んでおいた'}
+  {k:'none',label:'特になし',did:null,em:''},
+  {k:'off',label:'消した',did:'消しておいた',em:'💡'},
+  {k:'tidy',label:'片付けた',did:'片付けておいた',em:'✨'},
+  {k:'wash',label:'洗った',did:'洗っておいた',em:'🫧'},
+  {k:'close',label:'閉めた',did:'閉めておいた',em:'🚪'},
+  {k:'takeout',label:'出した',did:'出しておいた',em:'🗑️'},
+  {k:'fold',label:'取り込んだ',did:'取り込んでおいた',em:'👕'}
 ];
-const TONES=[{id:'yuru',label:'ゆるい'},{id:'kawaii',label:'かわいい'},{id:'sappari',label:'さっぱり'}];
 const MODES=[
   {id:'did',label:'やっておいたよ',sub:'やったことだけ'},
   {id:'inf',label:'知らせるだけ',sub:'事実だけ'},
   {id:'ask',label:'お願いね',sub:'急がないで'}
 ];
 const REPLIES=[
-  {k:'thanks',text:'ありがとう🫧'},
+  {k:'thanks',text:'ありがとう☺️'},
   {k:'ok',text:'了解！'},
   {k:'later',text:'あとでやるね'},
   {k:'sorry',text:'気づかなかった、ありがとう'},
   {k:'seen',text:'見たよ'}
 ];
-const E={
-  did:{yuru:'よ〜',kawaii:'よ🫧',sappari:'よ。'},
-  inf:{yuru:'〜',kawaii:'🫧',sappari:'。'},
-  ask:{yuru:'〜',kawaii:'☺️',sappari:'。'}
-};
-const S={
-  did:{yuru:['ついでにやっただけだから気にしないでね〜','気にしないでね〜'],
-       kawaii:['ついでにやっちゃった☺️','気にしないでね🫧'],
-       sappari:['ついでにやっただけ。','気にしないで。']},
-  inf:{yuru:['','急ぎじゃないよ〜'],
-       kawaii:['','急ぎじゃないからね☺️'],
-       sappari:['','急ぎじゃない。']}
-};
-const LEAD={
-  yuru:['ちょっとだけお願い〜 ','もしよければ、'],
-  kawaii:['お願いがあるの🥺 ','もしよかったら、'],
-  sappari:['お願い。','ひとつお願い。']
-};
-const TIMING={
-  yuru:['手が空いたときでいいよ〜','急がないから、ゆっくりでね〜'],
-  kawaii:['手が空いたときでいいからね☺️','急がないよ🫧'],
-  sappari:['手が空いたときでいい。','急がないので、手が空いたときで。']
-};
-const THX={
-  yuru:['いつもありがとね〜','助かってるよ〜'],
-  kawaii:['いつもありがとう💕','ありがとうね🫧'],
-  sappari:['いつもありがとう。','助かってます。']
-};
+// 末尾の言い回し。ひとつずつ、文と絵文字が合うようにしてある（「別の言い回し」で入れ替わる）
+const DID_END=['よ','ね','んだ','よ〜'];
+const CLOSE_DID=['ついでにやっちゃった☺️','気にしないでね🌿','たまたま目に入っただけだよ👀','そのままで大丈夫だよ🌿','やりたくてやっただけだよ✨'];
+const CLOSE_INF=['','急ぎじゃないからね🌿','ついでの共有だよ☺️','気づいたから伝えておくね👀','そのままで大丈夫だよ🌿'];
+const LEAD=['お願いがあるの、','もしよかったら、','ちょっとだけお願い、','できたらでいいんだけど、','よかったら、'];
+const TIMING=['手が空いたときでいいからね☺️','急がないよ🌿','ゆっくりで大丈夫だよ🐢','気が向いたときで十分だよ🌿','あとでも全然いいよ⏳'];
+const THX=['いつもありがとう💕','助かってるよ🙏','ありがとうね🌸','いつも感謝してるよ💕','ありがとうね☺️'];
+function askEmoji(t){return /嬉しい$/.test(t)?'☺️':/助かる$/.test(t)?'🙏':/安心する$/.test(t)?'😌':'';}
 function pick(a,seed){return a[seed%a.length];}
 function eventFrom(m){
   if(m.event_key==='custom'){
@@ -447,26 +426,26 @@ function eventFrom(m){
     const ac=ACTIONS.find(function(x){return x.k===m.action_key;});
     const noun=String(m.noun||'').trim();
     if(!st||!noun)return null;
-    return {now:noun+st.now,did:(ac&&ac.did)?noun+'、'+ac.did:null,ask:noun+'、'+st.ask};
+    return {now:noun+st.now,did:(ac&&ac.did)?noun+'、'+ac.did:null,ask:noun+'、'+st.ask,em:'',emDid:(ac&&ac.em)||''};
   }
   return EVENTS.find(function(e){return e.id===m.event_key;})||null;
 }
 function makeMessage(o){
-  const ev=o.ev,tone=o.tone,seed=o.seed||0,lines=[];
+  const ev=o.ev,seed=o.seed||0,lines=[];
   let mode=o.mode;
   if(mode==='did'&&!ev.did)mode='inf';
   if(mode==='inf'){
-    lines.push(ev.now+E.inf[tone]);
-    const s=pick(S.inf[tone],seed);
+    lines.push(ev.now+(ev.em||''));
+    const s=pick(CLOSE_INF,seed+1);
     if(s)lines.push(s);
   }else if(mode==='did'){
-    lines.push(ev.did+E.did[tone]);
-    lines.push(pick(S.did[tone],seed));
+    lines.push(ev.did+pick(DID_END,seed)+(ev.emDid||''));
+    lines.push(pick(CLOSE_DID,seed+2));
   }else{
-    lines.push(pick(LEAD[tone],seed)+ev.ask+E.ask[tone]);
-    lines.push(pick(TIMING[tone],seed));
+    lines.push(pick(LEAD,seed)+ev.ask+askEmoji(ev.ask));
+    lines.push(pick(TIMING,seed+3));
   }
-  if(o.thanks)lines.push(pick(THX[tone],seed));
+  if(o.thanks)lines.push(pick(THX,seed+1));
   return lines.join('\n');
 }
 function textFor(m){
@@ -476,7 +455,7 @@ function textFor(m){
   }
   const ev=eventFrom(m);
   if(!ev)return '';
-  return makeMessage({ev:ev,mode:m.mode,tone:m.tone,seed:m.variant||0,thanks:!!m.thanks});
+  return makeMessage({ev:ev,mode:m.mode,seed:m.variant||0,thanks:!!m.thanks});
 }
 /*END*/
 
@@ -490,7 +469,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v9';
+  var APP_VERSION='v10';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -499,16 +478,15 @@ function textFor(m){
 
   /* ---------- 文面づくりシートの状態 ---------- */
   var st={
-    event:store.get('event','cups'),mode:store.get('mode','did'),tone:store.get('tone','kawaii'),
+    event:store.get('event','cups'),mode:store.get('mode','did'),tone:'kawaii',
     thanks:store.get('thanks','0')==='1',cState:store.get('cstate','left'),cAction:store.get('caction','none'),seed:0
   };
   if(st.event!=='custom'&&!EVENTS.some(function(e){return e.id===st.event;}))st.event='cups';
   if(!MODES.some(function(m){return m.id===st.mode;}))st.mode='did';
-  if(!TONES.some(function(t){return t.id===st.tone;}))st.tone='kawaii';
   if(!STATES.some(function(s){return s.k===st.cState;}))st.cState='left';
   if(!ACTIONS.some(function(a){return a.k===st.cAction;}))st.cAction='none';
 
-  var groups={events:[],modes:[],tones:[],cstate:[],caction:[]};
+  var groups={events:[],modes:[],cstate:[],caction:[]};
   function mkChip(label,cls,onClick){
     var b=el('button',cls,label);b.type='button';b.setAttribute('aria-pressed','false');
     b.addEventListener('click',onClick);return b;
@@ -525,10 +503,6 @@ function textFor(m){
     b.appendChild(el('span','t',m.label));b.appendChild(el('span','s',m.sub));
     b.addEventListener('click',function(){st.mode=m.id;st.seed=0;store.set('mode',m.id);refreshSheet();});
     groups.modes.push({id:m.id,el:b});$('modes').appendChild(b);
-  });
-  TONES.forEach(function(t){
-    var b=mkChip(t.label,'chip',function(){st.tone=t.id;st.seed=0;store.set('tone',t.id);refreshSheet();});
-    groups.tones.push({id:t.id,el:b});$('tones').appendChild(b);
   });
   STATES.forEach(function(s){
     var b=mkChip(s.label,'chip',function(){st.cState=s.k;st.seed=0;store.set('cstate',s.k);refreshSheet();});
@@ -549,7 +523,7 @@ function textFor(m){
     return base;
   }
   function refreshSheet(){
-    sync(groups.events,st.event);sync(groups.modes,st.mode);sync(groups.tones,st.tone);
+    sync(groups.events,st.event);sync(groups.modes,st.mode);
     sync(groups.cstate,st.cState);sync(groups.caction,st.cAction);
     customBtn.setAttribute('aria-pressed',st.event==='custom'?'true':'false');
     $('custom').hidden=st.event!=='custom';
