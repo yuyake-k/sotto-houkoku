@@ -501,7 +501,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v15';
+  var APP_VERSION='v16';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -643,6 +643,7 @@ function textFor(m){
   function openSheet(open){
     $('sheet').hidden=!open;
     $('openSheet').setAttribute('aria-expanded',open?'true':'false');
+    $('openSheet').textContent=open?'とじる':'そっと報告';
     if(open){refreshSheet();scrollBottom();}
   }
   $('openSheet').addEventListener('click',function(){openSheet($('sheet').hidden);});
