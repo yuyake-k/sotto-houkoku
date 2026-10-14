@@ -521,7 +521,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v18';
+  var APP_VERSION='v19';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -568,7 +568,7 @@ function textFor(m){
       $('events').insertBefore(b,customBtn);
     });
   }
-  var customBtn=mkChip('＋ ほかのこと','chip plus',function(){st.event='custom';st.mineId=null;st.editing=false;st.seed=0;store.set('event','custom');refreshSheet();$('c-noun').focus();});
+  var customBtn=mkChip('＋ ほかのこと','chip plus',function(){st.event='custom';st.mineId=null;st.editing=false;st.seed=0;store.set('event','custom');refreshSheet();});
   $('events').appendChild(customBtn);
   renderMine();
   MODES.forEach(function(m){
