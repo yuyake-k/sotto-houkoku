@@ -309,6 +309,11 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           </div>
         </section>
         <section class="setsec">
+          <h3>アプリの更新</h3>
+          <p>新しい版にならないときに押してください。保存した部屋や項目は消えません。</p>
+          <button id="btn-refresh" class="btn" type="button">最新の版に更新する</button>
+        </section>
+        <section class="setsec">
           <h3>この部屋から退室する</h3>
           <p>退室すると、この部屋は自分の画面から消えます。全員が退室して7日たつと、部屋とやりとりは完全に消えます。7日のあいだは、合言葉があれば戻れます。</p>
           <button id="btn-leave" class="btn danger" type="button">退室する</button>
@@ -491,7 +496,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v13';
+  var APP_VERSION='v14';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[];
@@ -1056,6 +1061,14 @@ function textFor(m){
       setPanel(false);
     }finally{b.disabled=false;}
   });
+  $('btn-refresh').addEventListener('click',async function(){
+    this.disabled=true;this.textContent='更新しています…';
+    try{
+      if(window.caches){var ks=await caches.keys();await Promise.all(ks.map(function(k){return caches.delete(k);}));}
+      if(navigator.serviceWorker){var rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(function(r){return r.unregister();}));}
+    }catch(e){}
+    location.reload();
+  });
   $('btn-retry').addEventListener('click',function(){boot();});
   window.addEventListener('online',function(){if(!$('screen-retry').hidden)boot();});
   document.addEventListener('visibilitychange',function(){if(!document.hidden&&!$('screen-retry').hidden)boot();});
@@ -1072,7 +1085,12 @@ if ('serviceWorker' in navigator) {
     if (hadController && !reloaded) { reloaded = true; location.reload(); }
   });
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').catch(function () {});
+    navigator.serviceWorker.register('sw.js').then(function (reg) {
+      // ホーム画面のアプリは開きっぱなしになりやすいので、画面に戻ったときにも新しい版を探す
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) { try { reg.update(); } catch (e) {} }
+      });
+    }).catch(function () {});
   });
 }
 </script>
