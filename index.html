@@ -85,7 +85,7 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .nm{font-size:12px;color:var(--muted);margin:0 4px 2px}
 .nickrow{display:flex;gap:8px}
 .phrases{margin:10px 0 4px;display:flex;flex-direction:column;gap:10px}
-.phrases .pl{font-size:13px;font-weight:700;margin:0 0 4px}
+.phrases .pl{font-size:13px;font-weight:700;margin:0 0 4px;position:sticky;top:var(--pvh,0px);z-index:1;background:var(--surface);padding:6px 0 4px;box-shadow:0 6px 6px -6px rgba(0,0,0,.2)}
 .phrases .chips{gap:6px}
 .nickrow input{flex:1}
 .quote{
@@ -558,7 +558,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v31';
+  var APP_VERSION='v32';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -695,6 +695,12 @@ function textFor(m){
     $('status').textContent='削除しました';
   });
   $('thx').addEventListener('change',function(e){st.thanks=e.target.checked;store.set('thanks',st.thanks?'1':'0');refreshSheet();});
+  function setPvh(){
+    var h=$('pvhead');
+    if(!st.phOpen){$('sheet').style.removeProperty('--pvh');return;}
+    $('sheet').style.setProperty('--pvh',Math.max(0,h.offsetHeight-14)+'px');
+  }
+  window.addEventListener('resize',setPvh);
   function renderPhrases(){
     var box=$('phrases');
     var ev0=st.event==='custom'?null:EVENTS.filter(function(e){return e.id===st.event;})[0];
@@ -717,6 +723,7 @@ function textFor(m){
     box.hidden=!st.phOpen;
     $('shuffle').textContent=st.phOpen?'言い回しをとじる':'言い回しを変える';
     $('pvhead').classList.toggle('stick',st.phOpen);
+    setPvh();
   }
   $('shuffle').addEventListener('click',function(){st.phOpen=!st.phOpen;refreshSheet();});
 
