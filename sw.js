@@ -1,4 +1,4 @@
-const CACHE = 'sotto-v29';
+const CACHE = 'sotto-v30';
 const ASSETS = [
   './',
   './index.html',
