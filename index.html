@@ -84,6 +84,12 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .row.reply .bubble{font-size:14.5px;padding:6px 14px}
 .nm{font-size:12px;color:var(--muted);margin:0 4px 2px}
 .nickrow{display:flex;gap:8px}
+.phrases{margin:10px 0 4px;display:flex;flex-direction:column;gap:10px}
+.phrases .pl{font-size:13px;font-weight:700;margin:0 0 4px}
+.phrases .chips{gap:6px}
+.picknote{font-size:12px;margin:0 0 8px;opacity:.8}
+.mini{font:inherit;font-size:12px;border:1px solid currentColor;border-radius:999px;background:none;color:inherit;padding:2px 10px;margin-left:6px;cursor:pointer}
+.mini[aria-pressed=true]{background:var(--chip-on);color:var(--chip-on-ink);border-color:transparent}
 .nickrow input{flex:1}
 .quote{
   font:inherit;font-size:12px;line-height:1.5;text-align:left;
@@ -405,9 +411,11 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
       </div>
       <div class="group">
         <h2>届く文面</h2>
+        <p class="picknote">表示のしかた（見くらべ用）：<button id="ui-a" class="mini" type="button">A 常に出す</button><button id="ui-b" class="mini" type="button">B 押したときだけ</button></p>
         <div id="preview" class="preview" aria-live="polite"></div>
+        <div id="phrases" class="phrases" hidden></div>
         <div class="actions">
-          <button id="shuffle" class="btn" type="button">別の言い回し</button>
+          <button id="shuffle" class="btn" type="button">言い回しを変える</button>
           <button id="sendReport" class="btn primary" type="button">送る</button>
         </div>
       </div>
@@ -504,22 +512,31 @@ function eventFrom(m){
   }
   return EVENTS.find(function(e){return e.id===m.event_key;})||null;
 }
+// 言い回しの選び方は、1つの数字(variant)にまとめて保存する。
+// 10以上: 10 + a + 8*b + 64*c （a=文頭/締め、b=やわらげ、c=ありがとう） / 9以下: 昔の「順番送り」
+function encodePicks(a,b,c){return 10+a+8*b+64*c;}
+function picksFrom(v,mode){
+  if(v>=10){const n=v-10;return {a:n%8,b:Math.floor(n/8)%8,c:Math.floor(n/64)};}
+  const seed=v;
+  return {a:mode==='inf'?seed+1:mode==='did'?seed+2:seed,b:seed+3,c:seed+1};
+}
 function makeMessage(o){
-  const ev=o.ev,seed=o.seed||0,lines=[];
+  const ev=o.ev,lines=[];
   let mode=o.mode;
   if(mode==='did'&&!ev.did)mode='inf';
+  const p=picksFrom(o.variant!=null?o.variant:(o.seed||0),mode);
   if(mode==='inf'){
     lines.push(ev.now+(ev.em||''));
-    const s=pick(CLOSE_INF,seed+1);
+    const s=pick(CLOSE_INF,p.a);
     if(s)lines.push(s);
   }else if(mode==='did'){
-    lines.push(ev.did+pick(DID_END,seed)+(ev.emDid||''));
-    lines.push(pick(CLOSE_DID,seed+2));
+    lines.push(ev.did+pick(DID_END,0)+(ev.emDid||''));
+    lines.push(pick(CLOSE_DID,p.a));
   }else{
-    lines.push(pick(LEAD,seed)+ev.ask+askEmoji(ev.ask));
-    lines.push(pick(TIMING,seed+3));
+    lines.push(pick(LEAD,p.a)+ev.ask+askEmoji(ev.ask));
+    lines.push(pick(TIMING,p.b));
   }
-  if(o.thanks)lines.push(pick(THX,seed+1));
+  if(o.thanks)lines.push(pick(THX,p.c));
   return lines.join('\n');
 }
 function textFor(m){
@@ -529,7 +546,7 @@ function textFor(m){
   }
   const ev=eventFrom(m);
   if(!ev)return '';
-  return makeMessage({ev:ev,mode:m.mode,seed:m.variant||0,thanks:!!m.thanks});
+  return makeMessage({ev:ev,mode:m.mode,variant:m.variant||0,thanks:!!m.thanks});
 }
 /*END*/
 
@@ -543,7 +560,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v28';
+  var APP_VERSION='v29';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -553,7 +570,7 @@ function textFor(m){
   /* ---------- 文面づくりシートの状態 ---------- */
   var st={
     event:store.get('event','light'),mode:store.get('mode','did'),tone:'kawaii',
-    thanks:store.get('thanks','0')==='1',cState:store.get('cstate','left'),cAction:store.get('caction','none'),seed:0
+    thanks:store.get('thanks','0')==='1',cState:store.get('cstate','left'),cAction:store.get('caction','none'),seed:0,pa:0,pb:0,pc:0,pickui:store.get('pickui','a'),phOpen:false
   };
   if(st.event!=='custom'&&!EVENTS.some(function(e){return e.id===st.event;}))st.event='cups';
   if(!MODES.some(function(m){return m.id===st.mode;}))st.mode='did';
@@ -596,7 +613,7 @@ function textFor(m){
   MODES.forEach(function(m){
     var b=el('button','mode');b.type='button';b.setAttribute('aria-pressed','false');
     b.appendChild(el('span','t',m.label));b.appendChild(el('span','s',m.sub));
-    b.addEventListener('click',function(){st.mode=m.id;st.seed=0;store.set('mode',m.id);refreshSheet();});
+    b.addEventListener('click',function(){st.mode=m.id;st.seed=0;st.pa=0;st.pb=0;store.set('mode',m.id);refreshSheet();});
     groups.modes.push({id:m.id,el:b});$('modes').appendChild(b);
   });
   STATES.forEach(function(s){
@@ -610,7 +627,7 @@ function textFor(m){
 
   function currentRow(){
     var noun=$('c-noun').value.trim();
-    var base={kind:'report',event_key:st.event,mode:st.mode,tone:st.tone,variant:st.seed%10,thanks:st.thanks};
+    var base={kind:'report',event_key:st.event,mode:st.mode,tone:st.tone,variant:encodePicks(st.pa,st.pb,st.pc),thanks:st.thanks};
     if(st.event==='custom'){
       if(!noun||/[\r\n]/.test(noun)||noun.length>12)return null;
       base.noun=noun;base.state_key=st.cState;base.action_key=st.cAction;
@@ -645,6 +662,7 @@ function textFor(m){
     var pv=$('preview');
     if(row){pv.textContent=textFor(row);pv.className='preview';}
     else{pv.textContent='↑ 「1 物の名前」を入れると、ここに文面が出ます';pv.className='preview empty-p';}
+    renderPhrases();
     $('shuffle').disabled=!row;
     $('sendReport').disabled=!row||busy;
   }
@@ -679,7 +697,35 @@ function textFor(m){
     $('status').textContent='削除しました';
   });
   $('thx').addEventListener('change',function(e){st.thanks=e.target.checked;store.set('thanks',st.thanks?'1':'0');refreshSheet();});
-  $('shuffle').addEventListener('click',function(){st.seed+=1;refreshSheet();});
+  function renderPhrases(){
+    var box=$('phrases');
+    var ev0=st.event==='custom'?null:EVENTS.filter(function(e){return e.id===st.event;})[0];
+    var mode=st.mode;if(mode==='did'&&ev0&&!ev0.did)mode='inf';
+    var parts=[];
+    if(mode==='ask'){parts.push({t:'文のはじめ',list:LEAD,key:'pa'});parts.push({t:'やわらげのひとこと',list:TIMING,key:'pb'});}
+    else if(mode==='did'){parts.push({t:'しめのひとこと',list:CLOSE_DID,key:'pa'});}
+    else{parts.push({t:'しめのひとこと',list:CLOSE_INF,key:'pa'});}
+    if(st.thanks)parts.push({t:'ありがとうのひとこと',list:THX,key:'pc'});
+    box.textContent='';
+    parts.forEach(function(p){
+      var w=el('div','');w.appendChild(el('p','pl',p.t));
+      var c=el('div','chips');c.setAttribute('role','group');c.setAttribute('aria-label',p.t);
+      p.list.forEach(function(txt,i){
+        var b=mkChip(txt===''?'（なし）':txt,'chip',function(){st[p.key]=i;refreshSheet();});
+        b.setAttribute('aria-pressed',st[p.key]%p.list.length===i?'true':'false');c.appendChild(b);
+      });
+      w.appendChild(c);box.appendChild(w);
+    });
+    var always=st.pickui==='a';
+    box.hidden=always?false:!st.phOpen;
+    $('shuffle').hidden=always;
+    $('shuffle').textContent=st.phOpen?'言い回しをとじる':'言い回しを変える';
+    $('ui-a').setAttribute('aria-pressed',always?'true':'false');
+    $('ui-b').setAttribute('aria-pressed',always?'false':'true');
+  }
+  $('shuffle').addEventListener('click',function(){st.phOpen=!st.phOpen;refreshSheet();});
+  $('ui-a').addEventListener('click',function(){st.pickui='a';store.set('pickui','a');refreshSheet();});
+  $('ui-b').addEventListener('click',function(){st.pickui='b';store.set('pickui','b');refreshSheet();});
 
   function scrollBottom(){log.scrollTop=log.scrollHeight;}
   function openSheet(open){

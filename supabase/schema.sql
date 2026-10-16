@@ -39,7 +39,7 @@ create table if not exists public.messages (
   event_key  text check (event_key in ('light','cups','dishes','trash','laundry','lock','clothes','fridge','custom')),
   mode       text check (mode in ('did','inf','ask')),
   tone       text check (tone in ('yuru','kawaii','sappari')),
-  variant    int  not null default 0 check (variant between 0 and 9),
+  variant    int  not null default 0 check (variant between 0 and 999),
   thanks     boolean not null default false,
   -- 「ほかのこと」用: 物の名前（短い言葉）と、選択式の状態・やったこと
   noun       text check (char_length(noun) between 1 and 12 and noun !~ '[\r\n]'),
