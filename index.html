@@ -85,7 +85,7 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .nm{font-size:12px;color:var(--muted);margin:0 4px 2px}
 .nickrow{display:flex;gap:8px}
 .phrases{margin:10px 0 4px;display:flex;flex-direction:column;gap:10px}
-.phrases .pl{font-size:13px;font-weight:700;margin:0 0 4px;position:sticky;top:var(--pvh,0px);z-index:1;background:var(--surface);padding:6px 0 4px;box-shadow:0 6px 6px -6px rgba(0,0,0,.2)}
+.phrases .pl{font-size:13px;font-weight:700;margin:0 0 4px;position:sticky;top:calc(var(--pvh,0px) - 3px);z-index:1;background:var(--surface);padding:9px 0 6px;margin:0}
 .phrases .chips{gap:6px}
 .nickrow input{flex:1}
 .quote{
@@ -157,7 +157,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .switch{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:14px;min-height:44px;cursor:pointer}
 .switch input{width:22px;height:22px;accent-color:var(--accent);margin:0}
 .preview{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;min-height:84px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}
-.pvhead.stick{position:sticky;top:-14px;z-index:2;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px;box-shadow:0 8px 8px -8px rgba(0,0,0,.3)}
+.pvhead.stick{position:sticky;top:-14px;z-index:3;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px}
 .pvhead.stick h2{margin-top:0}
 .preview.empty-p{color:var(--muted)}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
@@ -558,7 +558,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v32';
+  var APP_VERSION='v33';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
