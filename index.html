@@ -338,6 +338,7 @@
 :root[data-style="luxtype"] h2,:root[data-style="luxtype"] h3{font-size:12px;letter-spacing:.3em;font-weight:800;border-bottom:1px solid #141414;padding-bottom:5px;margin-bottom:10px}
 :root[data-style="luxtype"] .card,:root[data-style="luxtype"] .setsec,:root[data-style="luxtype"] .sheet,:root[data-style="luxtype"] .preview,:root[data-style="luxtype"] .quick{border:1px solid #141414;box-shadow:none}
 :root[data-style="luxtype"] .chip,:root[data-style="luxtype"] .btn,:root[data-style="luxtype"] .mode{border:1px solid #141414;letter-spacing:.14em;background:transparent}
+:root[data-style="luxtype"] .chip[aria-pressed="true"],:root[data-style="luxtype"] .mode[aria-pressed="true"],:root[data-style="luxtype"] #events .chip[aria-pressed="true"]{background:var(--chip-on,#141414);color:var(--chip-on-ink,#f8f5ef)}
 :root[data-style="luxtype"] .btn.primary{background:#141414;color:#f8f5ef;letter-spacing:.3em;box-shadow:inset 0 0 0 3px #141414,inset 0 0 0 4px #a8873a}
 :root[data-style="luxtype"] .bubble{border:1px solid #141414;padding:12px 20px;letter-spacing:.09em;line-height:1.9;border-radius:0!important;box-shadow:none}
 :root[data-style="luxtype"] .row.mine .bubble{background:var(--mine-bg,#141414);color:var(--mine-ink,#f8f5ef);box-shadow:5px 5px 0 #a8873a}
@@ -369,6 +370,31 @@
 :root[data-style="artdeco"] .day::before,:root[data-style="artdeco"] .day::after{content:'';display:inline-block;width:10px;height:10px;background:#c9a24b;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);vertical-align:-1px;margin:0 9px}
 :root[data-style="artdeco"] .quick .qlbl,:root[data-style="artdeco"] .tag.rp{color:#e6c473}
 :root[data-style="artdeco"] .pvhead,:root[data-style="artdeco"] .sendbar,:root[data-style="artdeco"] .lookhead,:root[data-style="artdeco"] .phrases .pl{background:var(--surface,#16283a)}
+/* テイスト: フィリグリー（細い金属線で編んだ透かし細工のレース・ローズゴールドと深い紫） */
+:root[data-style="filigree"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84' viewBox='0 0 84 84'%3E%3Cg fill='none' stroke='%23b9825f' stroke-opacity='.4' stroke-width='1.1' stroke-linecap='round'%3E%3Cpath d='M8 42C8 22 30 22 30 36C30 46 18 46 18 38C18 32 26 32 26 37'/%3E%3Cpath d='M76 42C76 62 54 62 54 48C54 38 66 38 66 46C66 52 58 52 58 47'/%3E%3Cpath d='M30 36C36 30 48 30 54 36M30 48C36 54 48 54 54 48'/%3E%3Cpath d='M42 0C42 10 36 14 30 14M42 0C42 10 48 14 54 14M42 84C42 74 36 70 30 70M42 84C42 74 48 70 54 70'/%3E%3C/g%3E%3Cg fill='%23b9825f' fill-opacity='.45'%3E%3Ccircle cx='42' cy='42' r='2.2'/%3E%3Ccircle cx='26' cy='37' r='1.4'/%3E%3Ccircle cx='58' cy='47' r='1.4'/%3E%3C/g%3E%3C/svg%3E");background-size:84px 84px}
+:root[data-style="filigree"] .top{margin-inline:-16px;padding-inline:16px;background:rgba(255,253,250,.94);border-top:1px solid #c99b7a;box-shadow:0 1px 0 #c99b7a;margin-bottom:20px;padding-bottom:12px;position:relative}
+:root[data-style="filigree"] .top::after{content:'';position:absolute;left:0;right:0;bottom:-11px;height:11px;background:radial-gradient(circle at 50% 0,rgba(255,253,250,.94) 0 6px,#c99b7a 6px 7.2px,transparent 7.7px) 0 0/18px 11px repeat-x;pointer-events:none}
+:root[data-style="filigree"] .top h1{color:#5b2a4b;font-weight:700;letter-spacing:.2em}
+:root[data-style="filigree"] .top h1::before,:root[data-style="filigree"] .top h1::after{content:'';display:inline-block;width:.95em;height:.95em;vertical-align:-.12em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23b9825f' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M3 21V11C3 6 7 3 12 3H21M3 21C3 15 7 11 11 11C14 11 14 15 11.5 15C10 15 9.5 13.5 11 13.2'/%3E%3C/g%3E%3Ccircle cx='20.5' cy='3.5' r='1.3' fill='%23b9825f'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="filigree"] .top h1::before{margin-right:.4em}
+:root[data-style="filigree"] .top h1::after{margin-left:.4em;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate(180 12 12)' fill='none' stroke='%23b9825f' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M3 21V11C3 6 7 3 12 3H21M3 21C3 15 7 11 11 11C14 11 14 15 11.5 15C10 15 9.5 13.5 11 13.2'/%3E%3C/g%3E%3Ccircle cx='20.5' cy='3.5' r='1.3' fill='%23b9825f'/%3E%3C/svg%3E")}
+:root[data-style="filigree"] .top .lead{letter-spacing:.14em}
+:root[data-style="filigree"] h2,:root[data-style="filigree"] h3{color:#5b2a4b;letter-spacing:.14em;font-weight:700}
+:root[data-style="filigree"] h2::after,:root[data-style="filigree"] h3::after{content:'';display:block;height:7px;margin-top:3px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='7' viewBox='0 0 28 7'%3E%3Cpath d='M0 3.5C4 -1 10 -1 14 3.5C18 8 24 8 28 3.5' fill='none' stroke='%23b9825f' stroke-width='1' stroke-opacity='.8'/%3E%3C/svg%3E") repeat-x}
+:root[data-style="filigree"] .card,:root[data-style="filigree"] .setsec,:root[data-style="filigree"] .sheet,:root[data-style="filigree"] .preview,:root[data-style="filigree"] .quick{border:1px solid #c99b7a;box-shadow:inset 0 0 0 3px #fffdfa,inset 0 0 0 4px rgba(201,155,122,.55)}
+:root[data-style="filigree"] .chip,:root[data-style="filigree"] .btn,:root[data-style="filigree"] .mode{border:1px solid #c99b7a;border-radius:999px}
+:root[data-style="filigree"] .btn.primary{background:linear-gradient(180deg,#7a3a64,#5b2a4b);color:#f7e3d2;box-shadow:inset 0 0 0 2px #5b2a4b,inset 0 0 0 3px #d8b090}
+:root[data-style="filigree"] .bubble{position:relative;border:1px solid #c99b7a;box-shadow:inset 0 0 0 3px var(--their-bg,#fffdfa),inset 0 0 0 4px rgba(201,155,122,.6);border-radius:calc(26px*var(--rs,1))!important;padding:12px 22px;overflow:visible}
+:root[data-style="filigree"] .bubble::before,:root[data-style="filigree"] .bubble::after{content:'';position:absolute;width:15px;height:15px;pointer-events:none}
+:root[data-style="filigree"] .bubble::before{left:5px;top:5px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%23b9825f' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M3 21V11C3 6 7 3 12 3H21M3 21C3 15 7 11 11 11C14 11 14 15 11.5 15C10 15 9.5 13.5 11 13.2'/%3E%3C/g%3E%3Ccircle cx='20.5' cy='3.5' r='1.3' fill='%23b9825f'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="filigree"] .bubble::after{right:5px;bottom:5px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate(180 12 12)' fill='none' stroke='%23b9825f' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M3 21V11C3 6 7 3 12 3H21M3 21C3 15 7 11 11 11C14 11 14 15 11.5 15C10 15 9.5 13.5 11 13.2'/%3E%3C/g%3E%3Ccircle cx='20.5' cy='3.5' r='1.3' fill='%23b9825f'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="filigree"] .row.mine .bubble{background:var(--mine-bg,linear-gradient(180deg,#7a3a64,#5b2a4b));color:var(--mine-ink,#f7e3d2);box-shadow:inset 0 0 0 3px var(--mine-bg,#5b2a4b),inset 0 0 0 4px #d8b090}
+:root[data-style="filigree"] .row:not(.mine) .bubble{background:var(--their-bg,#fffdfa)}
+:root[data-style="filigree"] .row.replyable .bubble{border-color:#5b2a4b;border-width:2px}
+:root[data-style="filigree"] .day{background:rgba(255,253,250,.9);color:#85707a;letter-spacing:.2em;border:1px solid #c99b7a}
+:root[data-style="filigree"] .quick{border-color:#c99b7a}
+:root[data-style="filigree"] .quick .qlbl,:root[data-style="filigree"] .tag.rp{color:#5b2a4b}
+:root[data-style="filigree"] .pvhead,:root[data-style="filigree"] .sendbar,:root[data-style="filigree"] .lookhead,:root[data-style="filigree"] .phrases .pl{background:#fffdfa}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -927,7 +953,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v76';
+  var APP_VERSION='v77';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1544,6 +1570,11 @@ function textFor(m){
       '--accent':'#1f6f6b','--accent-ink':'#f6ecd0','--chip':'#1d3247','--chip-on':'#c9a24b','--chip-on-ink':'#0f1c2b',
       '--focus':'#e6c473','--shadow':'0 0 0 1px #c9a24b','--rs':'0.15',
       '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
+    ,{id:'filigree',name:'フィリグリー',theme:'light',sw:['#f6f1ea','#5b2a4b'],vars:{
+      '--bg':'#f6f1ea','--surface':'#fffdfa','--ink':'#3a2434','--muted':'#85707a','--line':'#c99b7a',
+      '--accent':'#5b2a4b','--accent-ink':'#f7e3d2','--chip':'#f1e6dc','--chip-on':'#5b2a4b','--chip-on-ink':'#f7e3d2',
+      '--focus':'#b9825f','--shadow':'0 2px 10px rgba(91,42,75,.14)','--rs':'1.3',
+      '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
