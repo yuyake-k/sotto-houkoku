@@ -112,12 +112,6 @@ button.bubble{cursor:pointer}
 .meta{display:flex;align-items:center;gap:8px;margin:2px 6px 0;font-size:11.5px;color:var(--muted);min-height:20px}
 .tag{padding:0 8px;border-radius:999px;border:1px solid var(--line)}
 .undo{font:inherit;font-size:12px;color:var(--accent);background:none;border:0;padding:4px 2px;cursor:pointer;text-decoration:underline}
-.picknote{font-size:12px;opacity:.85}
-.mini{font:inherit;font-size:12px;border:1px solid currentColor;border-radius:999px;background:none;color:inherit;padding:2px 10px;margin-left:6px;cursor:pointer}
-.mini[aria-pressed=true]{background:var(--chip-on);color:var(--chip-on-ink);border-color:transparent}
-.seg{display:flex;gap:8px}
-.segbtn{flex:1;font:inherit;font-size:15px;font-weight:700;min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-.segbtn[aria-pressed=true]{background:var(--chip-on);color:var(--chip-on-ink);border-color:transparent}
 .quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:10px 12px;border-radius:14px;border:1.5px dashed var(--accent);background:var(--surface);max-width:100%}
 .quick .qhint{flex:1 1 100%;margin:0;font-size:12px;color:var(--muted)}
 .quick .qlbl{flex:1 1 100%;margin:0;font-size:12.5px;font-weight:700;color:var(--accent)}
@@ -412,7 +406,6 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <div id="preview" class="preview" aria-live="polite"></div></div>
       <div class="sheet-head">
         <h2>何を伝える？</h2>
-        <span class="picknote">見くらべ：<button id="ui-a" class="mini" type="button">A 上に2択</button><button id="ui-b" class="mini" type="button">B 4つ目</button></span>
         <button id="closeSheet" class="btn" type="button" style="min-height:36px;padding:4px 12px">とじる</button>
       </div>
       <div class="group">
@@ -442,10 +435,6 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           </div>
           <p id="mine-note" class="mine-note" hidden></p>
         </div>
-      </div>
-      <div id="seg" class="seg" role="group" aria-label="気づいた・ありがとう" hidden>
-        <button id="seg-notice" class="segbtn" type="button">気づいたよ</button>
-        <button id="seg-thx" class="segbtn" type="button">ありがとう</button>
       </div>
       <div id="modegroup" class="group">
         <h2>どう伝える？</h2>
@@ -606,7 +595,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v53';
+  var APP_VERSION='v54';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -616,7 +605,7 @@ function textFor(m){
   /* ---------- 文面づくりシートの状態 ---------- */
   var st={
     event:store.get('event','light'),mode:store.get('mode','did'),tone:'kawaii',
-    thanks:store.get('thanks','0')==='1',cState:store.get('cstate','left'),cAction:store.get('caction','none'),seed:0,pa:0,pb:0,pc:0,phOpen:false,thxui:store.get('thxui','b'),lastMode:store.get('lastmode','did')
+    thanks:store.get('thanks','0')==='1',cState:store.get('cstate','left'),cAction:store.get('caction','none'),seed:0,pa:0,pb:0,pc:0,phOpen:false
   };
   if(st.event!=='custom'&&!EVENTS.some(function(e){return e.id===st.event;}))st.event='cups';
   if(!MODES.some(function(m){return m.id===st.mode;}))st.mode='did';
@@ -659,7 +648,7 @@ function textFor(m){
   MODES.forEach(function(m){
     var b=el('button','mode');b.type='button';b.setAttribute('aria-pressed','false');
     b.appendChild(el('span','t',m.label));b.appendChild(el('span','s',m.sub));
-    b.addEventListener('click',function(){if(m.id!=='thx'){st.lastMode=m.id;store.set('lastmode',m.id);}st.mode=m.id;st.seed=0;st.pa=0;st.pb=0;st.pc=0;store.set('mode',m.id);refreshSheet();});
+    b.addEventListener('click',function(){st.mode=m.id;st.seed=0;st.pa=0;st.pb=0;st.pc=0;store.set('mode',m.id);refreshSheet();});
     groups.modes.push({id:m.id,el:b});$('modes').appendChild(b);
   });
   STATES.forEach(function(s){
@@ -671,10 +660,6 @@ function textFor(m){
     groups.caction.push({id:a.k,el:b});$('c-action').appendChild(b);
   });
 
-  $('seg-notice').addEventListener('click',function(){st.mode=st.lastMode&&st.lastMode!=='thx'?st.lastMode:'did';st.pa=0;st.pb=0;st.pc=0;store.set('mode',st.mode);refreshSheet();});
-  $('seg-thx').addEventListener('click',function(){if(st.mode!=='thx'){st.lastMode=st.mode;store.set('lastmode',st.mode);}st.mode='thx';st.pa=0;st.pb=0;st.pc=0;store.set('mode',st.mode);refreshSheet();});
-  $('ui-a').addEventListener('click',function(){st.thxui='a';store.set('thxui','a');refreshSheet();});
-  $('ui-b').addEventListener('click',function(){st.thxui='b';store.set('thxui','b');if(st.mode==='thx'){}refreshSheet();});
   function currentRow(){
     var noun=$('c-noun').value.trim();
     var base={kind:'report',event_key:st.event,mode:st.mode,tone:st.tone,variant:encodePicks(st.pa,st.pb,st.pc),thanks:st.mode==='thx'?false:st.thanks};
@@ -686,12 +671,8 @@ function textFor(m){
   }
   function refreshSheet(){
     sync(groups.events,st.event);sync(groups.modes,st.mode);
-    var isT=st.mode==='thx',ua=st.thxui==='a';
-    $('seg').hidden=!ua;$('seg-notice').setAttribute('aria-pressed',isT?'false':'true');$('seg-thx').setAttribute('aria-pressed',isT?'true':'false');
-    $('modegroup').hidden=ua&&isT;
-    groups.modes.forEach(function(g){if(g.id==='thx')g.el.hidden=ua;});
+    var isT=st.mode==='thx';
     $('thx').closest('.group').hidden=isT;
-    $('ui-a').setAttribute('aria-pressed',ua?'true':'false');$('ui-b').setAttribute('aria-pressed',ua?'false':'true');
     sync(groups.cstate,st.cState);sync(groups.caction,st.cAction);
     customBtn.setAttribute('aria-pressed',(st.event==='custom'&&!st.mineId)?'true':'false');
     mineGroup.forEach(function(g){g.el.setAttribute('aria-pressed',(st.event==='custom'&&st.mineId===g.id)?'true':'false');});
