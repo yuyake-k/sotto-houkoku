@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#16121b" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=DotGothic16&family=Hachi+Maru+Pop&family=Yusei+Magic&family=Dela+Gothic+One&family=Mochiy+Pop+One&family=Yomogi&family=Shippori+Mincho&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Sans+JP:wght@400;500;700&family=DotGothic16&family=Hachi+Maru+Pop&family=Yusei+Magic&family=Dela+Gothic+One&family=Mochiy+Pop+One&family=Yomogi&family=Shippori+Mincho&display=swap">
 <style>
 /* layout: 1画面ずつ。入口(部屋をつくる/入る) → 部屋(履歴+下に「そっと報告」)。送れるのは定型だけ */
 :root{
@@ -46,13 +46,24 @@
 :root[data-style="japandi"] .row.replyable .bubble{border-width:1px;padding:9px 14px}
 /* テイスト: バウハウス（三原色・直線・太い黒線・影なし） */
 :root[data-style="bauhaus"] body{font-weight:500}
-:root[data-style="bauhaus"] .card,:root[data-style="bauhaus"] .setsec,:root[data-style="bauhaus"] .sheet,:root[data-style="bauhaus"] .bubble,:root[data-style="bauhaus"] .chip,:root[data-style="bauhaus"] .btn,:root[data-style="bauhaus"] .preview,:root[data-style="bauhaus"] .quick,:root[data-style="bauhaus"] .lookpv,:root[data-style="bauhaus"] input[type="text"]{border-width:2px;border-color:#111;box-shadow:none}
-:root[data-style="bauhaus"] .btn.primary,:root[data-style="bauhaus"] .row.mine .bubble{border-color:#111}
+:root[data-style="bauhaus"] .card,:root[data-style="bauhaus"] .setsec,:root[data-style="bauhaus"] .sheet,:root[data-style="bauhaus"] .bubble,:root[data-style="bauhaus"] .chip,:root[data-style="bauhaus"] .btn,:root[data-style="bauhaus"] .preview,:root[data-style="bauhaus"] .quick,:root[data-style="bauhaus"] .lookpv,:root[data-style="bauhaus"] input[type="text"]{border-width:2px;box-shadow:none}
+:root[data-style="bauhaus"]:not([data-theme="dark"]) .card,:root[data-style="bauhaus"]:not([data-theme="dark"]) .setsec,:root[data-style="bauhaus"]:not([data-theme="dark"]) .sheet,:root[data-style="bauhaus"]:not([data-theme="dark"]) .bubble,:root[data-style="bauhaus"]:not([data-theme="dark"]) .chip,:root[data-style="bauhaus"]:not([data-theme="dark"]) .btn,:root[data-style="bauhaus"]:not([data-theme="dark"]) .preview,:root[data-style="bauhaus"]:not([data-theme="dark"]) .lookpv,:root[data-style="bauhaus"]:not([data-theme="dark"]) input[type="text"]{border-color:#111}
 :root[data-style="bauhaus"] h1,:root[data-style="bauhaus"] h2,:root[data-style="bauhaus"] h3{font-weight:700;letter-spacing:.02em}
-:root[data-style="bauhaus"] .chip[aria-pressed="true"]{border-color:#111}
 :root[data-style="bauhaus"] .top{position:relative;padding-bottom:16px}
 :root[data-style="bauhaus"] .top::after{content:'';position:absolute;left:0;right:0;bottom:6px;height:6px;background:linear-gradient(90deg,#d62718 0 33.33%,#f6d33b 33.33% 66.66%,#1c3f95 66.66%)}
 :root[data-style="bauhaus"] .row.replyable .bubble{border-color:#d62718;border-width:3px;padding:8px 13px}
+/* テイスト: ユーティリタリアン（装飾なし・細い線・格子・小さなラベル） */
+:root[data-style="utility"] body{font-size:15px;letter-spacing:.01em}
+:root[data-style="utility"] .card,:root[data-style="utility"] .setsec,:root[data-style="utility"] .sheet,:root[data-style="utility"] .bubble,:root[data-style="utility"] .chip,:root[data-style="utility"] .btn,:root[data-style="utility"] .preview,:root[data-style="utility"] .quick,:root[data-style="utility"] .lookpv,:root[data-style="utility"] input[type="text"]{border-width:1px;box-shadow:none}
+:root[data-style="utility"] h2,:root[data-style="utility"] h3,:root[data-style="utility"] .looklbl{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+:root[data-style="utility"] h1{font-size:20px;font-weight:700;letter-spacing:.02em}
+:root[data-style="utility"] .top{border-bottom:1px solid var(--ink);padding-bottom:10px;margin-bottom:6px}
+:root[data-style="utility"] .row.mine .bubble{border-color:#111}
+:root[data-style="utility"] .row.replyable .bubble{border-color:#e8590c;border-width:2px;padding:8.5px 13px}
+:root[data-style="utility"] .quick{border:1px solid #e8590c}
+:root[data-style="utility"] .quick .qlbl,:root[data-style="utility"] .tag.rp{color:#e8590c}
+:root[data-style="utility"] .quick .chip{border-color:var(--ink)}
+:root[data-style="utility"] .btn.primary{box-shadow:none}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -611,7 +622,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v56';
+  var APP_VERSION='v58';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1162,7 +1173,12 @@ function textFor(m){
       '--bg':'#f1ece1','--surface':'#ffffff','--ink':'#111111','--muted':'#5a5648','--line':'#111111',
       '--accent':'#d62718','--accent-ink':'#ffffff','--chip':'#f6d33b','--chip-on':'#1c3f95','--chip-on-ink':'#ffffff',
       '--focus':'#1c3f95','--shadow':'none','--rs':'0',
-      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
+      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}},
+    {id:'utility',name:'ユーティリタリアン',theme:'light',sw:['#f3f3f1','#111111'],vars:{
+      '--bg':'#f3f3f1','--surface':'#ffffff','--ink':'#111111','--muted':'#6b6b66','--line':'#cfcfca',
+      '--accent':'#111111','--accent-ink':'#ffffff','--chip':'#e6e6e2','--chip-on':'#111111','--chip-on-ink':'#ffffff',
+      '--focus':'#e8590c','--shadow':'none','--rs':'0',
+      '--font':'"IBM Plex Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
@@ -1174,13 +1190,20 @@ function textFor(m){
     var r=document.documentElement.style;
     function set(k,v){if(v)r.setProperty(k,v);else r.removeProperty(k);}
     var stl=curStyle(),sv=stl.vars||{};
-    STYLE_KEYS.forEach(function(k){set(k,sv[k]||'');});
-    set('--accent',look.mine||sv['--accent']||'');set('--accent-ink',look.mine?inkFor(look.mine):(sv['--accent-ink']||''));
-    set('--their-bg',look.their||sv['--their-bg']||'');set('--their-ink',look.their?'#2a2233':(sv['--their-ink']||''));
     var bd=look.board,de=document.documentElement,theme='',tcol='';
-    if(bd==='light'||bd==='dark'){set('--bg','');theme=bd;tcol=bd==='dark'?'#16121b':'#f6f3f9';}
-    else if(bd){theme=inkFor(bd)==='#ffffff'?'dark':'light';set('--bg',bd);tcol=bd;}
-    else{set('--bg',sv['--bg']||'');if(stl.id){theme=stl.theme||'light';tcol=sv['--bg']||'';}}
+    if(bd==='light'||bd==='dark')theme=bd;
+    else if(bd)theme=inkFor(bd)==='#ffffff'?'dark':'light';
+    else if(stl.id)theme=stl.theme||'light';
+    // 暗い背景に、明るい前提のテイストの文字色を重ねない（読めなくなるため）
+    var clash=theme==='dark'&&(stl.theme||'light')!=='dark';
+    var COLORKEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow'];
+    STYLE_KEYS.forEach(function(k){set(k,(clash&&COLORKEYS.indexOf(k)>=0)?'':(sv[k]||''));});
+    var sAcc=clash?'':sv['--accent'],sAccInk=clash?'':sv['--accent-ink'];
+    set('--accent',look.mine||sAcc||'');set('--accent-ink',look.mine?inkFor(look.mine):(sAccInk||''));
+    set('--their-bg',look.their||(clash?'':sv['--their-bg'])||'');set('--their-ink',look.their?'#2a2233':((clash?'':sv['--their-ink'])||''));
+    if(bd==='light'||bd==='dark'){set('--bg','');tcol=bd==='dark'?'#16121b':'#f6f3f9';}
+    else if(bd){set('--bg',bd);tcol=bd;}
+    else{set('--bg',sv['--bg']||'');if(stl.id)tcol=sv['--bg']||'';}
     if(theme)de.setAttribute('data-theme',theme);else de.removeAttribute('data-theme');
     if(stl.id)de.setAttribute('data-style',stl.id);else de.removeAttribute('data-style');
     document.querySelectorAll('meta[name="theme-color"]').forEach(function(tc){
