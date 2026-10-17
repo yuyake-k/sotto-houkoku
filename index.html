@@ -296,7 +296,7 @@
 :root[data-style="victorian"] .btn.primary{background:linear-gradient(180deg,#8f2a4b,#6a1733);color:#f6e3b0;border-color:#d9b45a;box-shadow:0 0 0 2px #6a1733,inset 0 0 0 1px #d9b45a}
 :root[data-style="victorian"] .chip[aria-pressed="true"],:root[data-style="victorian"] .mode[aria-pressed="true"]{box-shadow:inset 0 0 0 1.5px #d9b45a}
 :root[data-style="victorian"] .bubble{border:2px solid #b8923a;border-radius:calc(20px*var(--rs,1)) calc(5px*var(--rs,1)) calc(20px*var(--rs,1)) calc(5px*var(--rs,1))!important;box-shadow:inset 0 0 0 3px var(--their-bg,#fbf5e8),inset 0 0 0 4px #7a1f3d;padding:11px 18px}
-:root[data-style="victorian"] .row.mine .bubble{background:var(--mine-bg,linear-gradient(180deg,#8f2a4b,#6a1733));color:var(--mine-ink,#f6e3b0);box-shadow:inset 0 0 0 3px #6a1733,inset 0 0 0 4px #d9b45a;border-radius:calc(5px*var(--rs,1)) calc(20px*var(--rs,1)) calc(5px*var(--rs,1)) calc(20px*var(--rs,1))!important}
+:root[data-style="victorian"] .row.mine .bubble{background:var(--mine-bg,linear-gradient(180deg,#8f2a4b,#6a1733));color:var(--mine-ink,#f6e3b0);box-shadow:inset 0 0 0 3px var(--mine-bg,#6a1733),inset 0 0 0 4px #d9b45a;border-radius:calc(5px*var(--rs,1)) calc(20px*var(--rs,1)) calc(5px*var(--rs,1)) calc(20px*var(--rs,1))!important}
 :root[data-style="victorian"] .row:not(.mine) .bubble{background:var(--their-bg,#fbf5e8)}
 :root[data-style="victorian"] .row.replyable .bubble{border-color:#2f6b57;border-width:3px}
 :root[data-style="victorian"] .day{background:#6a1733;color:#f6e3b0;border-radius:0;padding:2px 22px;letter-spacing:.12em;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%,9px 50%)}
@@ -861,7 +861,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v72';
+  var APP_VERSION='v73';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1494,6 +1494,7 @@ function textFor(m){
     STYLE_KEYS.forEach(function(k){set(k,(clash&&COLORKEYS.indexOf(k)>=0)?'':(sv[k]||''));});
     var sAcc=clash?'':sv['--accent'],sAccInk=clash?'':sv['--accent-ink'];
     set('--accent',look.mine||sAcc||'');set('--accent-ink',look.mine?inkFor(look.mine):(sAccInk||''));
+    set('--mine-bg',look.mine||'');set('--mine-ink',look.mine?inkFor(look.mine):'');
     set('--their-bg',look.their||(clash?'':sv['--their-bg'])||'');
     set('--arrow-their',stl.id==='pixel'?compArrow(look.their||'#0f1124'):'');set('--arrow-mine',stl.id==='pixel'?compArrow(look.mine||'#ff5d73'):'');set('--their-ink',look.their?'#2a2233':((clash?'':sv['--their-ink'])||''));
     if(bd==='light'||bd==='dark'){set('--bg','');tcol=bd==='dark'?'#16121b':'#f6f3f9';}
