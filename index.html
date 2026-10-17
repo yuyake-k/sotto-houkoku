@@ -254,6 +254,7 @@
 :root[data-style="popart"] .row.mine .bubble{background-image:radial-gradient(rgba(0,0,0,.2) 1.5px,transparent 2.1px);background-size:8px 8px;background-color:var(--mine-bg,#e8262d);text-shadow:1px 1px 0 rgba(0,0,0,.4)}
 :root[data-style="popart"] .row:not(.mine) .bubble{background-color:var(--their-bg,#fff)}
 :root[data-style="popart"] .row{margin-bottom:8px}
+:root[data-style="popart"] .meta{margin-top:12px}
 :root[data-style="popart"] .row.replyable .bubble{border-color:#1d4fd7;box-shadow:4px 4px 0 #1d4fd7}
 :root[data-style="popart"] .day{background:#fff;color:#111;border:3px solid #111;font-weight:700;border-radius:0;transform:rotate(-1.5deg)}
 :root[data-style="popart"] .quick{background:#fff;border-color:#1d4fd7;box-shadow:4px 4px 0 #1d4fd7}
@@ -840,7 +841,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v70';
+  var APP_VERSION='v71';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
