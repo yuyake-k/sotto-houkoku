@@ -182,7 +182,7 @@
 :root[data-style="memphis"] .top{margin-inline:-16px;padding-inline:16px;background:#ffd23f;border-bottom:4px solid #111;position:relative;padding-bottom:18px}
 :root[data-style="memphis"] .top::after{content:'';position:absolute;left:0;right:0;bottom:-14px;height:10px;background:linear-gradient(135deg,#ffd23f 25%,transparent 25%) -6px 0,linear-gradient(225deg,#ffd23f 25%,transparent 25%) -6px 0;background-size:12px 10px;pointer-events:none}
 :root[data-style="memphis"] .top h1{color:#111;text-shadow:2px 2px 0 #ff5fa2}
-:root[data-style="memphis"] .top h1::after{content:'▲ ● ■';position:absolute;left:100%;margin-left:10px;top:2px;font-size:11px;letter-spacing:.15em;color:#3a86ff;white-space:nowrap}
+:root[data-style="memphis"] .top::before{content:'▲ ● ■';position:absolute;right:14px;top:1px;font-size:11px;line-height:1;letter-spacing:.2em;color:#3a86ff;pointer-events:none}
 :root[data-style="memphis"] .top .lead{color:#111}
 :root[data-style="memphis"] .row.mine .bubble{transform:rotate(-1deg);background:var(--mine-bg,#ff5fa2);color:var(--mine-ink,#111)}
 :root[data-style="memphis"] .row:not(.mine) .bubble{transform:rotate(.8deg);background:var(--their-bg,#fff)}
@@ -209,6 +209,29 @@
 :root[data-style="y2k"] .quick{border-color:#00b8d9}
 :root[data-style="y2k"] .quick .qlbl,:root[data-style="y2k"] .tag.rp{color:#e0338a}
 :root[data-style="y2k"] .pvhead,:root[data-style="y2k"] .sendbar,:root[data-style="y2k"] .lookhead,:root[data-style="y2k"] .phrases .pl{background:#eef4ff}
+/* テイスト: ミッドセンチュリー（クリーム地・バーントオレンジ/ティール/マスタード・アトミックな星とブーメラン・木の帯） */
+:root[data-style="midcentury"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg opacity='.5'%3E%3Cg transform='translate(14 14) scale(.9)'%3E%3Cpath d='M30 12 V48 M12 30 H48 M17 17 L43 43 M43 17 L17 43' stroke='%23e5a823' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='30' cy='30' r='4' fill='%23e07a2f'/%3E%3C/g%3E%3Cpath d='M92 112 Q112 84 140 100 Q116 96 106 118Z' fill='%232a7f8e'/%3E%3Cellipse cx='120' cy='36' rx='14' ry='9' fill='%23e5a823' transform='rotate(-25 120 36)'/%3E%3C/g%3E%3C/svg%3E");background-size:160px 160px}
+:root[data-style="midcentury"] .top{margin-inline:-16px;padding-inline:16px;background:#5a3a26;border-bottom:5px solid #e5a823;box-shadow:0 5px 0 #2a7f8e;position:relative;margin-bottom:6px}
+:root[data-style="midcentury"] .top h1{color:#fff3dc;font-family:"Mochiy Pop One","Zen Kaku Gothic New",sans-serif;font-weight:400;letter-spacing:.06em}
+:root[data-style="midcentury"] .top h1::before{content:'✳';color:#e5a823;margin-right:.3em}
+:root[data-style="midcentury"] .top .lead,:root[data-style="midcentury"] .top .conn{color:#e9d7b5}
+:root[data-style="midcentury"] .top .btn{background:#fff3dc;color:#3b2f2a;border-color:#fff3dc}
+:root[data-style="midcentury"] h2,:root[data-style="midcentury"] h3{color:#2a7f8e;font-weight:700;letter-spacing:.06em}
+:root[data-style="midcentury"] .card,:root[data-style="midcentury"] .setsec,:root[data-style="midcentury"] .sheet,:root[data-style="midcentury"] .preview,:root[data-style="midcentury"] .quick{border:2px solid #d9c9aa;border-radius:calc(26px*var(--rs,1)) calc(10px*var(--rs,1)) calc(26px*var(--rs,1)) calc(10px*var(--rs,1))}
+:root[data-style="midcentury"] .chip,:root[data-style="midcentury"] .btn,:root[data-style="midcentury"] .mode{border-radius:999px;border:2px solid #d9c9aa}
+:root[data-style="midcentury"] .btn.primary{background:#e07a2f;color:#fff;border-color:#b85d1c;box-shadow:0 3px 0 #b85d1c}
+:root[data-style="midcentury"] #events .chip:nth-child(3n+1){background:#fbe3c5}
+:root[data-style="midcentury"] #events .chip:nth-child(3n+2){background:#cfe8e8}
+:root[data-style="midcentury"] #events .chip:nth-child(3n){background:#f8e7a8}
+:root[data-style="midcentury"] .chip[aria-pressed="true"],:root[data-style="midcentury"] #events .chip[aria-pressed="true"],:root[data-style="midcentury"] .mode[aria-pressed="true"]{background:#2a7f8e;color:#fff;border-color:#1d5f6b}
+:root[data-style="midcentury"] .bubble{border:0;box-shadow:0 3px 0 rgba(90,58,38,.18);border-radius:calc(26px*var(--rs,1)) calc(26px*var(--rs,1)) calc(26px*var(--rs,1)) calc(8px*var(--rs,1))!important}
+:root[data-style="midcentury"] .row.mine .bubble{border-radius:calc(26px*var(--rs,1)) calc(26px*var(--rs,1)) calc(8px*var(--rs,1)) calc(26px*var(--rs,1))!important;background:var(--mine-bg,#e07a2f)}
+:root[data-style="midcentury"] .row:not(.mine) .bubble{background:var(--their-bg,#cfe8e8);color:var(--their-ink,#1f3a3f)}
+:root[data-style="midcentury"] .row.replyable .bubble{outline:3px dashed #e5a823;outline-offset:2px}
+:root[data-style="midcentury"] .day{background:#e5a823;color:#3b2f2a;font-weight:700;border-radius:999px}
+:root[data-style="midcentury"] .quick{border-color:#e5a823}
+:root[data-style="midcentury"] .quick .qlbl,:root[data-style="midcentury"] .tag.rp{color:#b85d1c}
+:root[data-style="midcentury"] .pvhead,:root[data-style="midcentury"] .sendbar,:root[data-style="midcentury"] .lookhead,:root[data-style="midcentury"] .phrases .pl{background:#fffaf0}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -767,7 +790,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v66';
+  var APP_VERSION='v67';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1349,6 +1372,11 @@ function textFor(m){
       '--accent':'#ff4fa3','--accent-ink':'#ffffff','--chip':'#e6eefc','--chip-on':'#3a4fd8','--chip-on-ink':'#ffffff',
       '--focus':'#00b8d9','--shadow':'0 0 14px rgba(120,160,255,.45)','--rs':'1.5',
       '--font':'"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif'}}
+    ,{id:'midcentury',name:'ミッドセンチュリー',theme:'light',sw:['#f3ead7','#e07a2f'],vars:{
+      '--bg':'#f3ead7','--surface':'#fffaf0','--ink':'#3b2f2a','--muted':'#7a6a5c','--line':'#d9c9aa',
+      '--accent':'#e07a2f','--accent-ink':'#ffffff','--chip':'#efe2c6','--chip-on':'#2a7f8e','--chip-on-ink':'#ffffff',
+      '--focus':'#2a7f8e','--shadow':'0 3px 0 rgba(90,58,38,.18)','--rs':'1.3',
+      '--font':'"Zen Kaku Gothic New","Zen Maru Gothic","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
