@@ -84,6 +84,18 @@
 :root[data-style="bento"] .lookhead{background:inherit}
 :root[data-style="bento"] .row.replyable .bubble{border-color:var(--accent);border-width:2px;padding:8.5px 13px}
 :root[data-style="bento"] .btn.primary{box-shadow:none}
+/* テイスト: 3×3グリッド（均等な9マスで整える。細い線で区切った正方形のマス） */
+:root[data-style="grid3"] #events,:root[data-style="grid3"] .modes{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+:root[data-style="grid3"] #events{grid-template-columns:repeat(3,minmax(0,1fr))}
+:root[data-style="grid3"] .modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+:root[data-style="grid3"] #events .chip{aspect-ratio:1/1;min-height:0;border:0;border-radius:0;background:var(--surface);display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;font-size:13px;line-height:1.35;color:var(--ink)}
+:root[data-style="grid3"] #events .chip[aria-pressed="true"],:root[data-style="grid3"] #events .chip.plus[aria-pressed="true"],:root[data-style="grid3"] #events .chip.mine[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink)}
+:root[data-style="grid3"] .mode{border:0;border-radius:0;background:var(--surface);min-height:64px;justify-content:center;text-align:center;align-items:center}
+:root[data-style="grid3"] .mode[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink)}
+:root[data-style="grid3"] .card,:root[data-style="grid3"] .setsec,:root[data-style="grid3"] .sheet,:root[data-style="grid3"] .preview,:root[data-style="grid3"] .quick{border-width:1px;box-shadow:none}
+:root[data-style="grid3"] h2,:root[data-style="grid3"] h3{font-weight:700;letter-spacing:.06em}
+:root[data-style="grid3"] .row.replyable .bubble{border-color:var(--accent);border-width:2px;padding:8.5px 13px}
+:root[data-style="grid3"] .btn.primary{box-shadow:none}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -642,7 +654,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v59';
+  var APP_VERSION='v60';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1203,6 +1215,11 @@ function textFor(m){
       '--bg':'#e9ecf1','--surface':'#ffffff','--ink':'#1d1d1f','--muted':'#6e6e73','--line':'#e1e4ea',
       '--accent':'#3478f6','--accent-ink':'#ffffff','--chip':'#f1f3f6','--chip-on':'#1d1d1f','--chip-on-ink':'#ffffff',
       '--focus':'#3478f6','--shadow':'0 1px 2px rgba(29,29,31,.06)','--rs':'1.25',
+      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}},
+    {id:'grid3',name:'3×3グリッド',theme:'light',sw:['#f5f4f0','#1a9e8f'],vars:{
+      '--bg':'#f5f4f0','--surface':'#ffffff','--ink':'#202124','--muted':'#6f716f','--line':'#d9d8d2',
+      '--accent':'#1a9e8f','--accent-ink':'#ffffff','--chip':'#ffffff','--chip-on':'#202124','--chip-on-ink':'#ffffff',
+      '--focus':'#1a9e8f','--shadow':'none','--rs':'0.2',
       '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
