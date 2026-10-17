@@ -590,7 +590,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v51';
+  var APP_VERSION='v52';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -854,7 +854,6 @@ function textFor(m){
       }
       row.appendChild(bubble);
       var meta=el('div','meta');
-      if(m.kind==='report')meta.appendChild(el('span','tag','そっと報告'));
       if(!mine&&m.id===quickTarget)meta.appendChild(el('span','tag rp','↓ このメッセージに返信できます'));
       var tm=hm(m.created_at);
       if(tm)meta.appendChild(el('span',null,tm));
