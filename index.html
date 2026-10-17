@@ -283,6 +283,26 @@
 :root[data-style="neoclassical"] .quick{border-color:#b08d3c}
 :root[data-style="neoclassical"] .quick .qlbl,:root[data-style="neoclassical"] .tag.rp{color:#8a6d2b}
 :root[data-style="neoclassical"] .pvhead,:root[data-style="neoclassical"] .sendbar,:root[data-style="neoclassical"] .lookhead,:root[data-style="neoclassical"] .phrases .pl{background:#fdfbf6}
+/* テイスト: ヴィクトリアン（深いワインレッドと金・ダマスク柄の壁紙・飾り枠とリボン） */
+:root[data-style="victorian"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg fill='%237a1f3d' fill-opacity='.07'%3E%3Cpath d='M24 8C34 20 34 34 24 44C14 34 14 20 24 8Z'/%3E%3Cpath d='M72 52C82 64 82 78 72 88C62 78 62 64 72 52Z'/%3E%3Ccircle cx='72' cy='24' r='5'/%3E%3Ccircle cx='24' cy='72' r='5'/%3E%3C/g%3E%3Cg fill='none' stroke='%23b8923a' stroke-opacity='.22'%3E%3Cpath d='M48 0V96M0 48H96'/%3E%3C/g%3E%3C/svg%3E");background-size:96px 96px}
+:root[data-style="victorian"] .top{margin-inline:-16px;padding-inline:16px;background-color:#6a1733;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 0L28 14L14 28L0 14Z' fill='none' stroke='%23d9b45a' stroke-opacity='.45' stroke-width='1'/%3E%3Ccircle cx='14' cy='14' r='2' fill='%23d9b45a' fill-opacity='.5'/%3E%3C/svg%3E");background-size:28px 28px;border-top:3px solid #d9b45a;border-bottom:3px solid #d9b45a;box-shadow:0 0 0 1px #6a1733,0 5px 0 #2f4a3a;margin-bottom:8px;padding-bottom:20px;position:relative}
+:root[data-style="victorian"] .top::after{content:'';position:absolute;left:50%;bottom:-3px;width:60px;height:24px;transform:translate(-50%,50%);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 24'%3E%3Cg fill='%23d9b45a'%3E%3Cpath d='M30 2L38 12L30 22L22 12Z'/%3E%3Ccircle cx='12' cy='12' r='3.5'/%3E%3Ccircle cx='48' cy='12' r='3.5'/%3E%3Ccircle cx='3' cy='12' r='1.6'/%3E%3Ccircle cx='57' cy='12' r='1.6'/%3E%3C/g%3E%3Cpath d='M16 12H20M40 12H44' stroke='%23d9b45a' stroke-width='1.6'/%3E%3Cpath d='M30 7L34 12L30 17L26 12Z' fill='%237a1f3d'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+:root[data-style="victorian"] .top h1{color:#f6e3b0;font-weight:700;letter-spacing:.14em;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+:root[data-style="victorian"] .top .lead,:root[data-style="victorian"] .top .conn{color:#e8cf9a}
+:root[data-style="victorian"] .top .btn{background:#f6e3b0;color:#4a1426;border-color:#d9b45a}
+:root[data-style="victorian"] h2,:root[data-style="victorian"] h3{color:#7a1f3d;font-weight:700;letter-spacing:.1em;border-bottom:1px solid #d9b45a;padding-bottom:3px}
+:root[data-style="victorian"] .card,:root[data-style="victorian"] .setsec,:root[data-style="victorian"] .sheet,:root[data-style="victorian"] .preview,:root[data-style="victorian"] .quick{border:2px solid #b8923a;border-radius:calc(16px*var(--rs,1)) calc(4px*var(--rs,1)) calc(16px*var(--rs,1)) calc(4px*var(--rs,1));box-shadow:inset 0 0 0 4px #fbf5e8,inset 0 0 0 5px #7a1f3d}
+:root[data-style="victorian"] .chip,:root[data-style="victorian"] .btn,:root[data-style="victorian"] .mode{border:1.5px solid #b8923a;border-radius:999px}
+:root[data-style="victorian"] .btn.primary{background:linear-gradient(180deg,#8f2a4b,#6a1733);color:#f6e3b0;border-color:#d9b45a;box-shadow:0 0 0 2px #6a1733,inset 0 0 0 1px #d9b45a}
+:root[data-style="victorian"] .chip[aria-pressed="true"],:root[data-style="victorian"] .mode[aria-pressed="true"]{box-shadow:inset 0 0 0 1.5px #d9b45a}
+:root[data-style="victorian"] .bubble{border:2px solid #b8923a;border-radius:calc(20px*var(--rs,1)) calc(5px*var(--rs,1)) calc(20px*var(--rs,1)) calc(5px*var(--rs,1))!important;box-shadow:inset 0 0 0 3px var(--their-bg,#fbf5e8),inset 0 0 0 4px #7a1f3d;padding:11px 18px}
+:root[data-style="victorian"] .row.mine .bubble{background:var(--mine-bg,linear-gradient(180deg,#8f2a4b,#6a1733));color:var(--mine-ink,#f6e3b0);box-shadow:inset 0 0 0 3px #6a1733,inset 0 0 0 4px #d9b45a;border-radius:calc(5px*var(--rs,1)) calc(20px*var(--rs,1)) calc(5px*var(--rs,1)) calc(20px*var(--rs,1))!important}
+:root[data-style="victorian"] .row:not(.mine) .bubble{background:var(--their-bg,#fbf5e8)}
+:root[data-style="victorian"] .row.replyable .bubble{border-color:#2f6b57;border-width:3px}
+:root[data-style="victorian"] .day{background:#6a1733;color:#f6e3b0;border-radius:0;padding:2px 22px;letter-spacing:.12em;clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%,9px 50%)}
+:root[data-style="victorian"] .quick{border-color:#b8923a;background:#fbf5e8}
+:root[data-style="victorian"] .quick .qlbl,:root[data-style="victorian"] .tag.rp{color:#7a1f3d}
+:root[data-style="victorian"] .pvhead,:root[data-style="victorian"] .sendbar,:root[data-style="victorian"] .lookhead,:root[data-style="victorian"] .phrases .pl{background:#fbf5e8}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -841,7 +861,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v71';
+  var APP_VERSION='v72';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1437,6 +1457,11 @@ function textFor(m){
       '--bg':'#f4f1ea','--surface':'#fdfbf6','--ink':'#1f2438','--muted':'#6b6a72','--line':'#cdbb8a',
       '--accent':'#1f2f55','--accent-ink':'#f3e6bf','--chip':'#ece6d6','--chip-on':'#1f2f55','--chip-on-ink':'#e8cf8a',
       '--focus':'#b08d3c','--shadow':'0 2px 0 rgba(176,141,60,.35)','--rs':'0.4',
+      '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
+    ,{id:'victorian',name:'ヴィクトリアン',theme:'light',sw:['#efe4d0','#7a1f3d'],vars:{
+      '--bg':'#efe4d0','--surface':'#fbf5e8','--ink':'#3a1f26','--muted':'#7b6558','--line':'#b8923a',
+      '--accent':'#7a1f3d','--accent-ink':'#f6e3b0','--chip':'#e8d9bb','--chip-on':'#7a1f3d','--chip-on-ink':'#f6e3b0',
+      '--focus':'#2f6b57','--shadow':'0 3px 0 rgba(122,31,61,.22)','--rs':'0.9',
       '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
