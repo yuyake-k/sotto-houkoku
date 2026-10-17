@@ -85,7 +85,7 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .looksw{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 10px}
 .sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);padding:0;cursor:pointer;position:relative}
 .sw[aria-pressed=true]{outline:3px solid var(--focus);outline-offset:2px}
-.lookpv{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px;padding:10px;border-radius:14px;background:var(--bg)}
+.lookpv{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px;padding:10px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);position:sticky;top:0;z-index:2;box-shadow:0 -12px 0 var(--bg)}
 .lookpv .row{max-width:92%}
 .looklbl{font-size:13px;font-weight:700;margin:8px 0 2px}
 .nm{font-size:12px;color:var(--muted);margin:0 4px 2px}
@@ -577,7 +577,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v40';
+  var APP_VERSION='v41';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
