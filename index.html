@@ -1263,6 +1263,38 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .chip:focus-visible,.mode:focus-visible,.btn:focus-visible,.bubble:focus-visible,.undo:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (prefers-reduced-motion: reduce){.chip,.mode{transition:none}}
+
+/* ---------- モーション（動きを減らす設定の人には出さない） ---------- */
+@media (prefers-reduced-motion: no-preference){
+  @keyframes popR{0%{opacity:0;transform:scale(.6) translate(10px,8px)}60%{opacity:1;transform:scale(1.06) translate(0,0)}100%{transform:none}}
+  @keyframes popL{0%{opacity:0;transform:scale(.6) translate(-10px,8px)}60%{opacity:1;transform:scale(1.06) translate(0,0)}100%{transform:none}}
+  @keyframes sheetUp{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:none}}
+  @keyframes chipIn{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
+  @keyframes chipPop{0%{transform:scale(.92)}55%{transform:scale(1.07)}100%{transform:none}}
+  @keyframes noteIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  @keyframes scrIn{from{opacity:0}to{opacity:1}}
+  @keyframes ripp{from{transform:translate(-50%,-50%) scale(0);opacity:.28}to{transform:translate(-50%,-50%) scale(1);opacity:0}}
+  @keyframes bst{0%{transform:translate(-50%,-50%) scale(.4);opacity:1}100%{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1);opacity:0}}
+  .row.fresh.mine .bubble{animation:popR .5s cubic-bezier(.2,1.2,.4,1) both;transform-origin:100% 100%}
+  .row.fresh:not(.mine) .bubble{animation:popL .5s cubic-bezier(.2,1.2,.4,1) both;transform-origin:0 100%}
+  .row.fresh .meta{animation:scrIn .5s .15s both}
+  .row.fresh .quick .chip{animation:chipIn .4s both}
+  .row.fresh .quick .chip:nth-of-type(1){animation-delay:.25s}
+  .row.fresh .quick .chip:nth-of-type(2){animation-delay:.33s}
+  .row.fresh .quick .chip:nth-of-type(3){animation-delay:.41s}
+  .row.fresh .quick .chip:nth-of-type(4){animation-delay:.49s}
+  .row.fresh .quick .chip:nth-of-type(5){animation-delay:.57s}
+  .sheet:not([hidden]){animation:sheetUp .38s cubic-bezier(.2,.9,.3,1.05)}
+  .chip[aria-pressed="true"],.mode[aria-pressed="true"]{animation:chipPop .3s ease-out}
+  .note:not([hidden]){animation:noteIn .3s ease-out}
+  .empty b{display:block;animation:floaty 3.4s ease-in-out infinite}
+  .screen:not([hidden]){animation:scrIn .4s ease-out}
+  .ripw{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none}
+  .rip{position:absolute;width:260%;aspect-ratio:1;border-radius:50%;background:currentColor;animation:ripp .6s ease-out forwards}
+  .bstp{position:fixed;z-index:99;pointer-events:none;border-radius:50%;background:var(--accent);animation:bst .7s cubic-bezier(.1,.7,.3,1) forwards}
+  .bstp.l{border-radius:3px;height:3px!important}
+}
 </style>
 </head>
 <body>
@@ -1392,7 +1424,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           </div>
           </div>
           <p>色・フォント・大きさを変えられます。この端末だけに保存されます。</p>
-          <p class="looklbl">テイスト</p><div id="look-style" class="chips" role="group" aria-label="テイスト"></div>
+          <p class="looklbl">テイスト</p><div id="look-cat" class="chips" role="group" aria-label="テイストの種類"></div><div id="look-style" class="chips" role="group" aria-label="テイスト"></div>
           <p class="looklbl">自分の色（ふきだし・ボタン）</p><div id="look-mine" class="looksw" role="group" aria-label="自分の色（ふきだし・ボタン）"></div>
           <p class="looklbl">相手のふきだしの色</p><div id="look-their" class="looksw" role="group" aria-label="相手のふきだしの色"></div>
           <p class="looklbl">背景 <span id="look-boardname" class="lookname"></span></p><div id="look-board" class="looksw" role="group" aria-label="背景の色"></div>
@@ -1638,7 +1670,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v85';
+  var APP_VERSION='v86';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1652,7 +1684,7 @@ function textFor(m){
     else{d.classList.add('none');d.textContent=(nm||'？').slice(0,1);}
     return d;
   }
-  var selected=null,firstPaint=true,forceBottom=false,busy=false;
+  var selected=null,firstPaint=true,forceBottom=false,busy=false,seen={};
   var log=$('log');
 
   /* ---------- 文面づくりシートの状態 ---------- */
@@ -1887,6 +1919,8 @@ function textFor(m){
       var mine=m.sender_id===me;
       var row=el('div','row'+(mine?' mine':'')+(m.kind==='reply'?' reply':''));
       row.setAttribute('data-mid',m.id);
+      if(!firstPaint&&!seen[m.id])row.classList.add('fresh');
+      seen[m.id]=true;
       if(!mine&&m.id===quickTarget)row.classList.add('replyable');
       if(!mine){
         var nmw=el('div','nm');nmw.appendChild(avEl(avatars[m.sender_id],names[m.sender_id]||'相手'));
@@ -1935,7 +1969,7 @@ function textFor(m){
         q.appendChild(el('p','qlbl','↩ 返信する：ひとつ選んでタップ'));
         REPLIES.forEach(function(r){
           var b=el('button','chip',r.text);b.type='button';
-          b.addEventListener('click',function(){sendReply(r.k,m.id);});
+          b.addEventListener('click',function(){burst(b);sendReply(r.k,m.id);});
           q.appendChild(b);
         });
         q.appendChild(el('p','qhint','「あとでやるね」を選ぶと、30分後に自分へお知らせが届きます（通知をオンにしている場合）'));
@@ -2018,6 +2052,33 @@ function textFor(m){
     if(!document.hidden&&room&&sb){loadMessages().catch(function(){});loadMembers();}
   });
 
+  /* ---------- ちいさな動き（バースト・波紋） ---------- */
+  var calm=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function burst(src){
+    if(calm||!src||!src.getBoundingClientRect)return;
+    var r=src.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+    for(var i=0;i<14;i++){
+      var a=(i/14)*Math.PI*2+Math.random()*.3,d=44+Math.random()*34,sz=5+Math.random()*5;
+      var p=el('span','bstp'+(i%3===0?' l':''));
+      p.style.left=cx+'px';p.style.top=cy+'px';p.style.width=(i%3===0?sz*2:sz)+'px';p.style.height=sz+'px';
+      p.style.setProperty('--dx',Math.cos(a)*d+'px');p.style.setProperty('--dy',Math.sin(a)*d+'px');
+      if(i%3===0)p.style.transform='rotate('+(a*180/Math.PI)+'deg)';
+      document.body.appendChild(p);
+      setTimeout(function(q){q.remove();}.bind(null,p),800);
+    }
+  }
+  document.addEventListener('pointerdown',function(e){
+    if(calm)return;
+    var t=e.target.closest&&e.target.closest('.btn,.chip,.mode');
+    if(!t||t.disabled)return;
+    if(getComputedStyle(t).position==='static')t.style.position='relative';
+    var r=t.getBoundingClientRect();
+    var w=el('span','ripw'),c=el('span','rip');
+    c.style.left=(e.clientX-r.left)+'px';c.style.top=(e.clientY-r.top)+'px';
+    w.appendChild(c);t.appendChild(w);
+    setTimeout(function(){w.remove();},700);
+  },{passive:true});
+
   async function insertRow(row){
     if(busy||!room)return false;
     busy=true;$('sendReport').disabled=true;
@@ -2035,8 +2096,9 @@ function textFor(m){
   $('sendReport').addEventListener('click',async function(){
     var row=currentRow();
     if(!row)return;
+    var sbtn=$('sendReport');
     var ok=await insertRow(row);
-    if(ok){openSheet(false);$('openSheet').focus();}
+    if(ok){burst(sbtn);openSheet(false);$('openSheet').focus();}
   });
   async function sendReply(key,toId){
     await insertRow({kind:'reply',reply_key:key,reply_to:toId});
@@ -2060,7 +2122,7 @@ function textFor(m){
     $('in-nick').value='';log.innerHTML='';
     try{openSheet(false);}catch(e){}
     $('codebox').textContent=fmtCode(r.code);
-    firstPaint=true;
+    firstPaint=true;seen={};
     show('room');
     updateSub();
     loadMessages().catch(function(){note('メッセージを読み込めませんでした。ページを開き直してください。');});
@@ -2675,6 +2737,16 @@ function textFor(m){
       '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
+  var STYLE_CATS=[
+    {k:'clean',n:'すっきり',ids:['japandi','bauhaus','utility','bento','grid3','midcentury','brutalism']},
+    {k:'classic',n:'クラシック',ids:['neoclassical','victorian','baroque','luxtype','artdeco','filigree','nouveau','acanthus']},
+    {k:'cute',n:'かわいい',ids:['kawaii','coquette','bohemian','shabbychic','farmhouse','scrapbook','mixedmedia']},
+    {k:'pop',n:'ポップ',ids:['memphis','y2k','popart','kitsch','graffiti','pixel','citypop','retropop']},
+    {k:'dream',n:'ふしぎ',ids:['aurora','ethereal','surreal','westernmystic','anthropomorphic','tenebrism']},
+    {k:'future',n:'未来',ids:['steampunk','cybercore','vaporwave','synthwave','cyberpunk']}
+  ];
+  var styleTab='';
+  function catOf(id){var c=STYLE_CATS.filter(function(c){return c.ids.indexOf(id)>=0;})[0];return c?c.k:'';}
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
   var look={style:store.get('look.style',''),mode:store.get('look.mode',''),mine:store.get('look.mine',''),their:store.get('look.their',''),board:store.get('look.board',''),font:store.get('look.font',''),size:store.get('look.size','1')};
   if(!look.board&&look.mode)look.board=look.mode;look.mode='';
@@ -2755,13 +2827,23 @@ function textFor(m){
         box.appendChild(b);
       });
     }
-    var stb=$('look-style');stb.textContent='';
-    LOOK_STYLES.forEach(function(x){
+    var cb=$('look-cat'),stb=$('look-style');cb.textContent='';stb.textContent='';
+    if(!styleTab||!STYLE_CATS.some(function(c){return c.k===styleTab;}))styleTab=catOf(look.style)||STYLE_CATS[0].k;
+    function stChip(x){
       var b=el('button','chip',x.name);b.type='button';
       b.setAttribute('aria-pressed',look.style===x.id?'true':'false');
       b.addEventListener('click',function(){look.style=x.id;lookSave();applyLook();lookPaint();});
-      stb.appendChild(b);
+      return b;
+    }
+    stb.appendChild(stChip(LOOK_STYLES[0]));
+    STYLE_CATS.forEach(function(c){
+      var b=el('button','mode',c.n+(catOf(look.style)===c.k?' ●':''));b.type='button';
+      b.setAttribute('aria-pressed',styleTab===c.k?'true':'false');
+      b.addEventListener('click',function(){styleTab=c.k;lookPaint();});
+      cb.appendChild(b);
     });
+    var cat=STYLE_CATS.filter(function(c){return c.k===styleTab;})[0];
+    cat.ids.forEach(function(id){var x=LOOK_STYLES.filter(function(y){return y.id===id;})[0];if(x)stb.appendChild(stChip(x));});
     ch($('look-font'),LOOK_FONT,'font',look.font);
     ch($('look-size'),LOOK_SIZE,'size',look.size);
   }
