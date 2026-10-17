@@ -64,6 +64,26 @@
 :root[data-style="utility"] .quick .qlbl,:root[data-style="utility"] .tag.rp{color:#e8590c}
 :root[data-style="utility"] .quick .chip{border-color:var(--ink)}
 :root[data-style="utility"] .btn.primary{box-shadow:none}
+/* テイスト: ベントーグリッド（お弁当箱のように、情報を丸いタイルに区切る） */
+:root[data-style="bento"] .card,:root[data-style="bento"] .setsec,:root[data-style="bento"] .sheet,:root[data-style="bento"] .bubble,:root[data-style="bento"] .chip,:root[data-style="bento"] .btn,:root[data-style="bento"] .preview,:root[data-style="bento"] .quick,:root[data-style="bento"] .mode{border-color:transparent}
+:root[data-style="bento"] .sheet{background:var(--bg);padding-bottom:0;gap:10px}
+:root[data-style="bento"] .sheet .group,:root[data-style="bento"] .sheet .seg{background:var(--surface);border-radius:calc(20px*var(--rs));padding:12px}
+:root[data-style="bento"] .sheet .group>h2{margin-top:0}
+:root[data-style="bento"] .pvhead,:root[data-style="bento"] .sendbar{background:var(--bg)}
+:root[data-style="bento"] .preview{background:var(--surface)}
+:root[data-style="bento"] #events{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+:root[data-style="bento"] #events .chip{border-radius:calc(16px*var(--rs));min-height:52px;text-align:left;padding:8px 12px;line-height:1.35}
+:root[data-style="bento"] .modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+:root[data-style="bento"] .mode{background:var(--chip);border-radius:calc(16px*var(--rs))}
+:root[data-style="bento"] .setsec{border-color:transparent}
+:root[data-style="bento"] .setbody>.setsec:nth-of-type(5n+1){background:#ffffff}
+:root[data-style="bento"] .setbody>.setsec:nth-of-type(5n+2){background:#eaf2ff}
+:root[data-style="bento"] .setbody>.setsec:nth-of-type(5n+3){background:#fff1e4}
+:root[data-style="bento"] .setbody>.setsec:nth-of-type(5n+4){background:#eaf7ee}
+:root[data-style="bento"] .setbody>.setsec:nth-of-type(5n){background:#f3ecff}
+:root[data-style="bento"] .lookhead{background:inherit}
+:root[data-style="bento"] .row.replyable .bubble{border-color:var(--accent);border-width:2px;padding:8.5px 13px}
+:root[data-style="bento"] .btn.primary{box-shadow:none}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -622,7 +642,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v58';
+  var APP_VERSION='v59';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1178,7 +1198,12 @@ function textFor(m){
       '--bg':'#f3f3f1','--surface':'#ffffff','--ink':'#111111','--muted':'#6b6b66','--line':'#cfcfca',
       '--accent':'#111111','--accent-ink':'#ffffff','--chip':'#e6e6e2','--chip-on':'#111111','--chip-on-ink':'#ffffff',
       '--focus':'#e8590c','--shadow':'none','--rs':'0',
-      '--font':'"IBM Plex Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
+      '--font':'"IBM Plex Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}},
+    {id:'bento',name:'ベントーグリッド',theme:'light',sw:['#e9ecf1','#3478f6'],vars:{
+      '--bg':'#e9ecf1','--surface':'#ffffff','--ink':'#1d1d1f','--muted':'#6e6e73','--line':'#e1e4ea',
+      '--accent':'#3478f6','--accent-ink':'#ffffff','--chip':'#f1f3f6','--chip-on':'#1d1d1f','--chip-on-ink':'#ffffff',
+      '--focus':'#3478f6','--shadow':'0 1px 2px rgba(29,29,31,.06)','--rs':'1.25',
+      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
