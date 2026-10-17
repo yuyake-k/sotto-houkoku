@@ -453,7 +453,7 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 const EVENTS=[
   {id:'light',label:'電気の消し忘れ',now:'電気がつけっぱなしだよ',did:'電気消しておいた',ask:'電気を消してもらえると嬉しい',em:'💡',emDid:'💡'},
   {id:'cups',label:'コップが溜まってる',now:'コップが溜まってるよ',did:'コップ洗っておいた',ask:'コップを下に持っていってもらえると嬉しい',em:'🥛',emDid:'🫧'},
-  {id:'dishes',label:'洗い物',now:'洗い物が残ってるよ',did:'洗い物しておいた',ask:'洗い物をお願いできると嬉しい',em:'🍽️',emDid:'🫧'},
+  {id:'dishes',label:'食器洗い',now:'食器洗いが残ってるよ',did:'食器洗いしておいた',ask:'食器洗いをお願いできると嬉しい',em:'🍽️',emDid:'🫧'},
   {id:'trash',label:'ゴミ出し',now:'ゴミがそのままだよ',did:'ゴミ出しておいた',ask:'ゴミを出してもらえると助かる',em:'🗑️',emDid:'🗑️'},
   {id:'laundry',label:'洗濯物',now:'洗濯物が干しっぱなしだよ',did:'洗濯物取り込んでおいた',ask:'洗濯物を取り込んでもらえると助かる',em:'👕',emDid:'👕'},
   {id:'lock',label:'鍵の閉め忘れ',now:'鍵が開いたままだよ',did:'鍵閉めておいた',ask:'鍵を閉めてもらえると安心する',em:'🔑',emDid:'🔑'},
@@ -577,7 +577,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v38';
+  var APP_VERSION='v39';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
