@@ -21,14 +21,20 @@ Deno.serve(async (req) => {
   if (!SECRET || req.headers.get("x-webhook-secret") !== SECRET) {
     return new Response("forbidden", { status: 403 });
   }
-  let p: { room_id?: string; sender_id?: string; kind?: string; title?: string; body?: string };
+  let p: { room_id?: string; sender_id?: string; kind?: string; target?: string; title?: string; body?: string };
   try { p = await req.json(); } catch { return new Response("bad", { status: 400 }); }
   if (!p.room_id || !p.sender_id) return new Response("bad", { status: 400 });
 
-  const mem = await admin.from("room_members").select("user_id")
-    .eq("room_id", p.room_id).neq("user_id", p.sender_id);
-  if (mem.error) return new Response(`error members: ${mem.error.message}`.slice(0, 200));
-  const ids = (mem.data ?? []).map((m: { user_id: string }) => m.user_id);
+  // target: "self" のときは、送った本人だけに通知する（「あとでやるね」のお知らせ）
+  let ids: string[];
+  if (p.target === "self") {
+    ids = [p.sender_id];
+  } else {
+    const mem = await admin.from("room_members").select("user_id")
+      .eq("room_id", p.room_id).neq("user_id", p.sender_id);
+    if (mem.error) return new Response(`error members: ${mem.error.message}`.slice(0, 200));
+    ids = (mem.data ?? []).map((m: { user_id: string }) => m.user_id);
+  }
   if (!ids.length) return new Response("no-recipient");
 
   const subs = await admin.from("push_subscriptions")

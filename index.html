@@ -113,6 +113,7 @@ button.bubble{cursor:pointer}
 .tag{padding:0 8px;border-radius:999px;border:1px solid var(--line)}
 .undo{font:inherit;font-size:12px;color:var(--accent);background:none;border:0;padding:4px 2px;cursor:pointer;text-decoration:underline}
 .quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:10px 12px;border-radius:14px;border:1.5px dashed var(--accent);background:var(--surface);max-width:100%}
+.quick .qhint{flex:1 1 100%;margin:0;font-size:12px;color:var(--muted)}
 .quick .qlbl{flex:1 1 100%;margin:0;font-size:12.5px;font-weight:700;color:var(--accent)}
 .quick .chip{min-height:40px;font-size:14px;padding:6px 14px;background:var(--bg);border:1.5px solid var(--accent);color:var(--ink)}
 .quick .chip:active{background:var(--accent);color:var(--accent-ink)}
@@ -589,7 +590,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v50';
+  var APP_VERSION='v51';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -871,6 +872,7 @@ function textFor(m){
           b.addEventListener('click',function(){sendReply(r.k,m.id);});
           q.appendChild(b);
         });
+        q.appendChild(el('p','qhint','「あとでやるね」を選ぶと、30分後に自分へお知らせが届きます（通知をオンにしている場合）'));
         row.appendChild(q);
       }
       log.appendChild(row);
@@ -965,6 +967,7 @@ function textFor(m){
   });
   async function sendReply(key,toId){
     await insertRow({kind:'reply',reply_key:key,reply_to:toId});
+    if(key==='later')$('status').textContent='30分後にお知らせします';
   }
   async function undo(id){
     selected=null;
