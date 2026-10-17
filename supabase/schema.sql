@@ -37,7 +37,7 @@ create table if not exists public.messages (
 
   -- 報告
   event_key  text check (event_key in ('light','cups','dishes','trash','laundry','lock','clothes','fridge','custom')),
-  mode       text check (mode in ('did','inf','ask')),
+  mode       text check (mode in ('did','inf','ask','thx')),
   tone       text check (tone in ('yuru','kawaii','sappari')),
   variant    int  not null default 0 check (variant between 0 and 999),
   thanks     boolean not null default false,
