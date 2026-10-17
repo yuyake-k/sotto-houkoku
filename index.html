@@ -86,6 +86,7 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);padding:0;cursor:pointer;position:relative}
 .sw[aria-pressed=true]{outline:3px solid var(--focus);outline-offset:2px}
 .lookpv{display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line)}
+.lookname{font-weight:400;color:var(--muted);margin-left:6px}
 .lookhead{position:sticky;top:0;z-index:2;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px;display:flex;flex-direction:column;gap:8px;border-radius:16px 16px 0 0}
 .lookpv .row{max-width:92%}
 .looklbl{font-size:13px;font-weight:700;margin:8px 0 2px}
@@ -341,10 +342,9 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           </div>
           </div>
           <p>色・フォント・大きさを変えられます。この端末だけに保存されます。</p>
-          <p class="looklbl">画面の明るさ</p><div id="look-mode" class="chips" role="group" aria-label="画面の明るさ"></div>
           <p class="looklbl">自分の色（ふきだし・ボタン）</p><div id="look-mine" class="looksw" role="group" aria-label="自分の色（ふきだし・ボタン）"></div>
           <p class="looklbl">相手のふきだしの色</p><div id="look-their" class="looksw" role="group" aria-label="相手のふきだしの色"></div>
-          <p class="looklbl">背景の色(選ぶと、明るさは色に合わせます)</p><div id="look-board" class="looksw" role="group" aria-label="背景の色"></div>
+          <p class="looklbl">背景 <span id="look-boardname" class="lookname"></span></p><div id="look-board" class="looksw" role="group" aria-label="背景の色"></div>
           <p class="looklbl">フォント</p><div id="look-font" class="chips" role="group" aria-label="フォント"></div>
           <p class="looklbl">文字の大きさ</p><div id="look-size" class="chips" role="group" aria-label="文字の大きさ"></div>
           <div class="actions"><button id="look-reset" class="btn" type="button">もとにもどす</button></div>
@@ -582,7 +582,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v44';
+  var APP_VERSION='v45';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1111,11 +1111,11 @@ function textFor(m){
   /* ---------- チャットの見た目（この端末だけ） ---------- */
   var LOOK_MINE=[['ピンク','#e0446f'],['あお','#3b7ddd'],['みどり','#2f9e6e'],['オレンジ','#c8621c'],['むらさき','#7a55d9'],['グレー','#5b5668'],['ネイビー','#1f3a6e']];
   var LOOK_THEIR=[['しろ',''],['うすピンク','#fde4ec'],['うすあお','#deebfb'],['うすみどり','#dff3e8'],['うすきいろ','#fdf3d0'],['うすむらさき','#ebe4fb'],['うすグレー','#e9e7ee']];
-  var LOOK_BOARD=[['もとのまま',''],['うすピンク','#fbe9ef'],['うすあお','#e6eefb'],['うすみどり','#e5f4ec'],['うすきいろ','#fbf5dc'],['うすむらさき','#eee8fb'],['うすグレー','#ecebf0'],['ベージュ','#f3eadb'],['ネイビー','#141c2e'],['ふかみどり','#14231c'],['ぶどう','#231a30']];
+  var LOOK_BOARD=[['じどう(iPhoneに合わせる)',''],['あかるい','light'],['くらい','dark'],['うすピンク','#fbe9ef'],['うすあお','#e6eefb'],['うすみどり','#e5f4ec'],['うすきいろ','#fbf5dc'],['うすむらさき','#eee8fb'],['ベージュ','#f3eadb'],['ネイビー','#141c2e'],['ふかみどり','#14231c'],['ぶどう','#231a30']];
   var LOOK_FONT=[['まるゴシック',''],['ゴシック','"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif'],['明朝','"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif'],['手書き風','"Klee","Yu Kyokasho","YuKyokasho","Hiragino Maru Gothic ProN",cursive'],['ゲーム風(ドット)','"DotGothic16","Hiragino Maru Gothic ProN",monospace']];
   var LOOK_SIZE=[['小',0.9],['ふつう',1],['大',1.15],['とても大',1.3]];
   var look={mode:store.get('look.mode',''),mine:store.get('look.mine',''),their:store.get('look.their',''),board:store.get('look.board',''),font:store.get('look.font',''),size:store.get('look.size','1')};
-  if(look.board==='dark'){look.board='';look.mode='dark';}
+  if(!look.board&&look.mode)look.board=look.mode;look.mode='';
   function isDarkNow(){var t=document.documentElement.getAttribute('data-theme');return t?t==='dark':!!(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);}
   function inkFor(hex){var n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (0.299*r+0.587*g+0.114*b)>165?'#2a2233':'#ffffff';}
   function applyLook(){
@@ -1124,8 +1124,9 @@ function textFor(m){
     set('--accent',look.mine);set('--accent-ink',look.mine?inkFor(look.mine):'');
     set('--their-bg',look.their);set('--their-ink',look.their?'#2a2233':'');
     var bd=look.board,de=document.documentElement,theme='',tcol='';
-    if(bd){theme=inkFor(bd)==='#ffffff'?'dark':'light';set('--bg',bd);tcol=bd;}
-    else{set('--bg','');theme=look.mode==='light'?'light':look.mode==='dark'?'dark':'';tcol=theme==='dark'?'#16121b':theme==='light'?'#f6f3f9':'';}
+    if(bd==='light'||bd==='dark'){set('--bg','');theme=bd;tcol=bd==='dark'?'#16121b':'#f6f3f9';}
+    else if(bd){theme=inkFor(bd)==='#ffffff'?'dark':'light';set('--bg',bd);tcol=bd;}
+    else{set('--bg','');}
     if(theme)de.setAttribute('data-theme',theme);else de.removeAttribute('data-theme');
     document.querySelectorAll('meta[name="theme-color"]').forEach(function(tc){
       if(!tc.hasAttribute('data-orig'))tc.setAttribute('data-orig',tc.getAttribute('content')||'');
@@ -1141,7 +1142,10 @@ function textFor(m){
       list.forEach(function(x){
         var b=el('button','sw');b.type='button';b.setAttribute('aria-label',x[0]);b.title=x[0];
         var dk=isDarkNow();
-        b.style.background=x[1]||(key==='mine'?(dk?'#ff7a9f':'#e0446f'):(key==='board'?(dk?'#16121b':'#f6f3f9'):(dk?'#211b29':'#ffffff')));
+        if(key==='board'&&x[1]==='')b.style.background='linear-gradient(135deg,#f6f3f9 50%,#16121b 50%)';
+        else if(key==='board'&&x[1]==='light')b.style.background='#f6f3f9';
+        else if(key==='board'&&x[1]==='dark')b.style.background='#16121b';
+        else b.style.background=x[1]||(key==='mine'?(dk?'#ff7a9f':'#e0446f'):(key==='board'?(dk?'#16121b':'#f6f3f9'):(dk?'#211b29':'#ffffff')));
         b.setAttribute('aria-pressed',look[key]===x[1]?'true':'false');
         b.addEventListener('click',function(){look[key]=x[1];lookSave();applyLook();lookPaint();});
         box.appendChild(b);
@@ -1150,6 +1154,7 @@ function textFor(m){
     sw($('look-mine'),LOOK_MINE.map(function(x,i){return i===0?[x[0],'']:x;}),'mine');
     sw($('look-their'),LOOK_THEIR,'their');
     sw($('look-board'),LOOK_BOARD,'board');
+    $('look-boardname').textContent=(LOOK_BOARD.filter(function(x){return x[1]===look.board;})[0]||LOOK_BOARD[0])[0];
     function ch(box,list,key,cur){
       box.textContent='';
       list.forEach(function(x){
@@ -1160,13 +1165,6 @@ function textFor(m){
         box.appendChild(b);
       });
     }
-    var mb=$('look-mode');mb.textContent='';
-    [['iPhoneに合わせる',''],['ライト','light'],['ダーク','dark']].forEach(function(x){
-      var b=el('button','chip',x[0]);b.type='button';
-      b.setAttribute('aria-pressed',(!look.board&&look.mode===x[1])?'true':'false');
-      b.addEventListener('click',function(){look.mode=x[1];look.board='';lookSave();applyLook();lookPaint();});
-      mb.appendChild(b);
-    });
     ch($('look-font'),LOOK_FONT,'font',look.font);
     ch($('look-size'),LOOK_SIZE,'size',look.size);
   }
