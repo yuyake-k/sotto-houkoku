@@ -154,7 +154,7 @@
 /* ベントーグリッド: 帯が丸いタイルになり、吹き出しは大きな丸角のお弁当タイル */
 :root[data-style="bento"] body{background-image:radial-gradient(circle at 12% 8%,rgba(255,190,150,.28),transparent 38%),radial-gradient(circle at 92% 30%,rgba(150,200,255,.26),transparent 40%),radial-gradient(circle at 20% 92%,rgba(190,235,190,.26),transparent 40%);background-attachment:fixed}
 :root[data-style="bento"] .top{background:var(--surface);border-radius:calc(22px*var(--rs,1));margin:8px 0 6px;padding:12px 16px;box-shadow:0 2px 0 rgba(0,0,0,.05)}
-:root[data-style="bento"] .top h1::before{content:'🍱 ';font-size:.9em}
+:root[data-style="bento"] .top h1::before{content:'';display:inline-block;width:.95em;height:.95em;margin-right:.4em;vertical-align:-.1em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect x='2' y='2' width='17' height='17' rx='6' fill='%23ff9f6b'/%3E%3Crect x='21' y='2' width='17' height='17' rx='6' fill='%236fa8ff'/%3E%3Crect x='2' y='21' width='17' height='17' rx='6' fill='%235fc98a'/%3E%3Crect x='21' y='21' width='17' height='17' rx='6' fill='%23b08cff'/%3E%3C/svg%3E") center/contain no-repeat}
 :root[data-style="bento"] .bubble{border-radius:calc(22px*var(--rs,1))!important;border-color:transparent;box-shadow:0 2px 0 rgba(0,0,0,.06);padding:10px 16px}
 :root[data-style="bento"] .row:not(.mine) .bubble{background:var(--their-bg,#fff)}
 :root[data-style="bento"] .day{background:var(--surface);box-shadow:0 1px 0 rgba(0,0,0,.05)}
@@ -213,7 +213,7 @@
 :root[data-style="midcentury"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cg opacity='.5'%3E%3Cg transform='translate(14 14) scale(.9)'%3E%3Cpath d='M30 12 V48 M12 30 H48 M17 17 L43 43 M43 17 L17 43' stroke='%23e5a823' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='30' cy='30' r='4' fill='%23e07a2f'/%3E%3C/g%3E%3Cpath d='M92 112 Q112 84 140 100 Q116 96 106 118Z' fill='%232a7f8e'/%3E%3Cellipse cx='120' cy='36' rx='14' ry='9' fill='%23e5a823' transform='rotate(-25 120 36)'/%3E%3C/g%3E%3C/svg%3E");background-size:160px 160px}
 :root[data-style="midcentury"] .top{margin-inline:-16px;padding-inline:16px;background:#5a3a26;border-bottom:5px solid #e5a823;box-shadow:0 5px 0 #2a7f8e;position:relative;margin-bottom:6px}
 :root[data-style="midcentury"] .top h1{color:#fff3dc;font-family:"Mochiy Pop One","Zen Kaku Gothic New",sans-serif;font-weight:400;letter-spacing:.06em}
-:root[data-style="midcentury"] .top h1::before{content:'✳';color:#e5a823;margin-right:.3em}
+:root[data-style="midcentury"] .top h1::before{content:'';display:inline-block;width:1.05em;height:1.05em;margin-right:.35em;vertical-align:-.12em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 3V37M3 20H37M8 8L32 32M32 8L8 32' stroke='%23e5a823' stroke-width='3.2' stroke-linecap='round'/%3E%3Ccircle cx='20' cy='3.5' r='2.6' fill='%232a7f8e'/%3E%3Ccircle cx='20' cy='36.5' r='2.6' fill='%232a7f8e'/%3E%3Ccircle cx='3.5' cy='20' r='2.6' fill='%232a7f8e'/%3E%3Ccircle cx='36.5' cy='20' r='2.6' fill='%232a7f8e'/%3E%3Ccircle cx='20' cy='20' r='6' fill='%23e07a2f'/%3E%3C/svg%3E") center/contain no-repeat}
 :root[data-style="midcentury"] .top .lead,:root[data-style="midcentury"] .top .conn{color:#e9d7b5}
 :root[data-style="midcentury"] .top .btn{background:#fff3dc;color:#3b2f2a;border-color:#fff3dc}
 :root[data-style="midcentury"] h2,:root[data-style="midcentury"] h3{color:#2a7f8e;font-weight:700;letter-spacing:.06em}
@@ -790,7 +790,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v67';
+  var APP_VERSION='v68';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
