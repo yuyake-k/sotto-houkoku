@@ -88,6 +88,7 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .lookpv{display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line)}
 .lookname{font-weight:400;color:var(--muted);margin-left:6px}
 .lookhead{position:sticky;top:0;z-index:2;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px;display:flex;flex-direction:column;gap:8px;border-radius:16px 16px 0 0}
+.lookhead.stuck{margin:-14px -15.5px 0;padding:14px 15.5px 10px;border-radius:0}
 .lookpv .row{max-width:92%}
 .looklbl{font-size:13px;font-weight:700;margin:8px 0 2px}
 .nm{font-size:12px;color:var(--muted);margin:0 4px 2px}
@@ -582,7 +583,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v45';
+  var APP_VERSION='v46';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1170,6 +1171,12 @@ function textFor(m){
   }
   $('look-reset').addEventListener('click',function(){look={mode:'',mine:'',their:'',board:'',font:'',size:'1'};lookSave();applyLook();lookPaint();});
   if(window.matchMedia){try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){lookPaint();});}catch(e){}}
+  (function(){
+    var sb=document.querySelector('.setbody'),hd=document.querySelector('.lookhead');
+    if(!sb||!hd)return;
+    function chk(){hd.classList.toggle('stuck',hd.getBoundingClientRect().top<=sb.getBoundingClientRect().top+1&&sb.scrollTop>0);}
+    sb.addEventListener('scroll',chk,{passive:true});
+  })();
   applyLook();lookPaint();
 
   /* ---------- 合言葉パネル ---------- */
