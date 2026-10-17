@@ -177,7 +177,7 @@
 :root[data-style="pixel"] .row:not(.mine) .bubble{background:var(--their-bg,#0f1124);color:var(--their-ink,#f4f1de);border-color:#f4f1de;position:relative}
 :root[data-style="pixel"] .row:not(.mine) .bubble::after,:root[data-style="pixel"] .row.mine .bubble::after{content:'▼';position:absolute;right:8px;bottom:-1px;font-size:9px;color:var(--arrow-their,#ffd166);animation:pxb 1s steps(2) infinite}
 @keyframes pxb{50%{transform:translateY(3px)}}
-:root[data-style="pixel"] .row.mine .bubble::after{right:auto;left:8px;color:var(--arrow-mine,#ffd166)}
+:root[data-style="pixel"] .row.mine .bubble::after{color:var(--arrow-mine,#ffd166)}
 :root[data-style="pixel"] .row.mine .bubble{position:relative}
 :root[data-style="pixel"] .day{border-radius:0;background:#ffd166;color:#1d2033}
 /* メンフィス: 黄色い帯にジグザグ、紙吹雪、少し傾いた吹き出し */
@@ -259,6 +259,29 @@
 :root[data-style="popart"] .quick{background:#fff;border-color:#1d4fd7;box-shadow:4px 4px 0 #1d4fd7}
 :root[data-style="popart"] .quick .qlbl,:root[data-style="popart"] .tag.rp{color:#1d4fd7}
 :root[data-style="popart"] .pvhead,:root[data-style="popart"] .sendbar,:root[data-style="popart"] .lookhead,:root[data-style="popart"] .phrases .pl{background:#fff;box-shadow:none}
+/* テイスト: ネオクラシカル（大理石のアイボリー・金とネイビー・明朝体・ギリシャ風の雷文と柱） */
+:root[data-style="neoclassical"] body{background-image:linear-gradient(115deg,transparent 46%,rgba(120,110,90,.07) 47%,transparent 48.5%),linear-gradient(75deg,transparent 60%,rgba(120,110,90,.06) 61%,transparent 62.5%),linear-gradient(160deg,transparent 22%,rgba(176,141,60,.07) 23%,transparent 24.5%);background-size:260px 260px,340px 340px,420px 420px}
+:root[data-style="neoclassical"] .top{margin-inline:-16px;padding-inline:16px;background:#fdfbf6;border-top:3px double #b08d3c;border-bottom:3px double #b08d3c;position:relative;padding-bottom:20px;margin-bottom:6px}
+:root[data-style="neoclassical"] .top::after{content:'';position:absolute;left:0;right:0;bottom:3px;height:10px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='10' viewBox='0 0 18 10'%3E%3Cpath d='M0 9V1H13V7H5V4H9' fill='none' stroke='%23b08d3c' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x center/18px 10px;opacity:.9;pointer-events:none}
+:root[data-style="neoclassical"] .top h1{color:#1f2f55;font-weight:700;letter-spacing:.16em}
+:root[data-style="neoclassical"] .top h1::before{content:'';display:inline-block;width:1.05em;height:1.05em;margin-right:.45em;vertical-align:-.14em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23b08d3c' stroke-width='2'%3E%3Cpath d='M4 8H36M7 12H33M10 14V32M16 14V32M24 14V32M30 14V32M7 34H33M4 38H36'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="neoclassical"] .top .lead{letter-spacing:.1em}
+:root[data-style="neoclassical"] h1,:root[data-style="neoclassical"] h2,:root[data-style="neoclassical"] h3{font-weight:700;letter-spacing:.12em;color:#1f2f55}
+:root[data-style="neoclassical"] h2::before,:root[data-style="neoclassical"] h3::before{content:'◆';color:#b08d3c;font-size:.6em;margin-right:.6em;vertical-align:.15em}
+:root[data-style="neoclassical"] .card,:root[data-style="neoclassical"] .setsec,:root[data-style="neoclassical"] .sheet,:root[data-style="neoclassical"] .preview,:root[data-style="neoclassical"] .quick{border:1px solid #cdbb8a;box-shadow:inset 0 0 0 4px #fdfbf6,inset 0 0 0 5px #e3d6ae}
+:root[data-style="neoclassical"] .sheet{box-shadow:inset 0 0 0 4px #fdfbf6,inset 0 0 0 5px #e3d6ae,0 -2px 0 rgba(176,141,60,.3)}
+:root[data-style="neoclassical"] .chip,:root[data-style="neoclassical"] .btn,:root[data-style="neoclassical"] .mode{border:1px solid #b08d3c;letter-spacing:.06em}
+:root[data-style="neoclassical"] .btn.primary{background:#1f2f55;color:#e8cf8a;border:1px solid #b08d3c;box-shadow:inset 0 0 0 2px #1f2f55,inset 0 0 0 3px #b08d3c}
+:root[data-style="neoclassical"] .chip[aria-pressed="true"],:root[data-style="neoclassical"] .mode[aria-pressed="true"]{box-shadow:inset 0 0 0 2px #1f2f55,inset 0 0 0 3px #b08d3c}
+:root[data-style="neoclassical"] .bubble{border:1px solid #b08d3c;box-shadow:inset 0 0 0 3px var(--their-bg,#fdfbf6),inset 0 0 0 4px #e3d6ae;padding:11px 17px;border-radius:calc(8px*var(--rs,1))!important;letter-spacing:.05em}
+:root[data-style="neoclassical"] .row.mine .bubble{background:var(--mine-bg,#1f2f55);color:var(--mine-ink,#f3e6bf);box-shadow:inset 0 0 0 3px var(--mine-bg,#1f2f55),inset 0 0 0 4px #b08d3c}
+:root[data-style="neoclassical"] .row:not(.mine) .bubble{background:var(--their-bg,#fdfbf6)}
+:root[data-style="neoclassical"] .row.replyable .bubble{border-color:#1f2f55;border-width:2px}
+:root[data-style="neoclassical"] .day{background:transparent;color:#8a6d2b;letter-spacing:.3em;font-weight:700;border-radius:0}
+:root[data-style="neoclassical"] .day::before,:root[data-style="neoclassical"] .day::after{content:'';display:inline-block;width:16px;height:1px;background:#b08d3c;vertical-align:middle;margin:0 8px}
+:root[data-style="neoclassical"] .quick{border-color:#b08d3c}
+:root[data-style="neoclassical"] .quick .qlbl,:root[data-style="neoclassical"] .tag.rp{color:#8a6d2b}
+:root[data-style="neoclassical"] .pvhead,:root[data-style="neoclassical"] .sendbar,:root[data-style="neoclassical"] .lookhead,:root[data-style="neoclassical"] .phrases .pl{background:#fdfbf6}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -817,7 +840,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v69';
+  var APP_VERSION='v70';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1409,6 +1432,11 @@ function textFor(m){
       '--accent':'#e8262d','--accent-ink':'#ffffff','--chip':'#ffffff','--chip-on':'#1d4fd7','--chip-on-ink':'#ffffff',
       '--focus':'#1d4fd7','--shadow':'4px 4px 0 #111','--rs':'0.8',
       '--font':'"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif'}}
+    ,{id:'neoclassical',name:'ネオクラシカル',theme:'light',sw:['#f4f1ea','#1f2f55'],vars:{
+      '--bg':'#f4f1ea','--surface':'#fdfbf6','--ink':'#1f2438','--muted':'#6b6a72','--line':'#cdbb8a',
+      '--accent':'#1f2f55','--accent-ink':'#f3e6bf','--chip':'#ece6d6','--chip-on':'#1f2f55','--chip-on-ink':'#e8cf8a',
+      '--focus':'#b08d3c','--shadow':'0 2px 0 rgba(176,141,60,.35)','--rs':'0.4',
+      '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
