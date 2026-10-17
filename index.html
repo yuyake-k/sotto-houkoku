@@ -328,6 +328,27 @@
 :root[data-style="baroque"] .quick{background:#2a1a1f;border-color:#d4a84a}
 :root[data-style="baroque"] .quick .qlbl,:root[data-style="baroque"] .tag.rp{color:#e8c36a}
 :root[data-style="baroque"] .pvhead,:root[data-style="baroque"] .sendbar,:root[data-style="baroque"] .lookhead,:root[data-style="baroque"] .phrases .pl{background:var(--surface,#2a1a1f)}
+/* テイスト: ラグジュアリータイポグラフィ（大きな明朝体・極細の罫線・モノトーン・たっぷりの余白、雑誌の表紙のように） */
+:root[data-style="luxtype"] body{letter-spacing:.06em;line-height:1.85}
+:root[data-style="luxtype"] body::after{content:'S';position:fixed;right:-4vw;bottom:-9vh;font-family:"Shippori Mincho",serif;font-weight:800;font-size:58vh;line-height:1;color:rgba(20,20,20,.045);z-index:-1;pointer-events:none}
+:root[data-style="luxtype"] .top{margin-inline:-16px;padding:26px 16px 12px;background:var(--bg);border-top:1px solid #141414;border-bottom:1px solid #141414;box-shadow:0 3px 0 var(--bg),0 4px 0 #141414;margin-bottom:10px;position:relative}
+:root[data-style="luxtype"] .top::before{content:'VOL.01  /  THE QUIET REPORT';position:absolute;left:16px;top:7px;font-family:"Zen Kaku Gothic New",sans-serif;font-size:8.5px;letter-spacing:.34em;font-weight:700;color:#a8873a}
+:root[data-style="luxtype"] .top h1{font-size:30px;font-weight:800;letter-spacing:.22em;line-height:1.1}
+:root[data-style="luxtype"] .top .lead{font-family:"Zen Kaku Gothic New",sans-serif;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;margin-top:6px}
+:root[data-style="luxtype"] h2,:root[data-style="luxtype"] h3{font-size:12px;letter-spacing:.3em;font-weight:800;border-bottom:1px solid #141414;padding-bottom:5px;margin-bottom:10px}
+:root[data-style="luxtype"] .card,:root[data-style="luxtype"] .setsec,:root[data-style="luxtype"] .sheet,:root[data-style="luxtype"] .preview,:root[data-style="luxtype"] .quick{border:1px solid #141414;box-shadow:none}
+:root[data-style="luxtype"] .chip,:root[data-style="luxtype"] .btn,:root[data-style="luxtype"] .mode{border:1px solid #141414;letter-spacing:.14em;background:transparent}
+:root[data-style="luxtype"] .btn.primary{background:#141414;color:#f8f5ef;letter-spacing:.3em;box-shadow:inset 0 0 0 3px #141414,inset 0 0 0 4px #a8873a}
+:root[data-style="luxtype"] .bubble{border:1px solid #141414;padding:12px 20px;letter-spacing:.09em;line-height:1.9;border-radius:0!important;box-shadow:none}
+:root[data-style="luxtype"] .row.mine .bubble{background:var(--mine-bg,#141414);color:var(--mine-ink,#f8f5ef);box-shadow:5px 5px 0 #a8873a}
+:root[data-style="luxtype"] .row:not(.mine) .bubble{background:var(--their-bg,transparent)}
+:root[data-style="luxtype"] .row.replyable .bubble{border-width:2px;border-color:#a8873a}
+:root[data-style="luxtype"] .day{background:transparent;border-radius:0;font-family:"Zen Kaku Gothic New",sans-serif;font-size:10px;font-weight:700;letter-spacing:.4em;color:#141414}
+:root[data-style="luxtype"] .day::before,:root[data-style="luxtype"] .day::after{content:'';display:inline-block;width:28px;height:1px;background:#141414;vertical-align:middle;margin:0 10px}
+:root[data-style="luxtype"] .meta{letter-spacing:.14em}
+:root[data-style="luxtype"] .quick{border-color:#a8873a}
+:root[data-style="luxtype"] .quick .qlbl,:root[data-style="luxtype"] .tag.rp{color:#a8873a;letter-spacing:.2em}
+:root[data-style="luxtype"] .pvhead,:root[data-style="luxtype"] .sendbar,:root[data-style="luxtype"] .lookhead,:root[data-style="luxtype"] .phrases .pl{background:var(--surface,#fdfcf9)}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -886,7 +907,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v74';
+  var APP_VERSION='v75';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1492,6 +1513,11 @@ function textFor(m){
       '--bg':'#1a1114','--surface':'#2a1a1f','--ink':'#f3e3c3','--muted':'#b9a483','--line':'#8a6d2b',
       '--accent':'#a3223a','--accent-ink':'#f8e7bf','--chip':'#3a252b','--chip-on':'#d4a84a','--chip-on-ink':'#2a1216',
       '--focus':'#e8c36a','--shadow':'0 6px 18px rgba(0,0,0,.55)','--rs':'1',
+      '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
+    ,{id:'luxtype',name:'ラグジュアリータイポグラフィ',theme:'light',sw:['#f8f5ef','#141414'],vars:{
+      '--bg':'#f8f5ef','--surface':'#fdfcf9','--ink':'#141414','--muted':'#77736b','--line':'#141414',
+      '--accent':'#141414','--accent-ink':'#f8f5ef','--chip':'#f1ede4','--chip-on':'#141414','--chip-on-ink':'#f8f5ef',
+      '--focus':'#a8873a','--shadow':'none','--rs':'0',
       '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
