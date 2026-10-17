@@ -125,6 +125,64 @@
 :root[data-style="memphis"] .quick .qlbl,:root[data-style="memphis"] .tag.rp{color:#3a86ff}
 :root[data-style="memphis"] .pvhead,:root[data-style="memphis"] .sendbar,:root[data-style="memphis"] .lookhead,:root[data-style="memphis"] .phrases .pl{box-shadow:none}
 :root[data-style="memphis"] .sheet{background:#fff}
+/* ===== あそび強化 (v63): 背景・吹き出し・上の帯をテーマごとに ===== */
+.top h1{position:relative}
+/* ジャパンディ: 和紙のようなざらつき、墨の一筆、輪郭だけの相手の吹き出し */
+:root[data-style="japandi"] body{background-image:radial-gradient(rgba(120,100,80,.07) 1px,transparent 1.2px),radial-gradient(rgba(120,100,80,.05) 1px,transparent 1.2px);background-size:22px 22px,13px 13px;background-position:0 0,6px 7px}
+:root[data-style="japandi"] .top h1::after{content:'';display:block;width:34px;height:2px;margin-top:6px;border-radius:2px;background:var(--accent);opacity:.8;transform:rotate(-1.2deg)}
+:root[data-style="japandi"] .top{padding-bottom:12px}
+:root[data-style="japandi"] .row:not(.mine) .bubble{background:transparent;border-width:1px;border-bottom-left-radius:calc(4px*var(--rs,1))}
+:root[data-style="japandi"] .row.mine .bubble{border-radius:calc(24px*var(--rs,1)) calc(24px*var(--rs,1)) calc(4px*var(--rs,1)) calc(24px*var(--rs,1));padding:10px 18px}
+:root[data-style="japandi"] .day{background:transparent;border:0;position:relative;letter-spacing:.2em}
+:root[data-style="japandi"] .day::before,:root[data-style="japandi"] .day::after{content:'';display:inline-block;width:18px;height:1px;background:var(--line);vertical-align:middle;margin:0 8px}
+/* バウハウス: 背景に大きな円・三角・四角、赤い円つきの太い帯、直角の吹き出し */
+:root[data-style="bauhaus"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='520' viewBox='0 0 360 520'%3E%3Ccircle cx='300' cy='90' r='70' fill='%23d62718' opacity='.10'/%3E%3Cpath d='M30 470 L120 330 L210 470Z' fill='%231c3f95' opacity='.09'/%3E%3Crect x='250' y='330' width='80' height='80' fill='%23f6d33b' opacity='.20'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right bottom;background-size:min(100%,360px) auto;background-attachment:fixed}
+:root[data-style="bauhaus"] .top{margin-inline:-16px;padding-inline:16px;border-bottom:3px solid var(--ink);background:var(--surface)}
+:root[data-style="bauhaus"] .top h1::before{content:'';display:inline-block;width:.78em;height:.78em;border-radius:50%;background:#d62718;margin-right:.35em;vertical-align:-.04em}
+:root[data-style="bauhaus"] .bubble{border-radius:0!important}
+:root[data-style="bauhaus"] .row:not(.mine) .bubble{border-left-width:9px;border-left-color:#f6d33b}
+:root[data-style="bauhaus"] .row.mine .bubble{border-right:9px solid #1c3f95;border-color:transparent #1c3f95 transparent transparent}
+:root[data-style="bauhaus"] .day{border-radius:0;background:#f6d33b;color:#111;font-weight:700}
+/* ユーティリタリアン: 方眼紙、製図の見出し欄、等幅の吹き出しと四隅の目盛り */
+:root[data-style="utility"] body{background-image:linear-gradient(rgba(128,128,128,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(128,128,128,.13) 1px,transparent 1px);background-size:20px 20px;background-position:-1px -1px}
+:root[data-style="utility"] .top{margin-inline:-16px;padding-inline:16px;background:var(--surface);border-top:4px solid var(--ink);border-bottom:1px solid var(--ink)}
+:root[data-style="utility"] .top h1::after{content:'REPORT / No.001  REV.A';display:block;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:#e8590c;margin-top:3px}
+:root[data-style="utility"] .bubble{font-family:ui-monospace,"SF Mono",Menlo,monospace,var(--chat-font,inherit);font-size:calc(14px*var(--cs,1));border-radius:0!important;position:relative}
+:root[data-style="utility"] .row.mine .bubble{background:var(--ink);color:var(--surface)}
+:root[data-style="utility"] .row:not(.mine) .bubble::before{content:'▸ ';color:#e8590c}
+:root[data-style="utility"] .day{border-radius:0;background:transparent;border:1px solid var(--line);font-family:ui-monospace,Menlo,monospace;letter-spacing:.1em}
+/* ベントーグリッド: 帯が丸いタイルになり、吹き出しは大きな丸角のお弁当タイル */
+:root[data-style="bento"] body{background-image:radial-gradient(circle at 12% 8%,rgba(255,190,150,.28),transparent 38%),radial-gradient(circle at 92% 30%,rgba(150,200,255,.26),transparent 40%),radial-gradient(circle at 20% 92%,rgba(190,235,190,.26),transparent 40%);background-attachment:fixed}
+:root[data-style="bento"] .top{background:var(--surface);border-radius:calc(22px*var(--rs,1));margin:8px 0 6px;padding:12px 16px;box-shadow:0 2px 0 rgba(0,0,0,.05)}
+:root[data-style="bento"] .top h1::before{content:'🍱 ';font-size:.9em}
+:root[data-style="bento"] .bubble{border-radius:calc(22px*var(--rs,1))!important;border-color:transparent;box-shadow:0 2px 0 rgba(0,0,0,.06);padding:10px 16px}
+:root[data-style="bento"] .row:not(.mine) .bubble{background:var(--their-bg,#fff)}
+:root[data-style="bento"] .day{background:var(--surface);box-shadow:0 1px 0 rgba(0,0,0,.05)}
+/* 3×3グリッド: 9マスのドット印、3列の罫線の背景、正方形に近い吹き出し */
+:root[data-style="grid3"] body{background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:33.333% 33.333%;background-attachment:fixed;background-position:0 0}
+:root[data-style="grid3"] .top{margin-inline:-16px;padding-inline:16px;background:var(--surface);border-bottom:1px solid var(--ink)}
+:root[data-style="grid3"] .top h1::before{content:'';display:inline-block;width:.9em;height:.9em;margin-right:.4em;vertical-align:-.06em;background:radial-gradient(circle,var(--ink) 0 22%,transparent 24%) 0 0/33.333% 33.333%}
+:root[data-style="grid3"] .bubble{border-radius:0!important}
+:root[data-style="grid3"] .row.mine .bubble{border:0}
+:root[data-style="grid3"] .day{border-radius:0}
+/* ピクセルアート: 星空、HPバーのような帯、ドラクエ風の会話ウィンドウ */
+:root[data-style="pixel"] body{background-image:radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#ffd166 1px,transparent 1.5px),radial-gradient(#8ecae6 1px,transparent 1.5px);background-size:97px 89px,151px 131px,67px 113px;background-position:7px 11px,53px 70px,31px 40px;background-attachment:fixed}
+:root[data-style="pixel"] .top{margin-inline:-16px;padding-inline:16px;background:#0f1124;border-bottom:4px solid #f4f1de;box-shadow:0 4px 0 #ff5d73}
+:root[data-style="pixel"] .top .lead::after{content:' ♥♥♥♡';color:#ff5d73;letter-spacing:.1em}
+:root[data-style="pixel"] .bubble{box-shadow:inset 0 0 0 2px #0f1124,inset 0 0 0 4px rgba(244,241,222,.5)}
+:root[data-style="pixel"] .row:not(.mine) .bubble{background:#0f1124;color:#f4f1de;border-color:#f4f1de;position:relative}
+:root[data-style="pixel"] .row:not(.mine) .bubble::after{content:'▼';position:absolute;right:8px;bottom:-1px;font-size:9px;color:#ffd166;animation:pxb 1s steps(2) infinite}
+@keyframes pxb{50%{transform:translateY(3px)}}
+:root[data-style="pixel"] .day{border-radius:0;background:#ffd166;color:#1d2033}
+/* メンフィス: 黄色い帯にジグザグ、紙吹雪、少し傾いた吹き出し */
+:root[data-style="memphis"] .top{margin-inline:-16px;padding-inline:16px;background:#ffd23f;border-bottom:4px solid #111;position:relative;padding-bottom:18px}
+:root[data-style="memphis"] .top::after{content:'';position:absolute;left:0;right:0;bottom:-14px;height:10px;background:linear-gradient(135deg,#ffd23f 25%,transparent 25%) -6px 0,linear-gradient(225deg,#ffd23f 25%,transparent 25%) -6px 0;background-size:12px 10px;pointer-events:none}
+:root[data-style="memphis"] .top h1{color:#111;text-shadow:2px 2px 0 #ff5fa2}
+:root[data-style="memphis"] .top h1::after{content:'▲ ● ■';position:absolute;right:-64px;top:-4px;font-size:12px;letter-spacing:.3em;color:#3a86ff;white-space:nowrap}
+:root[data-style="memphis"] .top .lead{color:#111}
+:root[data-style="memphis"] .row.mine .bubble{transform:rotate(-1deg);background:var(--mine-bg,#ff5fa2);color:var(--mine-ink,#111)}
+:root[data-style="memphis"] .row:not(.mine) .bubble{transform:rotate(.8deg);background:var(--their-bg,#fff)}
+:root[data-style="memphis"] .day{background:#3a86ff;color:#fff;border:2px solid #111;border-radius:0;transform:rotate(-2deg);font-weight:700}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -683,7 +741,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v62';
+  var APP_VERSION='v63';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1287,6 +1345,11 @@ function textFor(m){
     else{set('--bg',sv['--bg']||'');if(stl.id)tcol=sv['--bg']||'';}
     if(theme)de.setAttribute('data-theme',theme);else de.removeAttribute('data-theme');
     if(stl.id)de.setAttribute('data-style',stl.id);else de.removeAttribute('data-style');
+    try{
+      var ai=document.querySelector('link[rel="apple-touch-icon"]'),mf=document.querySelector('link[rel="manifest"]');
+      if(ai)ai.setAttribute('href',stl.id?'icons/st-'+stl.id+'-apple-touch-icon.png':'icons/apple-touch-icon.png');
+      if(mf)mf.setAttribute('href',stl.id?'manifest-'+stl.id+'.json':'manifest.json');
+    }catch(e){}
     document.querySelectorAll('meta[name="theme-color"]').forEach(function(tc){
       if(!tc.hasAttribute('data-orig'))tc.setAttribute('data-orig',tc.getAttribute('content')||'');
       tc.setAttribute('content',tcol||tc.getAttribute('data-orig'));
