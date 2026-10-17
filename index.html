@@ -119,7 +119,7 @@ button.bubble{cursor:pointer}
 .sheet{
   flex:none;max-height:64%;overflow-y:auto;background:var(--surface);
   border:1.5px solid var(--line);border-radius:18px;box-shadow:var(--shadow);
-  padding:14px;margin-bottom:8px;display:flex;flex-direction:column;gap:14px;
+  padding:0 14px 0;margin-bottom:8px;display:flex;flex-direction:column;gap:14px;
 }
 .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .sheet-head h2{margin:0}
@@ -164,9 +164,9 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .switch{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:14px;min-height:44px;cursor:pointer}
 .switch input{width:22px;height:22px;accent-color:var(--accent);margin:0}
 .preview{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;min-height:84px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7;font-family:var(--chat-font,inherit);font-size:calc(16px*var(--cs,1))}
-.pvhead{position:sticky;top:-14px;z-index:3;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px;flex:none}
+.pvhead{position:sticky;top:0;z-index:3;background:var(--surface);margin:0 -14px;padding:14px 14px 10px;flex:none}
 .pvhead h2{margin-top:0}
-.sendbar{position:sticky;bottom:-14px;z-index:3;background:var(--surface);margin:0 -14px -14px;padding:10px 14px 14px;flex:none}
+.sendbar{position:sticky;bottom:0;z-index:3;background:var(--surface);margin:0 -14px;padding:10px 14px 14px;flex:none}
 .preview.empty-p{color:var(--muted)}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .btn{
@@ -185,7 +185,8 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .setcard{width:100%;max-width:520px;max-height:88%;background:var(--bg);border-radius:22px 22px 0 0;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
 .sethead{flex:none;background:var(--bg);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px 10px;border-bottom:1.5px solid var(--line)}
 .sethead h2{margin:0;font-size:18px}
-.setbody{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.setbody{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.setbody>:first-child{margin-top:14px}
 .setsec{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
 .setsec h3{margin:0;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em}
 .setsec p{margin:0;font-size:13.5px;color:var(--muted)}
@@ -581,7 +582,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v43';
+  var APP_VERSION='v44';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -720,7 +721,7 @@ function textFor(m){
   $('thx').addEventListener('change',function(e){st.thanks=e.target.checked;store.set('thanks',st.thanks?'1':'0');refreshSheet();});
   function setPvh(){
     var h=$('pvhead');
-    $('sheet').style.setProperty('--pvh',Math.max(0,h.offsetHeight-14)+'px');
+    $('sheet').style.setProperty('--pvh',Math.max(0,h.offsetHeight)+'px');
   }
   window.addEventListener('resize',setPvh);
   function renderPhrases(){
