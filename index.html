@@ -583,7 +583,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v46';
+  var APP_VERSION='v47';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -885,6 +885,7 @@ function textFor(m){
   function setPanel(open){
     if(open)paintPush();
     $('codepanel').hidden=!open;
+    if(open){var sbd=document.querySelector('.setbody');if(sbd)sbd.scrollTop=0;var lh=document.querySelector('.lookhead');if(lh)lh.classList.remove('stuck');}
     $('btn-code').setAttribute('aria-expanded',open?'true':'false');
     if(!open)$('btn-code').focus();
   }
