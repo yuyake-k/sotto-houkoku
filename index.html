@@ -131,7 +131,7 @@
 :root[data-style="japandi"] body{background-image:radial-gradient(rgba(120,100,80,.07) 1px,transparent 1.2px),radial-gradient(rgba(120,100,80,.05) 1px,transparent 1.2px);background-size:22px 22px,13px 13px;background-position:0 0,6px 7px}
 :root[data-style="japandi"] .top h1::after{content:'';display:block;width:34px;height:2px;margin-top:6px;border-radius:2px;background:var(--accent);opacity:.8;transform:rotate(-1.2deg)}
 :root[data-style="japandi"] .top{padding-bottom:12px}
-:root[data-style="japandi"] .row:not(.mine) .bubble{background:transparent;border-width:1px;border-bottom-left-radius:calc(4px*var(--rs,1))}
+:root[data-style="japandi"] .row:not(.mine) .bubble{background:var(--their-bg,transparent);border-width:1px;border-bottom-left-radius:calc(4px*var(--rs,1))}
 :root[data-style="japandi"] .row.mine .bubble{border-radius:calc(24px*var(--rs,1)) calc(24px*var(--rs,1)) calc(4px*var(--rs,1)) calc(24px*var(--rs,1));padding:10px 18px}
 :root[data-style="japandi"] .day{background:transparent;border:0;position:relative;letter-spacing:.2em}
 :root[data-style="japandi"] .day::before,:root[data-style="japandi"] .day::after{content:'';display:inline-block;width:18px;height:1px;background:var(--line);vertical-align:middle;margin:0 8px}
@@ -168,9 +168,11 @@
 /* ピクセルアート: 星空、HPバーのような帯、ドラクエ風の会話ウィンドウ */
 :root[data-style="pixel"] body{background-image:radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#ffd166 1px,transparent 1.5px),radial-gradient(#8ecae6 1px,transparent 1.5px);background-size:97px 89px,151px 131px,67px 113px;background-position:7px 11px,53px 70px,31px 40px;background-attachment:fixed}
 :root[data-style="pixel"] .top{margin-inline:-16px;padding-inline:16px;background:#0f1124;border-bottom:4px solid #f4f1de;box-shadow:0 4px 0 #ff5d73}
+:root[data-style="pixel"] .top h1,:root[data-style="pixel"] .top .lead{color:#f4f1de!important;text-shadow:2px 2px 0 #ff5d73}
+:root[data-style="pixel"] .top .lead{text-shadow:none;color:#c9d1e8!important}
 :root[data-style="pixel"] .top .lead::after{content:' ♥♥♥♡';color:#ff5d73;letter-spacing:.1em}
 :root[data-style="pixel"] .bubble{box-shadow:inset 0 0 0 2px #0f1124,inset 0 0 0 4px rgba(244,241,222,.5)}
-:root[data-style="pixel"] .row:not(.mine) .bubble{background:#0f1124;color:#f4f1de;border-color:#f4f1de;position:relative}
+:root[data-style="pixel"] .row:not(.mine) .bubble{background:var(--their-bg,#0f1124);color:var(--their-ink,#f4f1de);border-color:#f4f1de;position:relative}
 :root[data-style="pixel"] .row:not(.mine) .bubble::after{content:'▼';position:absolute;right:8px;bottom:-1px;font-size:9px;color:#ffd166;animation:pxb 1s steps(2) infinite}
 @keyframes pxb{50%{transform:translateY(3px)}}
 :root[data-style="pixel"] .day{border-radius:0;background:#ffd166;color:#1d2033}
@@ -741,7 +743,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v63';
+  var APP_VERSION='v64';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
