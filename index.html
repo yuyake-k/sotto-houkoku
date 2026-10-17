@@ -85,7 +85,8 @@ h2{margin:0 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em}
 .looksw{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 10px}
 .sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);padding:0;cursor:pointer;position:relative}
 .sw[aria-pressed=true]{outline:3px solid var(--focus);outline-offset:2px}
-.lookpv{display:flex;flex-direction:column;gap:6px;margin:8px 0 12px;padding:10px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);position:sticky;top:0;z-index:2;box-shadow:0 -12px 0 var(--bg)}
+.lookpv{display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line)}
+.lookhead{position:sticky;top:0;z-index:2;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px;display:flex;flex-direction:column;gap:8px;border-radius:16px 16px 0 0}
 .lookpv .row{max-width:92%}
 .looklbl{font-size:13px;font-weight:700;margin:8px 0 2px}
 .nm{font-size:12px;color:var(--muted);margin:0 4px 2px}
@@ -331,12 +332,14 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
           </div>
         </section>
         <section class="setsec">
+          <div class="lookhead">
           <h3>チャットの見た目</h3>
-          <p>色・フォント・大きさを変えられます。この端末だけに保存されます。</p>
-          <div id="lookpv" class="lookpv" aria-hidden="true">
+            <div id="lookpv" class="lookpv" aria-hidden="true">
             <div class="row"><div class="bubble">電気つけっぱなしだったよ💡</div></div>
             <div class="row mine"><div class="bubble">ありがとう☺️</div></div>
           </div>
+          </div>
+          <p>色・フォント・大きさを変えられます。この端末だけに保存されます。</p>
           <p class="looklbl">画面の明るさ</p><div id="look-mode" class="chips" role="group" aria-label="画面の明るさ"></div>
           <p class="looklbl">自分の色（ふきだし・ボタン）</p><div id="look-mine" class="looksw" role="group" aria-label="自分の色（ふきだし・ボタン）"></div>
           <p class="looklbl">相手のふきだしの色</p><div id="look-their" class="looksw" role="group" aria-label="相手のふきだしの色"></div>
@@ -578,7 +581,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v42';
+  var APP_VERSION='v43';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
