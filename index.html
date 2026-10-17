@@ -533,6 +533,137 @@
 :root[data-style="surreal"] .meta{margin-top:14px}
 :root[data-style="surreal"] .quick .qlbl,:root[data-style="surreal"] .tag.rp{color:#c8553d}
 :root[data-style="surreal"] .pvhead,:root[data-style="surreal"] .sendbar,:root[data-style="surreal"] .lookhead,:root[data-style="surreal"] .phrases .pl{background:#fdf6e6}
+/* テイスト: テネブリズム（闇に一筋の光。カラヴァッジョの絵のように、光の当たる縁だけが浮かび上がる） */
+:root[data-style="tenebrism"] body{background-color:#080605;background-image:radial-gradient(ellipse 70% 42% at 14% 0,rgba(255,176,90,.34),rgba(255,176,90,.08) 55%,transparent 75%),radial-gradient(ellipse 50% 30% at 100% 100%,rgba(120,50,20,.18),transparent 70%);background-attachment:fixed}
+:root[data-style="tenebrism"] body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 60% 36% at 14% 0,rgba(255,200,120,.16),transparent 70%);animation:flick 5s ease-in-out infinite alternate}
+ @keyframes flick{0%{opacity:.7}35%{opacity:1}60%{opacity:.8}100%{opacity:.95}}
+:root[data-style="tenebrism"] .top{margin-inline:-16px;padding-inline:16px;background:linear-gradient(105deg,rgba(255,170,80,.22) 0,rgba(20,14,10,.9) 38%,#0a0706 100%);border-bottom:1px solid rgba(255,190,110,.35);box-shadow:0 14px 30px -10px rgba(0,0,0,.9);margin-bottom:8px}
+:root[data-style="tenebrism"] .top h1{background:linear-gradient(100deg,#fff1c6 0,#ffb454 40%,#6b4423 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-weight:800;letter-spacing:.2em}
+:root[data-style="tenebrism"] .top h1::before{content:'';display:inline-block;width:.6em;height:.8em;margin-right:.5em;vertical-align:-.06em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32'%3E%3Cpath d='M12 1C14 9 22 13 22 21C22 27 17 31 12 31C7 31 2 27 2 21C2 15 7 13 8 7C10 9 11 6 12 1Z' fill='%23ffb454'/%3E%3Cpath d='M12 13C13 18 17 20 17 24C17 28 14 30 12 30C10 30 7 28 7 24C7 20 11 18 12 13Z' fill='%23fff1c6'/%3E%3C/svg%3E") center/contain no-repeat;-webkit-text-fill-color:initial;filter:drop-shadow(0 0 6px rgba(255,170,70,.9))}
+:root[data-style="tenebrism"] .top .lead,:root[data-style="tenebrism"] .top .conn{color:#b59a78}
+:root[data-style="tenebrism"] .top .btn{background:#0d0907;color:#e8c892;border:1px solid rgba(255,190,110,.45)}
+:root[data-style="tenebrism"] h2,:root[data-style="tenebrism"] h3{color:#e8b868;letter-spacing:.16em;font-weight:700;text-shadow:0 0 12px rgba(255,170,70,.35)}
+:root[data-style="tenebrism"] .card,:root[data-style="tenebrism"] .setsec,:root[data-style="tenebrism"] .sheet,:root[data-style="tenebrism"] .preview,:root[data-style="tenebrism"] .quick{background:linear-gradient(135deg,#1b130d 0,#0c0806 55%);border:1px solid #2a1d13;border-top-color:rgba(255,190,110,.5);border-left-color:rgba(255,190,110,.4);box-shadow:0 14px 34px rgba(0,0,0,.85)}
+:root[data-style="tenebrism"] .chip,:root[data-style="tenebrism"] .btn,:root[data-style="tenebrism"] .mode{border:1px solid #2f2218;border-top-color:rgba(255,190,110,.5);border-left-color:rgba(255,190,110,.35);background:#120d09}
+:root[data-style="tenebrism"] .btn.primary{background:linear-gradient(135deg,#d98a3a,#7a3a14);color:#fff1d6;border-color:rgba(255,215,150,.6);box-shadow:0 0 18px rgba(255,160,70,.35)}
+:root[data-style="tenebrism"] .chip[aria-pressed="true"],:root[data-style="tenebrism"] .mode[aria-pressed="true"]{background:linear-gradient(135deg,#f0b25a,#a85f1c);color:#1c0f05;border-color:rgba(255,230,180,.8);box-shadow:0 0 14px rgba(255,170,70,.45)}
+:root[data-style="tenebrism"] .bubble{border:1px solid #2a1d13;border-top-color:rgba(255,200,130,.75);border-left-color:rgba(255,200,130,.6);border-radius:calc(16px*var(--rs,1))!important;box-shadow:10px 12px 26px rgba(0,0,0,.85)}
+:root[data-style="tenebrism"] .row.mine .bubble{background:var(--mine-bg,linear-gradient(135deg,#8a3a1c 0,#3a1409 60%,#1d0a05));color:var(--mine-ink,#ffe6c0)}
+:root[data-style="tenebrism"] .row:not(.mine) .bubble{background:var(--their-bg,linear-gradient(135deg,#2a1d13 0,#0e0907 65%));color:var(--their-ink,#ecd7b4)}
+:root[data-style="tenebrism"] .row.replyable .bubble{border-color:#ffd48a;box-shadow:0 0 0 1px #ffb454,0 0 24px rgba(255,170,70,.55),10px 12px 26px rgba(0,0,0,.85)}
+:root[data-style="tenebrism"] .day{background:transparent;color:#c99a58;letter-spacing:.3em;border-radius:0;border-bottom:1px solid rgba(255,190,110,.35)}
+:root[data-style="tenebrism"] .quick .qlbl,:root[data-style="tenebrism"] .tag.rp{color:#ffc66e}
+:root[data-style="tenebrism"] .pvhead,:root[data-style="tenebrism"] .sendbar,:root[data-style="tenebrism"] .lookhead,:root[data-style="tenebrism"] .phrases .pl{background:#0c0806}
+@media (prefers-reduced-motion:reduce){:root[data-style="tenebrism"] body::before{animation:none}}
+/* テイスト: ボヘミアン（キリム柄とマンダラ、テラコッタ・マスタード・ターコイズ。フリンジの下がる帯） */
+:root[data-style="bohemian"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23c0533a' stroke-opacity='.22' stroke-width='1.6'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Ccircle cx='30' cy='30' r='20' stroke-dasharray='2 5'/%3E%3Ccircle cx='90' cy='90' r='4'/%3E%3Ccircle cx='90' cy='90' r='12'/%3E%3Ccircle cx='90' cy='90' r='20' stroke-dasharray='2 5'/%3E%3C/g%3E%3Cg fill='%232f8f88' fill-opacity='.2'%3E%3Cpath d='M90 24C98 14 108 18 108 26C100 30 94 30 90 24Z'/%3E%3Cpath d='M30 96C22 106 12 102 12 94C20 90 26 90 30 96Z'/%3E%3C/g%3E%3Cg fill='%23e8a33d' fill-opacity='.35'%3E%3Ccircle cx='60' cy='60' r='3'/%3E%3Ccircle cx='60' cy='10' r='2'/%3E%3Ccircle cx='10' cy='60' r='2'/%3E%3Ccircle cx='110' cy='60' r='2'/%3E%3Ccircle cx='60' cy='112' r='2'/%3E%3C/g%3E%3C/svg%3E");background-size:120px 120px}
+:root[data-style="bohemian"] .top{margin-inline:-16px;padding-inline:16px;background:#fbf0dc;border-top:14px solid transparent;border-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='14' viewBox='0 0 48 14'%3E%3Crect width='48' height='14' fill='%237a2e2a'/%3E%3Cg%3E%3Cpolygon points='0,14 12,2 24,14' fill='%23e8a33d'/%3E%3Cpolygon points='24,14 36,2 48,14' fill='%232f8f88'/%3E%3Cpolygon points='6,14 12,7 18,14' fill='%237a2e2a'/%3E%3Cpolygon points='30,14 36,7 42,14' fill='%237a2e2a'/%3E%3Cpolygon points='12,0 15,3 12,6 9,3' fill='%23f2d9a8'/%3E%3Cpolygon points='36,0 39,3 36,6 33,3' fill='%23f2d9a8'/%3E%3C/g%3E%3C/svg%3E") 14 0 0 0 / 14px 0 0 0 round;box-shadow:0 2px 0 #c0533a;margin-bottom:26px;position:relative}
+:root[data-style="bohemian"] .top::after{content:'';position:absolute;left:0;right:0;bottom:-16px;height:16px;background:repeating-linear-gradient(90deg,#c0533a 0 2px,transparent 2px 5px,#e8a33d 5px 7px,transparent 7px 10px,#2f8f88 10px 12px,transparent 12px 15px);-webkit-mask:linear-gradient(180deg,#000 0,#000 60%,transparent);mask:linear-gradient(180deg,#000 0,#000 60%,transparent);pointer-events:none}
+:root[data-style="bohemian"] .top h1{font-family:"Yomogi","Zen Maru Gothic",sans-serif;font-weight:400;font-size:28px;color:#7a2e2a;letter-spacing:.1em}
+:root[data-style="bohemian"] .top h1::before{content:'';display:inline-block;width:1em;height:1em;margin-right:.3em;vertical-align:-.15em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%23c0533a' stroke-width='1.4'%3E%3Ccircle cx='16' cy='16' r='3'/%3E%3Ccircle cx='16' cy='16' r='9'/%3E%3Cpath d='M16 2V30M2 16H30M6 6L26 26M26 6L6 26' stroke-opacity='.55'/%3E%3C/g%3E%3Cg fill='%23e8a33d'%3E%3Ccircle cx='16' cy='5' r='2'/%3E%3Ccircle cx='16' cy='27' r='2'/%3E%3Ccircle cx='5' cy='16' r='2'/%3E%3Ccircle cx='27' cy='16' r='2'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='1.8' fill='%232f8f88'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="bohemian"] .top .lead{color:#8a6a4f}
+:root[data-style="bohemian"] h2,:root[data-style="bohemian"] h3{font-family:"Yomogi","Zen Maru Gothic",sans-serif;font-weight:400;font-size:17px;color:#c0533a;letter-spacing:.08em}
+:root[data-style="bohemian"] h2::after,:root[data-style="bohemian"] h3::after{content:'';display:block;height:4px;margin-top:2px;background:radial-gradient(circle,#e8a33d 1.5px,transparent 2px) 0 0/10px 4px repeat-x}
+:root[data-style="bohemian"] .card,:root[data-style="bohemian"] .setsec,:root[data-style="bohemian"] .sheet,:root[data-style="bohemian"] .preview,:root[data-style="bohemian"] .quick{background:#fff8ea;border:2px dotted #c0533a;border-radius:calc(18px*var(--rs,1));box-shadow:0 0 0 4px #fbf0dc,0 0 0 5px #e8a33d}
+:root[data-style="bohemian"] .chip,:root[data-style="bohemian"] .btn,:root[data-style="bohemian"] .mode{border:2px dotted #c0533a;border-radius:calc(14px*var(--rs,1))}
+:root[data-style="bohemian"] #events .chip:nth-child(4n+1){background:#f7d9a6}
+:root[data-style="bohemian"] #events .chip:nth-child(4n+2){background:#bfe3df}
+:root[data-style="bohemian"] #events .chip:nth-child(4n+3){background:#f3c1b3}
+:root[data-style="bohemian"] #events .chip:nth-child(4n){background:#f2e2a0}
+:root[data-style="bohemian"] .btn.primary{background:#c0533a;color:#fff4de;border:2px dotted #fff4de;box-shadow:0 0 0 3px #c0533a,0 4px 0 #7a2e2a}
+:root[data-style="bohemian"] .chip[aria-pressed="true"],:root[data-style="bohemian"] .mode[aria-pressed="true"],:root[data-style="bohemian"] #events .chip[aria-pressed="true"]{background:#2f8f88;color:#fff;border-style:solid;border-color:#1d6560}
+:root[data-style="bohemian"] .bubble{position:relative;border:2px dotted #c0533a;border-radius:calc(20px*var(--rs,1))!important;padding:11px 20px;box-shadow:0 0 0 3px var(--their-bg,#fff8ea),0 0 0 4px #e8a33d;margin:4px 5px;overflow:visible}
+:root[data-style="bohemian"] .bubble::before{content:'';position:absolute;top:-14px;width:26px;height:26px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='none' stroke='%23c0533a' stroke-width='1.4'%3E%3Ccircle cx='16' cy='16' r='3'/%3E%3Ccircle cx='16' cy='16' r='9'/%3E%3Cpath d='M16 2V30M2 16H30M6 6L26 26M26 6L6 26' stroke-opacity='.55'/%3E%3C/g%3E%3Cg fill='%23e8a33d'%3E%3Ccircle cx='16' cy='5' r='2'/%3E%3Ccircle cx='16' cy='27' r='2'/%3E%3Ccircle cx='5' cy='16' r='2'/%3E%3Ccircle cx='27' cy='16' r='2'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='1.8' fill='%232f8f88'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+:root[data-style="bohemian"] .row.mine .bubble::before{right:12px}
+:root[data-style="bohemian"] .row:not(.mine) .bubble::before{left:12px}
+:root[data-style="bohemian"] .row.mine .bubble{background:var(--mine-bg,#c0533a);color:var(--mine-ink,#fff4de);border-color:#fff4de;box-shadow:0 0 0 3px var(--mine-bg,#c0533a),0 0 0 4px #e8a33d}
+:root[data-style="bohemian"] .row:not(.mine) .bubble{background:var(--their-bg,#fff8ea)}
+:root[data-style="bohemian"] .row.replyable .bubble{border-color:#2f8f88;border-style:solid}
+:root[data-style="bohemian"] .day{background:#2f8f88;color:#fff;border-radius:999px;letter-spacing:.14em;font-weight:700;border:2px dotted #fff}
+:root[data-style="bohemian"] .quick{border-color:#2f8f88}
+:root[data-style="bohemian"] .quick .qlbl,:root[data-style="bohemian"] .tag.rp{color:#2f8f88}
+:root[data-style="bohemian"] .pvhead,:root[data-style="bohemian"] .sendbar,:root[data-style="bohemian"] .lookhead,:root[data-style="bohemian"] .phrases .pl{background:#fff8ea}
+/* テイスト: シャビーシック（色あせた白木の板とレース。やさしいピンクとミント、小さなバラ） */
+:root[data-style="shabbychic"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='56' viewBox='0 0 200 56'%3E%3Crect width='200' height='56' fill='%23f5eee8'/%3E%3Cpath d='M0 55H200' stroke='%23d9ccc2' stroke-width='1.4'/%3E%3Cg stroke='%23e4d8cf' stroke-width='1' fill='none'%3E%3Cpath d='M0 14C40 10 80 18 120 13C160 9 180 14 200 12'/%3E%3Cpath d='M0 36C50 40 90 32 140 37C170 40 190 35 200 36'/%3E%3C/g%3E%3Cg fill='%23e9ddd3'%3E%3Ccircle cx='46' cy='25' r='2.4'/%3E%3Ccircle cx='150' cy='46' r='2'/%3E%3C/g%3E%3C/svg%3E");background-size:200px 56px}
+:root[data-style="shabbychic"] .top{margin-inline:-16px;padding-inline:16px;background:#fffafa;border-top:3px solid #e8c4cd;margin-bottom:24px;padding-bottom:12px;position:relative;box-shadow:0 1px 0 #e3b8c4}
+:root[data-style="shabbychic"] .top::after{content:'';position:absolute;left:0;right:0;bottom:-12px;height:12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='12' viewBox='0 0 22 12'%3E%3Cpath d='M0 0C0 8 4 11 11 11C18 11 22 8 22 0' fill='%23fffafa' stroke='%23e3b8c4' stroke-width='1.2'/%3E%3Ccircle cx='11' cy='5' r='1.8' fill='%23e3b8c4'/%3E%3C/svg%3E") repeat-x/22px 12px;pointer-events:none}
+:root[data-style="shabbychic"] .top h1{font-family:"Yomogi","Zen Maru Gothic",sans-serif;font-weight:400;font-size:28px;color:#c9798f;letter-spacing:.12em;text-shadow:1px 1px 0 #fff}
+:root[data-style="shabbychic"] .top h1::before{content:'';display:inline-block;width:1.05em;height:1.05em;margin-right:.3em;vertical-align:-.18em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='%23f0b6c4' stroke='%23c9798f' stroke-width='1.2'%3E%3Ccircle cx='16' cy='16' r='9'/%3E%3C/g%3E%3Cg fill='none' stroke='%23c9798f' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M16 16C13 13 16 10 19 12C22 14 20 19 15 19C10 19 9 12 15 9'/%3E%3C/g%3E%3Cg fill='%23a8cdb6' stroke='%236f9d84' stroke-width='1'%3E%3Cpath d='M4 24C8 20 12 22 12 26C8 28 5 27 4 24Z'/%3E%3Cpath d='M28 24C24 20 20 22 20 26C24 28 27 27 28 24Z'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="shabbychic"] .top .lead{color:#a58a8f}
+:root[data-style="shabbychic"] .top .btn{background:#fffafa;color:#8a6a72;border-color:#e3b8c4}
+:root[data-style="shabbychic"] h2,:root[data-style="shabbychic"] h3{font-family:"Yomogi","Zen Maru Gothic",sans-serif;font-weight:400;font-size:17px;color:#c9798f;letter-spacing:.1em}
+:root[data-style="shabbychic"] .card,:root[data-style="shabbychic"] .setsec,:root[data-style="shabbychic"] .sheet,:root[data-style="shabbychic"] .preview,:root[data-style="shabbychic"] .quick{background:#fffafa;border:2px solid #fff;border-radius:calc(18px*var(--rs,1));box-shadow:0 0 0 1px #e3b8c4,0 6px 14px rgba(201,121,143,.18),inset 0 0 18px rgba(232,196,205,.25)}
+:root[data-style="shabbychic"] .chip,:root[data-style="shabbychic"] .btn,:root[data-style="shabbychic"] .mode{border:1.5px solid #e3b8c4;border-radius:999px;background:#fffafa}
+:root[data-style="shabbychic"] #events .chip:nth-child(3n+1){background:#fbe3e8}
+:root[data-style="shabbychic"] #events .chip:nth-child(3n+2){background:#e0f1e6}
+:root[data-style="shabbychic"] #events .chip:nth-child(3n){background:#fdf1d6}
+:root[data-style="shabbychic"] .btn.primary{background:linear-gradient(180deg,#f3c1cd,#e79db0);color:#fff;text-shadow:0 1px 0 rgba(150,60,90,.35);border-color:#fff;box-shadow:0 0 0 1px #e3b8c4,0 4px 10px rgba(201,121,143,.3)}
+:root[data-style="shabbychic"] .chip[aria-pressed="true"],:root[data-style="shabbychic"] .mode[aria-pressed="true"],:root[data-style="shabbychic"] #events .chip[aria-pressed="true"]{background:#a8cdb6;color:#2d4a3a;border-color:#6f9d84;font-weight:700}
+:root[data-style="shabbychic"] .bubble{position:relative;border:2px solid #fff;border-radius:calc(22px*var(--rs,1))!important;padding:11px 20px;overflow:visible;box-shadow:0 0 0 1px #e3b8c4,0 4px 10px rgba(201,121,143,.22),inset 0 0 14px rgba(255,255,255,.7)}
+:root[data-style="shabbychic"] .bubble::before{content:'';position:absolute;top:-12px;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cg fill='%23f0b6c4' stroke='%23c9798f' stroke-width='1.2'%3E%3Ccircle cx='16' cy='16' r='9'/%3E%3C/g%3E%3Cg fill='none' stroke='%23c9798f' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M16 16C13 13 16 10 19 12C22 14 20 19 15 19C10 19 9 12 15 9'/%3E%3C/g%3E%3Cg fill='%23a8cdb6' stroke='%236f9d84' stroke-width='1'%3E%3Cpath d='M4 24C8 20 12 22 12 26C8 28 5 27 4 24Z'/%3E%3Cpath d='M28 24C24 20 20 22 20 26C24 28 27 27 28 24Z'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+:root[data-style="shabbychic"] .row.mine .bubble::before{right:12px}
+:root[data-style="shabbychic"] .row:not(.mine) .bubble::before{left:12px}
+:root[data-style="shabbychic"] .row.mine .bubble{background:var(--mine-bg,#f4c9d3);color:var(--mine-ink,#5a3a44)}
+:root[data-style="shabbychic"] .row:not(.mine) .bubble{background:var(--their-bg,#fffafa)}
+:root[data-style="shabbychic"] .row.replyable .bubble{box-shadow:0 0 0 2px #6f9d84,0 4px 10px rgba(111,157,132,.3)}
+:root[data-style="shabbychic"] .day{background:#fffafa;color:#a58a8f;border:1px solid #e3b8c4;border-radius:999px;letter-spacing:.14em}
+:root[data-style="shabbychic"] .quick{border-color:#a8cdb6}
+:root[data-style="shabbychic"] .quick .qlbl,:root[data-style="shabbychic"] .tag.rp{color:#6f9d84}
+:root[data-style="shabbychic"] .row{margin-top:8px}
+:root[data-style="shabbychic"] .pvhead,:root[data-style="shabbychic"] .sendbar,:root[data-style="shabbychic"] .lookhead,:root[data-style="shabbychic"] .phrases .pl{background:#fffafa}
+/* テイスト: ファームハウス/コテージコア（ギンガムチェックと野の花、木のぬくもり、いちごの赤とセージの緑） */
+:root[data-style="farmhouse"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fffdf7'/%3E%3Crect width='8' height='16' fill='%236f9a66' fill-opacity='0.14'/%3E%3Crect width='16' height='8' fill='%236f9a66' fill-opacity='0.14'/%3E%3C/svg%3E");background-size:32px 32px}
+:root[data-style="farmhouse"] .top{margin-inline:-16px;padding-inline:16px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fffdf7'/%3E%3Crect width='8' height='16' fill='%23d2483f' fill-opacity='0.35'/%3E%3Crect width='16' height='8' fill='%23d2483f' fill-opacity='0.35'/%3E%3C/svg%3E");background-size:24px 24px;border-top:0;border-bottom:3px solid #fffdf7;box-shadow:0 0 0 1px #d2483f,0 6px 0 -1px #fffdf7,0 7px 0 #d2483f;margin-bottom:14px;position:relative}
+:root[data-style="farmhouse"] .top>div:first-child{background:#fffdf7;border-radius:12px;padding:4px 10px 6px;min-width:0;box-shadow:0 0 0 2px #d2483f,inset 0 0 0 2px #fffdf7,inset 0 0 0 3px rgba(210,72,63,.5);margin-block:2px}
+:root[data-style="farmhouse"] .top h1{white-space:nowrap;font-family:"Yomogi","Zen Maru Gothic",sans-serif;font-weight:400;font-size:21px;letter-spacing:.06em;color:#b8372f;letter-spacing:.12em}
+:root[data-style="farmhouse"] .top h1::before{content:'';display:inline-block;width:.95em;height:1.05em;margin-right:.3em;vertical-align:-.16em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 40'%3E%3Cg fill='none' stroke='%235f8a5a' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M18 38V16M18 30C12 28 10 22 12 18M18 26C24 24 26 18 24 14'/%3E%3C/g%3E%3Cg fill='%23fffdf7' stroke='%23d2483f' stroke-width='1.2'%3E%3Ccircle cx='18' cy='9' r='3.4'/%3E%3Ccircle cx='12' cy='13' r='3.4'/%3E%3Ccircle cx='24' cy='13' r='3.4'/%3E%3Ccircle cx='14' cy='5' r='3.4'/%3E%3Ccircle cx='22' cy='5' r='3.4'/%3E%3C/g%3E%3Ccircle cx='18' cy='9' r='2.4' fill='%23f2b33d'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="farmhouse"] .top .lead{color:#6b7c5f;font-size:12px;margin-top:0}
+:root[data-style="farmhouse"] .top .btn{background:#fffdf7;color:#8a2a24;border:2px solid #d2483f}
+:root[data-style="farmhouse"] h2,:root[data-style="farmhouse"] h3{font-family:"Yomogi","Zen Maru Gothic",sans-serif;font-weight:400;font-size:17px;color:#b8372f;letter-spacing:.08em}
+:root[data-style="farmhouse"] h2::before,:root[data-style="farmhouse"] h3::before{content:'';display:inline-block;width:.8em;height:.9em;margin-right:.35em;vertical-align:-.1em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 40'%3E%3Cg fill='none' stroke='%235f8a5a' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M18 38V16M18 30C12 28 10 22 12 18M18 26C24 24 26 18 24 14'/%3E%3C/g%3E%3Cg fill='%23fffdf7' stroke='%23d2483f' stroke-width='1.2'%3E%3Ccircle cx='18' cy='9' r='3.4'/%3E%3Ccircle cx='12' cy='13' r='3.4'/%3E%3Ccircle cx='24' cy='13' r='3.4'/%3E%3Ccircle cx='14' cy='5' r='3.4'/%3E%3Ccircle cx='22' cy='5' r='3.4'/%3E%3C/g%3E%3Ccircle cx='18' cy='9' r='2.4' fill='%23f2b33d'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="farmhouse"] .card,:root[data-style="farmhouse"] .setsec,:root[data-style="farmhouse"] .sheet,:root[data-style="farmhouse"] .preview,:root[data-style="farmhouse"] .quick{background:#fffdf7;border:2px dashed #5f8a5a;border-radius:calc(12px*var(--rs,1));box-shadow:0 0 0 4px #fffdf7,0 0 0 5px rgba(95,138,90,.5)}
+:root[data-style="farmhouse"] .chip,:root[data-style="farmhouse"] .btn,:root[data-style="farmhouse"] .mode{border:2px solid #5f8a5a;border-radius:calc(10px*var(--rs,1));background:#fffdf7}
+:root[data-style="farmhouse"] .btn.primary{background:#d2483f;color:#fffdf7;border:2px dashed #fffdf7;box-shadow:0 0 0 2px #d2483f,0 4px 0 #8a2a24}
+:root[data-style="farmhouse"] .chip[aria-pressed="true"],:root[data-style="farmhouse"] .mode[aria-pressed="true"],:root[data-style="farmhouse"] #events .chip[aria-pressed="true"]{background:#5f8a5a;color:#fffdf7}
+:root[data-style="farmhouse"] .bubble{border:7px solid transparent;border-radius:calc(10px*var(--rs,1))!important;padding:5px 14px;box-shadow:0 3px 0 rgba(95,138,90,.25)}
+:root[data-style="farmhouse"] .row.mine .bubble{background:linear-gradient(var(--mine-bg,#fffdf7),var(--mine-bg,#fffdf7)) padding-box,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fffdf7'/%3E%3Crect width='8' height='16' fill='%235f8a5a' fill-opacity='0.38'/%3E%3Crect width='16' height='8' fill='%235f8a5a' fill-opacity='0.38'/%3E%3C/svg%3E") border-box;background-size:auto,16px 16px;color:var(--mine-ink,#33402a)}
+:root[data-style="farmhouse"] .row:not(.mine) .bubble{background:linear-gradient(var(--their-bg,#fffdf7),var(--their-bg,#fffdf7)) padding-box,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fffdf7'/%3E%3Crect width='8' height='16' fill='%23d2483f' fill-opacity='0.35'/%3E%3Crect width='16' height='8' fill='%23d2483f' fill-opacity='0.35'/%3E%3C/svg%3E") border-box;background-size:auto,16px 16px}
+:root[data-style="farmhouse"] .row.replyable .bubble{box-shadow:0 0 0 2px #f2b33d,0 3px 0 rgba(95,138,90,.25)}
+:root[data-style="farmhouse"] .day{background:#fffdf7;color:#b8372f;border:2px solid #d2483f;border-radius:calc(8px*var(--rs,1));font-weight:700;letter-spacing:.1em}
+:root[data-style="farmhouse"] .quick{border-color:#d2483f}
+:root[data-style="farmhouse"] .quick .qlbl,:root[data-style="farmhouse"] .tag.rp{color:#b8372f}
+:root[data-style="farmhouse"] .pvhead,:root[data-style="farmhouse"] .sendbar,:root[data-style="farmhouse"] .lookhead,:root[data-style="farmhouse"] .phrases .pl{background:#fffdf7}
+/* テイスト: カワイイ（ぷっくりしたステッカー。ピンクの水玉と星とハート、リボン、白いフチ） */
+:root[data-style="kawaii"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Crect width='72' height='72' fill='%23ffd6e8'/%3E%3Cg fill='%23ffffff' fill-opacity='.8'%3E%3Ccircle cx='18' cy='18' r='7'/%3E%3Ccircle cx='54' cy='54' r='7'/%3E%3C/g%3E%3Cpath d='M54 14C52 9 46 10 47 15C48 19 54 22 54 22C54 22 60 19 61 15C62 10 56 9 54 14Z' fill='%23ff8fc0' fill-opacity='.7' transform='translate(-2 -4) scale(.9)'/%3E%3Cpath d='M16 56L18 61L23 61L19 64L21 69L16 66L11 69L13 64L9 61L14 61Z' fill='%23ffe36e' fill-opacity='.9'/%3E%3C/svg%3E");background-size:72px 72px;font-weight:500}
+:root[data-style="kawaii"] .top{margin-inline:-16px;padding-inline:16px;background:linear-gradient(180deg,#ff9fcb,#ff7ab8);border-bottom:5px solid #fff;box-shadow:0 0 0 2px #ff6fae,0 7px 0 #ffc1dd;margin-bottom:16px;position:relative}
+:root[data-style="kawaii"] .top h1{white-space:nowrap;font-size:22px;font-family:"Hachi Maru Pop","Zen Maru Gothic",sans-serif;font-weight:400;color:#fff;letter-spacing:.08em;text-shadow:-2px -2px 0 #ff4f9d,2px -2px 0 #ff4f9d,-2px 2px 0 #ff4f9d,2px 2px 0 #ff4f9d,0 4px 0 #ff4f9d}
+:root[data-style="kawaii"] .top h1::before{content:'';display:inline-block;width:1.4em;height:1em;margin-right:.25em;vertical-align:-.12em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 28'%3E%3Cg fill='%23ff6fae' stroke='%23fff' stroke-width='2.2' stroke-linejoin='round'%3E%3Cpath d='M20 14C12 2 2 2 2 12C2 22 12 26 20 14Z'/%3E%3Cpath d='M20 14C28 2 38 2 38 12C38 22 28 26 20 14Z'/%3E%3Ccircle cx='20' cy='14' r='4.6' fill='%23ff8fc0'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="kawaii"] .top h1::after{content:'';display:inline-block;width:.8em;height:.75em;margin-left:.3em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21C4 14 1 10 1 6.5C1 3.5 3.4 1.5 6 1.5C8.4 1.5 10.6 3 12 5C13.4 3 15.6 1.5 18 1.5C20.6 1.5 23 3.5 23 6.5C23 10 20 14 12 21Z' fill='%23ff6fae' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") center/contain no-repeat;transform:rotate(12deg)}
+:root[data-style="kawaii"] .top .btn,:root[data-style="farmhouse"] .top .btn{white-space:nowrap}
+:root[data-style="kawaii"] .top .lead,:root[data-style="kawaii"] .top .conn{color:#fff;font-weight:700;text-shadow:0 1px 0 #ff4f9d}
+:root[data-style="kawaii"] .top .btn{background:#fff;color:#e0338a;border:3px solid #ff6fae;box-shadow:0 3px 0 #ff9fcb}
+:root[data-style="kawaii"] h2,:root[data-style="kawaii"] h3{font-family:"Hachi Maru Pop","Zen Maru Gothic",sans-serif;font-weight:400;color:#e0338a;letter-spacing:.08em}
+:root[data-style="kawaii"] h2::before,:root[data-style="kawaii"] h3::before{content:'';display:inline-block;width:.85em;height:.8em;margin-right:.3em;vertical-align:-.08em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21C4 14 1 10 1 6.5C1 3.5 3.4 1.5 6 1.5C8.4 1.5 10.6 3 12 5C13.4 3 15.6 1.5 18 1.5C20.6 1.5 23 3.5 23 6.5C23 10 20 14 12 21Z' fill='%23ff6fae' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="kawaii"] .card,:root[data-style="kawaii"] .setsec,:root[data-style="kawaii"] .sheet,:root[data-style="kawaii"] .preview,:root[data-style="kawaii"] .quick{background:#fff;border:4px solid #fff;border-radius:calc(24px*var(--rs,1));box-shadow:0 0 0 2px #ff9fcb,0 8px 0 #ffc1dd}
+:root[data-style="kawaii"] .chip,:root[data-style="kawaii"] .btn,:root[data-style="kawaii"] .mode{border:3px solid #fff;border-radius:999px;box-shadow:0 0 0 2px #ff9fcb,0 3px 0 #ffc1dd;font-weight:700}
+:root[data-style="kawaii"] #events .chip:nth-child(4n+1){background:#ffe7f1}
+:root[data-style="kawaii"] #events .chip:nth-child(4n+2){background:#e4f4ff}
+:root[data-style="kawaii"] #events .chip:nth-child(4n+3){background:#fff7cc}
+:root[data-style="kawaii"] #events .chip:nth-child(4n){background:#e6ffe9}
+:root[data-style="kawaii"] .btn.primary{background:linear-gradient(180deg,#ff8fc0,#ff5fa6);color:#fff;text-shadow:0 2px 0 #d62b81;font-family:"Hachi Maru Pop","Zen Maru Gothic",sans-serif;letter-spacing:.1em}
+:root[data-style="kawaii"] .chip[aria-pressed="true"],:root[data-style="kawaii"] .mode[aria-pressed="true"],:root[data-style="kawaii"] #events .chip[aria-pressed="true"]{background:#ff6fae;color:#fff;text-shadow:0 1px 0 #d62b81}
+:root[data-style="kawaii"] .bubble{border:4px solid #fff;border-radius:calc(26px*var(--rs,1))!important;padding:9px 18px;box-shadow:0 0 0 2px #ff9fcb,0 5px 0 #ffc1dd;position:relative;overflow:visible}
+:root[data-style="kawaii"] .bubble::after{content:'';position:absolute;top:-13px;width:20px;height:18px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 22'%3E%3Cpath d='M12 21C4 14 1 10 1 6.5C1 3.5 3.4 1.5 6 1.5C8.4 1.5 10.6 3 12 5C13.4 3 15.6 1.5 18 1.5C20.6 1.5 23 3.5 23 6.5C23 10 20 14 12 21Z' fill='%23ff6fae' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+:root[data-style="kawaii"] .row.mine .bubble::after{right:14px;transform:rotate(12deg)}
+:root[data-style="kawaii"] .row:not(.mine) .bubble::after{left:14px;transform:rotate(-12deg)}
+:root[data-style="kawaii"] .row.mine .bubble{background:var(--mine-bg,linear-gradient(180deg,#ff9fcb,#ff7ab8));color:var(--mine-ink,#fff);text-shadow:0 1px 0 rgba(214,43,129,.5)}
+:root[data-style="kawaii"] .row:not(.mine) .bubble{background:var(--their-bg,#fff)}
+:root[data-style="kawaii"] .row.replyable .bubble{box-shadow:0 0 0 3px #7ad8ff,0 5px 0 #b9ecff}
+:root[data-style="kawaii"] .day{background:#fff;color:#e0338a;border:3px solid #ff9fcb;border-radius:999px;transform:rotate(-2deg);font-weight:700;box-shadow:0 2px 0 #ffc1dd}
+:root[data-style="kawaii"] .quick{border-color:#fff;box-shadow:0 0 0 2px #7ad8ff,0 6px 0 #b9ecff}
+:root[data-style="kawaii"] .quick .qlbl,:root[data-style="kawaii"] .tag.rp{color:#e0338a}
+:root[data-style="kawaii"] .row{margin-top:8px}
+:root[data-style="kawaii"] .pvhead,:root[data-style="kawaii"] .sendbar,:root[data-style="kawaii"] .lookhead,:root[data-style="kawaii"] .phrases .pl{background:#fff}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -1091,7 +1222,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v79';
+  var APP_VERSION='v80';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1793,6 +1924,81 @@ function textFor(m){
       '--shadow':'5px 6px 0 rgba(30,42,58,.25)',
       '--rs':'1',
       '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
+    ,{id:'tenebrism',name:'テネブリズム',theme:'dark',sw:['#0c0806','#d98a3a'],vars:{
+      '--bg':'#080605',
+      '--surface':'#14100c',
+      '--ink':'#ecd7b4',
+      '--muted':'#a38a68',
+      '--line':'#2f2218',
+      '--accent':'#8a3a1c',
+      '--accent-ink':'#ffe6c0',
+      '--chip':'#1a120c',
+      '--chip-on':'#f0b25a',
+      '--chip-on-ink':'#1c0f05',
+      '--focus':'#ffc66e',
+      '--shadow':'0 14px 34px rgba(0,0,0,.85)',
+      '--rs':'1',
+      '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
+    ,{id:'bohemian',name:'ボヘミアン',theme:'light',sw:['#f6ead7','#c0533a'],vars:{
+      '--bg':'#f6ead7',
+      '--surface':'#fff8ea',
+      '--ink':'#4a2e24',
+      '--muted':'#8a6a4f',
+      '--line':'#c0533a',
+      '--accent':'#c0533a',
+      '--accent-ink':'#fff4de',
+      '--chip':'#f4e1bf',
+      '--chip-on':'#2f8f88',
+      '--chip-on-ink':'#ffffff',
+      '--focus':'#2f8f88',
+      '--shadow':'0 0 0 4px #fbf0dc',
+      '--rs':'1',
+      '--font':'"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif'}}
+    ,{id:'shabbychic',name:'シャビーシック',theme:'light',sw:['#f5eee8','#f0b6c4'],vars:{
+      '--bg':'#f5eee8',
+      '--surface':'#fffafa',
+      '--ink':'#5a4a4e',
+      '--muted':'#a58a8f',
+      '--line':'#e3b8c4',
+      '--accent':'#f4c9d3',
+      '--accent-ink':'#5a3a44',
+      '--chip':'#f6e8e8',
+      '--chip-on':'#a8cdb6',
+      '--chip-on-ink':'#2d4a3a',
+      '--focus':'#6f9d84',
+      '--shadow':'0 6px 14px rgba(201,121,143,.18)',
+      '--rs':'1.2',
+      '--font':'"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif'}}
+    ,{id:'farmhouse',name:'ファームハウス/コテージコア',theme:'light',sw:['#f3efdf','#d2483f'],vars:{
+      '--bg':'#f3efdf',
+      '--surface':'#fffdf7',
+      '--ink':'#3d3a2c',
+      '--muted':'#7d7a62',
+      '--line':'#5f8a5a',
+      '--accent':'#d2483f',
+      '--accent-ink':'#fffdf7',
+      '--chip':'#eee8cf',
+      '--chip-on':'#5f8a5a',
+      '--chip-on-ink':'#fffdf7',
+      '--focus':'#f2b33d',
+      '--shadow':'0 3px 0 rgba(95,138,90,.25)',
+      '--rs':'1',
+      '--font':'"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif'}}
+    ,{id:'kawaii',name:'カワイイ',theme:'light',sw:['#ffd6e8','#ff7ab8'],vars:{
+      '--bg':'#ffd6e8',
+      '--surface':'#ffffff',
+      '--ink':'#5a2a45',
+      '--muted':'#a8708f',
+      '--line':'#ff9fcb',
+      '--accent':'#ff7ab8',
+      '--accent-ink':'#ffffff',
+      '--chip':'#ffe7f1',
+      '--chip-on':'#ff6fae',
+      '--chip-on-ink':'#ffffff',
+      '--focus':'#7ad8ff',
+      '--shadow':'0 6px 0 #ffc1dd',
+      '--rs':'1.5',
+      '--font':'"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}

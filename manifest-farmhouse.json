@@ -1,0 +1,29 @@
+{
+  "name": "そっと報告",
+  "short_name": "そっと報告",
+  "description": "言いにくいことを、定型のやさしい文面で二人だけに届けます。",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f3f9",
+  "theme_color": "#e0446f",
+  "icons": [
+    {
+      "src": "icons/st-farmhouse-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/st-farmhouse-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/st-farmhouse-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
