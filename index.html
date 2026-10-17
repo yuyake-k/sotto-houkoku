@@ -96,6 +96,17 @@
 :root[data-style="grid3"] h2,:root[data-style="grid3"] h3{font-weight:700;letter-spacing:.06em}
 :root[data-style="grid3"] .row.replyable .bubble{border-color:var(--accent);border-width:2px;padding:8.5px 13px}
 :root[data-style="grid3"] .btn.primary{box-shadow:none}
+/* テイスト: ピクセルアート（ドット文字・角が欠けたマス・太い枠） */
+:root[data-style="pixel"] .bubble,:root[data-style="pixel"] .chip,:root[data-style="pixel"] .btn,:root[data-style="pixel"] .card,:root[data-style="pixel"] .setsec,:root[data-style="pixel"] .preview,:root[data-style="pixel"] .quick,:root[data-style="pixel"] .mode,:root[data-style="pixel"] .lookpv,:root[data-style="pixel"] input[type="text"]{border-width:3px;border-color:var(--line);box-shadow:none;clip-path:polygon(0 4px,4px 4px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 4px,100% 4px,100% calc(100% - 4px),calc(100% - 4px) calc(100% - 4px),calc(100% - 4px) 100%,4px 100%,4px calc(100% - 4px),0 calc(100% - 4px))}
+:root[data-style="pixel"] body{font-size:15px;line-height:1.75;letter-spacing:.02em}
+:root[data-style="pixel"] .row.mine .bubble,:root[data-style="pixel"] .btn.primary{border-color:#f4f1de}
+:root[data-style="pixel"] .chip[aria-pressed="true"],:root[data-style="pixel"] .mode[aria-pressed="true"]{border-color:#ffd166}
+:root[data-style="pixel"] .row.replyable .bubble{border-color:#06d6a0;border-width:4px;padding:7.5px 12px}
+:root[data-style="pixel"] .quick{border-style:solid;border-color:#06d6a0}
+:root[data-style="pixel"] .quick .qlbl,:root[data-style="pixel"] .tag.rp{color:#06d6a0}
+:root[data-style="pixel"] h1,:root[data-style="pixel"] h2,:root[data-style="pixel"] h3{font-weight:400;letter-spacing:.08em}
+:root[data-style="pixel"] .top h1::before{content:'■ ';color:var(--accent)}
+:root[data-style="pixel"] .pvhead,:root[data-style="pixel"] .sendbar,:root[data-style="pixel"] .lookhead{clip-path:none}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -654,7 +665,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v60';
+  var APP_VERSION='v61';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1220,7 +1231,12 @@ function textFor(m){
       '--bg':'#f5f4f0','--surface':'#ffffff','--ink':'#202124','--muted':'#6f716f','--line':'#d9d8d2',
       '--accent':'#1a9e8f','--accent-ink':'#ffffff','--chip':'#ffffff','--chip-on':'#202124','--chip-on-ink':'#ffffff',
       '--focus':'#1a9e8f','--shadow':'none','--rs':'0.2',
-      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
+      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}},
+    {id:'pixel',name:'ピクセルアート',theme:'dark',sw:['#1d2033','#ff5d73'],vars:{
+      '--bg':'#1d2033','--surface':'#2b2f4d','--ink':'#f4f1de','--muted':'#a9abc6','--line':'#f4f1de',
+      '--accent':'#ff5d73','--accent-ink':'#1d2033','--chip':'#3a3f66','--chip-on':'#ffd166','--chip-on-ink':'#1d2033',
+      '--focus':'#06d6a0','--shadow':'none','--rs':'0',
+      '--font':'"DotGothic16","Hiragino Maru Gothic ProN",monospace'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
@@ -1236,8 +1252,8 @@ function textFor(m){
     if(bd==='light'||bd==='dark')theme=bd;
     else if(bd)theme=inkFor(bd)==='#ffffff'?'dark':'light';
     else if(stl.id)theme=stl.theme||'light';
-    // 暗い背景に、明るい前提のテイストの文字色を重ねない（読めなくなるため）
-    var clash=theme==='dark'&&(stl.theme||'light')!=='dark';
+    // 背景の明るさがテイストの前提と逆のとき、テイストの文字色を重ねない（読めなくなるため）
+    var clash=!!stl.id&&theme&&theme!==(stl.theme||'light');
     var COLORKEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow'];
     STYLE_KEYS.forEach(function(k){set(k,(clash&&COLORKEYS.indexOf(k)>=0)?'':(sv[k]||''));});
     var sAcc=clash?'':sv['--accent'],sAccInk=clash?'':sv['--accent-ink'];
