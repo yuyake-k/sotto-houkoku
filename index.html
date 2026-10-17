@@ -107,6 +107,24 @@
 :root[data-style="pixel"] h1,:root[data-style="pixel"] h2,:root[data-style="pixel"] h3{font-weight:400;letter-spacing:.08em}
 :root[data-style="pixel"] .top h1::before{content:'■ ';color:var(--accent)}
 :root[data-style="pixel"] .pvhead,:root[data-style="pixel"] .sendbar,:root[data-style="pixel"] .lookhead{clip-path:none}
+/* テイスト: メンフィス（派手な色・幾何学模様・太い黒線とずらした影） */
+:root[data-style="memphis"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cg fill='none' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' opacity='.55'%3E%3Cpath d='M12 30 q8 -12 16 0 t16 0 t16 0' stroke='%23ff5fa2'/%3E%3Ccircle cx='100' cy='26' r='9' stroke='%2300c2b8'/%3E%3Cpath d='M20 100 l14 -24 l14 24 z' stroke='%233a86ff'/%3E%3Cpath d='M96 96 l22 22 M118 96 l-22 22' stroke='%23ffb400'/%3E%3C/g%3E%3Cg fill='%23111' opacity='.5'%3E%3Ccircle cx='70' cy='70' r='2.5'/%3E%3Ccircle cx='78' cy='70' r='2.5'/%3E%3Ccircle cx='86' cy='70' r='2.5'/%3E%3Ccircle cx='70' cy='78' r='2.5'/%3E%3Ccircle cx='78' cy='78' r='2.5'/%3E%3Ccircle cx='86' cy='78' r='2.5'/%3E%3C/g%3E%3C/svg%3E");background-size:140px 140px}
+:root[data-style="memphis"] .card,:root[data-style="memphis"] .setsec,:root[data-style="memphis"] .bubble,:root[data-style="memphis"] .chip,:root[data-style="memphis"] .btn,:root[data-style="memphis"] .preview,:root[data-style="memphis"] .quick,:root[data-style="memphis"] .mode,:root[data-style="memphis"] .lookpv,:root[data-style="memphis"] input[type="text"]{border:2.5px solid #111;box-shadow:3px 3px 0 #111}
+:root[data-style="memphis"] .chip:active,:root[data-style="memphis"] .btn:active{box-shadow:0 0 0 #111;transform:translate(3px,3px)}
+:root[data-style="memphis"] #events .chip:nth-child(4n+1),:root[data-style="memphis"] #look-style .chip:nth-child(4n+1){background:#ffd23f}
+:root[data-style="memphis"] #events .chip:nth-child(4n+2),:root[data-style="memphis"] #look-style .chip:nth-child(4n+2){background:#7ee8e0}
+:root[data-style="memphis"] #events .chip:nth-child(4n+3),:root[data-style="memphis"] #look-style .chip:nth-child(4n+3){background:#ffb3d1}
+:root[data-style="memphis"] #events .chip:nth-child(4n),:root[data-style="memphis"] #look-style .chip:nth-child(4n){background:#bcd4ff}
+:root[data-style="memphis"] .chip[aria-pressed="true"],:root[data-style="memphis"] #events .chip[aria-pressed="true"],:root[data-style="memphis"] #look-style .chip[aria-pressed="true"]{background:#111;color:#fff}
+:root[data-style="memphis"] .mode{background:#7ee8e0}
+:root[data-style="memphis"] .mode[aria-pressed="true"]{background:#111;color:#fff}
+:root[data-style="memphis"] .btn.primary{background:#ff5fa2;color:#111}
+:root[data-style="memphis"] h1,:root[data-style="memphis"] h2,:root[data-style="memphis"] h3{font-family:"Dela Gothic One","Zen Maru Gothic",sans-serif;font-weight:400;letter-spacing:.03em}
+:root[data-style="memphis"] .row.replyable .bubble{border-color:#3a86ff;border-width:3.5px;padding:7.5px 12.5px}
+:root[data-style="memphis"] .quick{background:#fff;border-color:#3a86ff}
+:root[data-style="memphis"] .quick .qlbl,:root[data-style="memphis"] .tag.rp{color:#3a86ff}
+:root[data-style="memphis"] .pvhead,:root[data-style="memphis"] .sendbar,:root[data-style="memphis"] .lookhead,:root[data-style="memphis"] .phrases .pl{box-shadow:none}
+:root[data-style="memphis"] .sheet{background:#fff}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -665,7 +683,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v61';
+  var APP_VERSION='v62';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1236,7 +1254,12 @@ function textFor(m){
       '--bg':'#1d2033','--surface':'#2b2f4d','--ink':'#f4f1de','--muted':'#a9abc6','--line':'#f4f1de',
       '--accent':'#ff5d73','--accent-ink':'#1d2033','--chip':'#3a3f66','--chip-on':'#ffd166','--chip-on-ink':'#1d2033',
       '--focus':'#06d6a0','--shadow':'none','--rs':'0',
-      '--font':'"DotGothic16","Hiragino Maru Gothic ProN",monospace'}}
+      '--font':'"DotGothic16","Hiragino Maru Gothic ProN",monospace'}},
+    {id:'memphis',name:'メンフィス',theme:'light',sw:['#fff4d6','#ff5fa2'],vars:{
+      '--bg':'#fff4d6','--surface':'#ffffff','--ink':'#111111','--muted':'#5a5240','--line':'#111111',
+      '--accent':'#ff5fa2','--accent-ink':'#111111','--chip':'#ffd23f','--chip-on':'#111111','--chip-on-ink':'#ffffff',
+      '--focus':'#3a86ff','--shadow':'3px 3px 0 #111','--rs':'0.7',
+      '--font':'"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
