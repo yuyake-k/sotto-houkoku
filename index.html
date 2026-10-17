@@ -157,9 +157,9 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
 .switch{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:14px;min-height:44px;cursor:pointer}
 .switch input{width:22px;height:22px;accent-color:var(--accent);margin:0}
 .preview{background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;min-height:84px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.7}
-.pvhead.stick{position:sticky;top:-14px;z-index:3;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px}
-.pvhead.stick h2{margin-top:0}
-.sendbar.stick{position:sticky;bottom:-14px;z-index:3;background:var(--surface);margin:0 -14px -14px;padding:10px 14px 14px}
+.pvhead{position:sticky;top:-14px;z-index:3;background:var(--surface);margin:-14px -14px 0;padding:14px 14px 10px;flex:none}
+.pvhead h2{margin-top:0}
+.sendbar{position:sticky;bottom:-14px;z-index:3;background:var(--surface);margin:0 -14px -14px;padding:10px 14px 14px;flex:none}
 .preview.empty-p{color:var(--muted)}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .btn{
@@ -369,6 +369,8 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
     <div id="log" class="log" aria-live="polite" aria-label="メッセージ"></div>
 
     <section id="sheet" class="sheet" hidden aria-label="そっと報告をつくる">
+      <div id="pvhead" class="pvhead"><h2>届く文面</h2>
+        <div id="preview" class="preview" aria-live="polite"></div></div>
       <div class="sheet-head">
         <h2>何を伝える？</h2>
         <button id="closeSheet" class="btn" type="button" style="min-height:36px;padding:4px 12px">とじる</button>
@@ -409,14 +411,10 @@ input[type="text"]::placeholder{color:var(--muted);opacity:.8}
         <h2>ひとこと</h2>
         <label class="switch"><input id="thx" type="checkbox"> ありがとうをひとこと添える</label>
       </div>
-      <div class="group">
-        <div id="pvhead" class="pvhead"><h2>届く文面</h2>
-        <div id="preview" class="preview" aria-live="polite"></div></div>
-        <div id="phrases" class="phrases" hidden></div>
-        <div id="sendbar" class="actions sendbar">
-          <button id="shuffle" class="btn" type="button">言い回しを変える</button>
-          <button id="sendReport" class="btn primary" type="button">送る</button>
-        </div>
+      <div id="phrases" class="phrases" hidden></div>
+      <div id="sendbar" class="actions sendbar">
+        <button id="shuffle" class="btn" type="button">言い回しを変える</button>
+        <button id="sendReport" class="btn primary" type="button">送る</button>
       </div>
     </section>
 
@@ -559,7 +557,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v34';
+  var APP_VERSION='v35';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -698,7 +696,6 @@ function textFor(m){
   $('thx').addEventListener('change',function(e){st.thanks=e.target.checked;store.set('thanks',st.thanks?'1':'0');refreshSheet();});
   function setPvh(){
     var h=$('pvhead');
-    if(!st.phOpen){$('sheet').style.removeProperty('--pvh');return;}
     $('sheet').style.setProperty('--pvh',Math.max(0,h.offsetHeight-14)+'px');
   }
   window.addEventListener('resize',setPvh);
@@ -723,8 +720,6 @@ function textFor(m){
     });
     box.hidden=!st.phOpen;
     $('shuffle').textContent=st.phOpen?'言い回しをとじる':'言い回しを変える';
-    $('pvhead').classList.toggle('stick',st.phOpen);
-    $('sendbar').classList.toggle('stick',st.phOpen);
     setPvh();
   }
   $('shuffle').addEventListener('click',function(){st.phOpen=!st.phOpen;refreshSheet();});
