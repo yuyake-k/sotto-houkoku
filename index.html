@@ -303,6 +303,31 @@
 :root[data-style="victorian"] .quick{border-color:#b8923a;background:#fbf5e8}
 :root[data-style="victorian"] .quick .qlbl,:root[data-style="victorian"] .tag.rp{color:#7a1f3d}
 :root[data-style="victorian"] .pvhead,:root[data-style="victorian"] .sendbar,:root[data-style="victorian"] .lookhead,:root[data-style="victorian"] .phrases .pl{background:#fbf5e8}
+/* テイスト: バロック（闇に浮かぶ劇的な光・ワインレッドのビロードと金の渦巻き装飾・カーテンの飾り） */
+:root[data-style="baroque"] body{background-image:radial-gradient(ellipse 90% 55% at 50% -8%,rgba(212,168,74,.28),transparent 70%),radial-gradient(rgba(212,168,74,.14) 1px,transparent 1.5px);background-size:auto,18px 18px;background-attachment:fixed}
+:root[data-style="baroque"] .top{margin-inline:-16px;padding-inline:16px;background:radial-gradient(ellipse at 50% 0,#8a1d33 0,#5c1020 60%,#3c0a15 100%);border-top:3px solid #d4a84a;border-bottom:3px solid #d4a84a;margin-bottom:18px;padding-bottom:16px;position:relative;box-shadow:0 0 0 1px #3c0a15,0 6px 14px rgba(0,0,0,.55)}
+:root[data-style="baroque"] .top::after{content:'';position:absolute;left:0;right:0;bottom:-15px;height:14px;background:radial-gradient(circle at 50% 0,#5c1020 0 12px,#d4a84a 12px 14px,transparent 14.5px) 0 0/32px 14px repeat-x;pointer-events:none}
+:root[data-style="baroque"] .top h1{background:linear-gradient(180deg,#fff0c4,#d4a84a 55%,#9a7424);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;font-weight:800;letter-spacing:.14em;filter:drop-shadow(0 2px 0 rgba(0,0,0,.5))}
+:root[data-style="baroque"] .top h1::before{content:'';display:inline-block;width:1.3em;height:.65em;margin-right:.4em;vertical-align:.02em;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 20'%3E%3Cpath d='M2 10C8 2 14 2 18 8C20 11 22 12 24 10C26 8 24 5 21 6M38 10C32 18 26 18 22 12' fill='none' stroke='%23d4a84a' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='21' cy='6' r='1.6' fill='%23d4a84a'/%3E%3C/svg%3E") center/contain no-repeat;-webkit-text-fill-color:initial}
+:root[data-style="baroque"] .top .lead,:root[data-style="baroque"] .top .conn{color:#ecd8aa}
+:root[data-style="baroque"] .top .btn{background:#2a1216;color:#f3e3c3;border:1.5px solid #d4a84a}
+:root[data-style="baroque"] h2,:root[data-style="baroque"] h3{color:#e8c36a;font-weight:800;letter-spacing:.12em}
+:root[data-style="baroque"] .card,:root[data-style="baroque"] .setsec,:root[data-style="baroque"] .sheet,:root[data-style="baroque"] .preview,:root[data-style="baroque"] .quick{border:2px solid #8a6d2b;box-shadow:inset 0 0 0 3px var(--surface,#2a1a1f),inset 0 0 0 4px rgba(212,168,74,.55),0 6px 18px rgba(0,0,0,.45)}
+:root[data-style="baroque"] .chip,:root[data-style="baroque"] .btn,:root[data-style="baroque"] .mode{border:1.5px solid #8a6d2b}
+:root[data-style="baroque"] .btn.primary{background:linear-gradient(180deg,#b72a44,#7a1428);color:#f8e7bf;border-color:#d4a84a;box-shadow:inset 0 0 0 1px rgba(255,235,180,.35),0 2px 8px rgba(0,0,0,.5)}
+:root[data-style="baroque"] .chip[aria-pressed="true"],:root[data-style="baroque"] .mode[aria-pressed="true"]{background:linear-gradient(180deg,#f0cf7a,#d4a84a);border-color:#fff0c4}
+:root[data-style="baroque"] .bubble{position:relative;border:2px solid #d4a84a;border-radius:calc(22px*var(--rs,1)) calc(6px*var(--rs,1)) calc(22px*var(--rs,1)) calc(6px*var(--rs,1))!important;padding:12px 20px;box-shadow:0 6px 14px rgba(0,0,0,.5),inset 0 0 0 3px rgba(0,0,0,.25);overflow:visible}
+:root[data-style="baroque"] .bubble::before,:root[data-style="baroque"] .bubble::after{content:'';position:absolute;width:16px;height:16px;pointer-events:none}
+:root[data-style="baroque"] .bubble::before{left:2px;top:2px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 22V10C2 5 6 2 12 2H22M2 14C2 9 6 6 10 6H14M6 22V13C6 10 8 9 10 9' fill='none' stroke='%23d4a84a' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='9' r='2' fill='%23d4a84a'/%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="baroque"] .bubble::after{right:2px;bottom:2px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate(180 12 12)'%3E%3Cpath d='M2 22V10C2 5 6 2 12 2H22M2 14C2 9 6 6 10 6H14M6 22V13C6 10 8 9 10 9' fill='none' stroke='%23d4a84a' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='9' r='2' fill='%23d4a84a'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+:root[data-style="baroque"] .row.mine .bubble{background:var(--mine-bg,radial-gradient(ellipse at 30% 0,#b72a44,#7a1428));color:var(--mine-ink,#f8e7bf)}
+:root[data-style="baroque"] .row:not(.mine) .bubble{background:var(--their-bg,radial-gradient(ellipse at 30% 0,#3d2830,#2a1a1f));color:var(--their-ink,#f3e3c3)}
+:root[data-style="baroque"] .row.replyable .bubble{border-color:#fff0c4;box-shadow:0 0 0 2px #d4a84a,0 0 16px rgba(232,195,106,.6)}
+:root[data-style="baroque"] .day{background:transparent;color:#e8c36a;letter-spacing:.3em;border-radius:0;font-weight:700}
+:root[data-style="baroque"] .day::before,:root[data-style="baroque"] .day::after{content:'';display:inline-block;width:20px;height:1px;background:#d4a84a;vertical-align:middle;margin:0 8px}
+:root[data-style="baroque"] .quick{background:#2a1a1f;border-color:#d4a84a}
+:root[data-style="baroque"] .quick .qlbl,:root[data-style="baroque"] .tag.rp{color:#e8c36a}
+:root[data-style="baroque"] .pvhead,:root[data-style="baroque"] .sendbar,:root[data-style="baroque"] .lookhead,:root[data-style="baroque"] .phrases .pl{background:var(--surface,#2a1a1f)}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -861,7 +886,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v73';
+  var APP_VERSION='v74';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1462,6 +1487,11 @@ function textFor(m){
       '--bg':'#efe4d0','--surface':'#fbf5e8','--ink':'#3a1f26','--muted':'#7b6558','--line':'#b8923a',
       '--accent':'#7a1f3d','--accent-ink':'#f6e3b0','--chip':'#e8d9bb','--chip-on':'#7a1f3d','--chip-on-ink':'#f6e3b0',
       '--focus':'#2f6b57','--shadow':'0 3px 0 rgba(122,31,61,.22)','--rs':'0.9',
+      '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
+    ,{id:'baroque',name:'バロック',theme:'dark',sw:['#1a1114','#a3223a'],vars:{
+      '--bg':'#1a1114','--surface':'#2a1a1f','--ink':'#f3e3c3','--muted':'#b9a483','--line':'#8a6d2b',
+      '--accent':'#a3223a','--accent-ink':'#f8e7bf','--chip':'#3a252b','--chip-on':'#d4a84a','--chip-on-ink':'#2a1216',
+      '--focus':'#e8c36a','--shadow':'0 6px 18px rgba(0,0,0,.55)','--rs':'1',
       '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
