@@ -349,6 +349,26 @@
 :root[data-style="luxtype"] .quick{border-color:#a8873a}
 :root[data-style="luxtype"] .quick .qlbl,:root[data-style="luxtype"] .tag.rp{color:#a8873a;letter-spacing:.2em}
 :root[data-style="luxtype"] .pvhead,:root[data-style="luxtype"] .sendbar,:root[data-style="luxtype"] .lookhead,:root[data-style="luxtype"] .phrases .pl{background:var(--surface,#fdfcf9)}
+/* テイスト: アールデコ（紺と金・扇形と放射線・面取りした角・左右対称の幾何学） */
+:root[data-style="artdeco"] body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28' viewBox='0 0 56 28'%3E%3Cg fill='none' stroke='%23c9a24b' stroke-opacity='.22' stroke-width='1.2'%3E%3Cpath d='M0 28A28 28 0 0 1 56 28M8 28A20 20 0 0 1 48 28M16 28A12 12 0 0 1 40 28M24 28A4 4 0 0 1 32 28'/%3E%3Cpath d='M-28 28A28 28 0 0 1 28 28M28 28A28 28 0 0 1 84 28' stroke-opacity='.22'/%3E%3C/g%3E%3C/svg%3E");background-size:56px 28px;background-attachment:fixed}
+:root[data-style="artdeco"] .top{margin-inline:-16px;padding-inline:16px;background:linear-gradient(rgba(10,19,30,.62),rgba(10,19,30,.86)),repeating-conic-gradient(from -90deg at 50% 135%,#c9a24b 0 3.2deg,#0b1520 3.2deg 9deg);border-top:3px solid #c9a24b;border-bottom:3px solid #c9a24b;box-shadow:0 3px 0 #0f1c2b,0 4px 0 #c9a24b;margin-bottom:10px;padding-bottom:16px}
+:root[data-style="artdeco"] .top h1{color:#e6c473;font-weight:700;letter-spacing:.3em;text-shadow:0 2px 0 #0b1520}
+:root[data-style="artdeco"] .top h1::before{content:'';display:inline-block;width:.8em;height:.8em;margin-right:.5em;vertical-align:-.04em;background:#c9a24b;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);box-shadow:none}
+:root[data-style="artdeco"] .top .lead,:root[data-style="artdeco"] .top .conn{color:#e3d6b0;letter-spacing:.14em}
+:root[data-style="artdeco"] .top .btn{background:#0f1c2b;color:#e6c473;border:1.5px solid #c9a24b}
+:root[data-style="artdeco"] h2,:root[data-style="artdeco"] h3{color:#e6c473;letter-spacing:.2em;font-weight:700}
+:root[data-style="artdeco"] h2::after,:root[data-style="artdeco"] h3::after{content:'';display:block;height:5px;margin-top:5px;border-top:1px solid #c9a24b;border-bottom:1px solid #c9a24b;opacity:.8}
+:root[data-style="artdeco"] .card,:root[data-style="artdeco"] .setsec,:root[data-style="artdeco"] .sheet,:root[data-style="artdeco"] .preview,:root[data-style="artdeco"] .quick{border:2px solid #c9a24b;box-shadow:inset 0 0 0 4px var(--surface,#16283a),inset 0 0 0 5px rgba(201,162,75,.6)}
+:root[data-style="artdeco"] .chip,:root[data-style="artdeco"] .btn,:root[data-style="artdeco"] .mode{border:1.5px solid #c9a24b;letter-spacing:.08em}
+:root[data-style="artdeco"] .btn.primary{background:linear-gradient(180deg,#e6c473,#b88f35);color:#0f1c2b;font-weight:700;letter-spacing:.2em}
+:root[data-style="artdeco"] .bubble{border:2px solid transparent!important;border-radius:0!important;padding:11px 20px;box-shadow:none;clip-path:polygon(10px 0,calc(100% - 10px) 0,100% 10px,100% calc(100% - 10px),calc(100% - 10px) 100%,10px 100%,0 calc(100% - 10px),0 10px);letter-spacing:.05em}
+:root[data-style="artdeco"] .row.mine .bubble{background:linear-gradient(var(--mine-bg,#1f6f6b),var(--mine-bg,#1f6f6b)) padding-box,linear-gradient(135deg,#f0d78c,#b88f35 50%,#f0d78c) border-box;color:var(--mine-ink,#f6ecd0)}
+:root[data-style="artdeco"] .row:not(.mine) .bubble{background:linear-gradient(var(--their-bg,#16283a),var(--their-bg,#16283a)) padding-box,linear-gradient(135deg,#f0d78c,#b88f35 50%,#f0d78c) border-box;color:var(--their-ink,#f2e6c8)}
+:root[data-style="artdeco"] .row.replyable .bubble{background:linear-gradient(var(--their-bg,#16283a),var(--their-bg,#16283a)) padding-box,linear-gradient(135deg,#ffffff,#e6c473 50%,#ffffff) border-box;border-width:4px!important;padding:9px 18px}
+:root[data-style="artdeco"] .day{background:transparent;color:#e6c473;letter-spacing:.3em;border-radius:0;font-weight:700}
+:root[data-style="artdeco"] .day::before,:root[data-style="artdeco"] .day::after{content:'';display:inline-block;width:10px;height:10px;background:#c9a24b;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);vertical-align:-1px;margin:0 9px}
+:root[data-style="artdeco"] .quick .qlbl,:root[data-style="artdeco"] .tag.rp{color:#e6c473}
+:root[data-style="artdeco"] .pvhead,:root[data-style="artdeco"] .sendbar,:root[data-style="artdeco"] .lookhead,:root[data-style="artdeco"] .phrases .pl{background:var(--surface,#16283a)}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -907,7 +927,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v75';
+  var APP_VERSION='v76';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1519,6 +1539,11 @@ function textFor(m){
       '--accent':'#141414','--accent-ink':'#f8f5ef','--chip':'#f1ede4','--chip-on':'#141414','--chip-on-ink':'#f8f5ef',
       '--focus':'#a8873a','--shadow':'none','--rs':'0',
       '--font':'"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif'}}
+    ,{id:'artdeco',name:'アールデコ',theme:'dark',sw:['#0f1c2b','#c9a24b'],vars:{
+      '--bg':'#0f1c2b','--surface':'#16283a','--ink':'#f2e6c8','--muted':'#a9b3b8','--line':'#c9a24b',
+      '--accent':'#1f6f6b','--accent-ink':'#f6ecd0','--chip':'#1d3247','--chip-on':'#c9a24b','--chip-on-ink':'#0f1c2b',
+      '--focus':'#e6c473','--shadow':'0 0 0 1px #c9a24b','--rs':'0.15',
+      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
   function curStyle(){return LOOK_STYLES.filter(function(x){return x.id===look.style;})[0]||LOOK_STYLES[0];}
