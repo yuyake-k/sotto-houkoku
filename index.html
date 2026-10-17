@@ -44,6 +44,15 @@
 :root[data-style="japandi"] h1,:root[data-style="japandi"] h2,:root[data-style="japandi"] h3{font-weight:500;letter-spacing:.08em}
 :root[data-style="japandi"] .btn.primary{box-shadow:none}
 :root[data-style="japandi"] .row.replyable .bubble{border-width:1px;padding:9px 14px}
+/* テイスト: バウハウス（三原色・直線・太い黒線・影なし） */
+:root[data-style="bauhaus"] body{font-weight:500}
+:root[data-style="bauhaus"] .card,:root[data-style="bauhaus"] .setsec,:root[data-style="bauhaus"] .sheet,:root[data-style="bauhaus"] .bubble,:root[data-style="bauhaus"] .chip,:root[data-style="bauhaus"] .btn,:root[data-style="bauhaus"] .preview,:root[data-style="bauhaus"] .quick,:root[data-style="bauhaus"] .lookpv,:root[data-style="bauhaus"] input[type="text"]{border-width:2px;border-color:#111;box-shadow:none}
+:root[data-style="bauhaus"] .btn.primary,:root[data-style="bauhaus"] .row.mine .bubble{border-color:#111}
+:root[data-style="bauhaus"] h1,:root[data-style="bauhaus"] h2,:root[data-style="bauhaus"] h3{font-weight:700;letter-spacing:.02em}
+:root[data-style="bauhaus"] .chip[aria-pressed="true"]{border-color:#111}
+:root[data-style="bauhaus"] .top{position:relative;padding-bottom:16px}
+:root[data-style="bauhaus"] .top::after{content:'';position:absolute;left:0;right:0;bottom:6px;height:6px;background:linear-gradient(90deg,#d62718 0 33.33%,#f6d33b 33.33% 66.66%,#1c3f95 66.66%)}
+:root[data-style="bauhaus"] .row.replyable .bubble{border-color:#d62718;border-width:3px;padding:8px 13px}
 [hidden]{display:none!important}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -602,7 +611,7 @@ function textFor(m){
   var show=function(name){
     ['setup','welcome','retry','room','list'].forEach(function(n){$('screen-'+n).hidden=(n!==name);});
   };
-  var APP_VERSION='v55';
+  var APP_VERSION='v56';
   var cfg=window.SOTTO_CONFIG||{};
   var sb=null,me=null,room=null,memberCount=1,msgs=[],channel=null;
   var names={},myNick='',nickPrompted=false,others=[],myRooms=[],bootNote='',lastKick=0;
@@ -1148,6 +1157,11 @@ function textFor(m){
       '--bg':'#f2eee6','--surface':'#faf8f3','--ink':'#38342d','--muted':'#8a8377','--line':'#ddd6c8',
       '--accent':'#6b7d5f','--accent-ink':'#ffffff','--chip':'#e8e2d6','--chip-on':'#38342d','--chip-on-ink':'#faf8f3',
       '--focus':'#6b7d5f','--shadow':'0 1px 2px rgba(56,52,45,.08)','--rs':'0.45',
+      '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}},
+    {id:'bauhaus',name:'バウハウス',theme:'light',sw:['#f1ece1','#d62718'],vars:{
+      '--bg':'#f1ece1','--surface':'#ffffff','--ink':'#111111','--muted':'#5a5648','--line':'#111111',
+      '--accent':'#d62718','--accent-ink':'#ffffff','--chip':'#f6d33b','--chip-on':'#1c3f95','--chip-on-ink':'#ffffff',
+      '--focus':'#1c3f95','--shadow':'none','--rs':'0',
       '--font':'"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif'}}
   ];
   var STYLE_KEYS=['--surface','--ink','--muted','--line','--chip','--chip-on','--chip-on-ink','--focus','--shadow','--rs','--font'];
